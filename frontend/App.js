@@ -1,10 +1,9 @@
-import 'regenerator-runtime/runtime';
-import React from 'react';
+import "regenerator-runtime/runtime";
+import React from "react";
 
-import './assets/global.css';
+import "./assets/global.css";
 
-import { EducationalText, SignInPrompt, SignOutButton } from './ui-components';
-
+import { EducationalText, SignInPrompt, SignOutButton } from "./ui-components";
 
 export default function App({ isSignedIn, contractId, wallet }) {
   const [valueFromBlockchain, setValueFromBlockchain] = React.useState();
@@ -19,40 +18,56 @@ export default function App({ isSignedIn, contractId, wallet }) {
       .finally(() => {
         setUiPleaseWait(false);
       });
-    }
-  , []);
+  }, []);
 
   /// If user not signed-in with wallet - show prompt
   if (!isSignedIn) {
     // Sign-in flow will reload the page later
-    return <SignInPrompt greeting={valueFromBlockchain} onClick={() => wallet.signIn()}/>;
+    return (
+      <SignInPrompt
+        greeting={valueFromBlockchain}
+        onClick={() => wallet.signIn()}
+      />
+    );
   }
 
   function changeGreeting(e) {
     e.preventDefault();
     setUiPleaseWait(true);
     const { greetingInput } = e.target.elements;
-    
+
     // use the wallet to send the greeting to the contract
-    wallet.callMethod({ method: 'set_greeting', args: { message: greetingInput.value }, contractId })
-      .then(async () => {return getGreeting();})
+    wallet
+      .callMethod({
+        method: "set_greeting",
+        args: { message: greetingInput.value },
+        contractId,
+      })
+      .then(async () => {
+        return getGreeting();
+      })
       .then(setValueFromBlockchain)
       .finally(() => {
         setUiPleaseWait(false);
       });
   }
 
-  function getGreeting(){
+  function getGreeting() {
     // use the wallet to query the contract's greeting
-    return wallet.viewMethod({ method: 'get_greeting', contractId })
+    return wallet.viewMethod({ method: "get_greeting", contractId });
   }
 
   return (
     <>
-      <SignOutButton accountId={wallet.accountId} onClick={() => wallet.signOut()}/>
-      <main className={uiPleaseWait ? 'please-wait' : ''}>
+      <SignOutButton
+        accountId={wallet.accountId}
+        onClick={() => wallet.signOut()}
+      />
+
+      <main className={uiPleaseWait ? "please-wait" : ""}>
         <h1>
-          The contract says: <span className="greeting">{valueFromBlockchain}</span>
+          The contract says:{" "}
+          <span className="greeting">{valueFromBlockchain}</span>
         </h1>
         <form onSubmit={changeGreeting} className="change">
           <label>Change greeting:</label>
@@ -68,7 +83,7 @@ export default function App({ isSignedIn, contractId, wallet }) {
             </button>
           </div>
         </form>
-        <EducationalText/>
+        <EducationalText />
       </main>
     </>
   );
