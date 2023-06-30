@@ -19,8 +19,8 @@ window.onload = async () => {
   ReactDOM.render(
     <App
       isSignedIn={isSignedIn}
-      contractId={CONTRACT_ADDRESS}
       wallet={wallet}
+      contractId={CONTRACT_ADDRESS}
     />,
     document.getElementById("root")
   );
