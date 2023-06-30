@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 // Find all our documentation at https://docs.near.org
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::UnorderedMap;
@@ -107,6 +109,25 @@ impl Contract {
             data: None
         };
     }
+
+    pub fn get_yourself(&self) -> Response{
+
+        let pub_id = env::signer_account_pk();
+
+        let lister = self.listers.get(&pub_id);
+
+        match lister {
+            Some(lis) =>{
+                Response { status: "NOTCREATED".to_string(), message: "User exists".to_string(), data: Some(lis.email)}
+            }
+            None => {
+                Response { status: "NOTCREATED".to_string(), message: "User doesnt exists".to_string(), data: None}
+            }
+
+        }
+        
+    }
+
 }
 
 /*
