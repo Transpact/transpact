@@ -2977,7 +2977,7 @@ window.onload = async ()=>{
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-dom":"j6uA9","./App":"2Ew96","./near-wallet":"dg9wB","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"iTorj":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-dom":"j6uA9","./App":"29gdY","./near-wallet":"ggARf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"iTorj":[function(require,module,exports) {
 "use strict";
 module.exports = require("ee51401569654d91");
 
@@ -27141,16 +27141,15 @@ module.exports = require("ef03b89c8fe2794e");
     /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */ if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop === "function") __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
 })();
 
-},{}],"2Ew96":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$c1db = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+},{}],"29gdY":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$1a4f = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$c1db.prelude(module);
+$parcel$ReactRefreshHelpers$1a4f.prelude(module);
 
 try {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>App);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _runtime = require("regenerator-runtime/runtime");
 var _react = require("react");
@@ -27159,7 +27158,7 @@ var _reactDefault = parcelHelpers.interopDefault(_react);
 // import "./styles/global.css";
 var _uiComponents = require("./ui-components");
 var _s = $RefreshSig$();
-function App({ isSignedIn, contractId, wallet }) {
+const App = ({ isSignedIn, contractId, wallet })=>{
     _s();
     const [valueFromBlockchain, setValueFromBlockchain] = (0, _reactDefault.default).useState();
     const [uiPleaseWait, setUiPleaseWait] = (0, _reactDefault.default).useState(true);
@@ -27175,10 +27174,10 @@ function App({ isSignedIn, contractId, wallet }) {
         greeting: valueFromBlockchain,
         onClick: ()=>wallet.signIn()
     }, void 0, false, {
-        fileName: "App.js",
-        lineNumber: 28,
+        fileName: "App.tsx",
+        lineNumber: 35,
         columnNumber: 7
-    }, this);
+    }, undefined);
     function changeGreeting(e) {
         e.preventDefault();
         setUiPleaseWait(true);
@@ -27209,10 +27208,10 @@ function App({ isSignedIn, contractId, wallet }) {
                 accountId: wallet.accountId,
                 onClick: ()=>wallet.signOut()
             }, void 0, false, {
-                fileName: "App.js",
-                lineNumber: 63,
+                fileName: "App.tsx",
+                lineNumber: 70,
                 columnNumber: 7
-            }, this),
+            }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("main", {
                 className: uiPleaseWait ? "please-wait" : "",
                 children: [
@@ -27225,16 +27224,16 @@ function App({ isSignedIn, contractId, wallet }) {
                                 className: "greeting",
                                 children: valueFromBlockchain
                             }, void 0, false, {
-                                fileName: "App.js",
-                                lineNumber: 71,
+                                fileName: "App.tsx",
+                                lineNumber: 78,
                                 columnNumber: 11
-                            }, this)
+                            }, undefined)
                         ]
                     }, void 0, true, {
-                        fileName: "App.js",
-                        lineNumber: 69,
+                        fileName: "App.tsx",
+                        lineNumber: 76,
                         columnNumber: 9
-                    }, this),
+                    }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
                         onSubmit: changeGreeting,
                         className: "change",
@@ -27242,10 +27241,10 @@ function App({ isSignedIn, contractId, wallet }) {
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
                                 children: "Change greeting:"
                             }, void 0, false, {
-                                fileName: "App.js",
-                                lineNumber: 74,
+                                fileName: "App.tsx",
+                                lineNumber: 81,
                                 columnNumber: 11
-                            }, this),
+                            }, undefined),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                 children: [
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
@@ -27253,64 +27252,65 @@ function App({ isSignedIn, contractId, wallet }) {
                                         defaultValue: valueFromBlockchain,
                                         id: "greetingInput"
                                     }, void 0, false, {
-                                        fileName: "App.js",
-                                        lineNumber: 76,
+                                        fileName: "App.tsx",
+                                        lineNumber: 83,
                                         columnNumber: 13
-                                    }, this),
+                                    }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
                                         children: [
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                                 children: "Save"
                                             }, void 0, false, {
-                                                fileName: "App.js",
-                                                lineNumber: 82,
+                                                fileName: "App.tsx",
+                                                lineNumber: 89,
                                                 columnNumber: 15
-                                            }, this),
+                                            }, undefined),
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                                 className: "loader"
                                             }, void 0, false, {
-                                                fileName: "App.js",
-                                                lineNumber: 83,
+                                                fileName: "App.tsx",
+                                                lineNumber: 90,
                                                 columnNumber: 15
-                                            }, this)
+                                            }, undefined)
                                         ]
                                     }, void 0, true, {
-                                        fileName: "App.js",
-                                        lineNumber: 81,
+                                        fileName: "App.tsx",
+                                        lineNumber: 88,
                                         columnNumber: 13
-                                    }, this)
+                                    }, undefined)
                                 ]
                             }, void 0, true, {
-                                fileName: "App.js",
-                                lineNumber: 75,
+                                fileName: "App.tsx",
+                                lineNumber: 82,
                                 columnNumber: 11
-                            }, this)
+                            }, undefined)
                         ]
                     }, void 0, true, {
-                        fileName: "App.js",
-                        lineNumber: 73,
+                        fileName: "App.tsx",
+                        lineNumber: 80,
                         columnNumber: 9
-                    }, this),
+                    }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _uiComponents.EducationalText), {}, void 0, false, {
-                        fileName: "App.js",
-                        lineNumber: 87,
+                        fileName: "App.tsx",
+                        lineNumber: 94,
                         columnNumber: 9
-                    }, this)
+                    }, undefined)
                 ]
             }, void 0, true, {
-                fileName: "App.js",
-                lineNumber: 68,
+                fileName: "App.tsx",
+                lineNumber: 75,
                 columnNumber: 7
-            }, this)
+            }, undefined)
         ]
     }, void 0, true);
-}
+};
 _s(App, "kS24ka7QLm9/xaObsbkZiE5+6uE=");
 _c = App;
+exports.default = App;
 var _c;
 $RefreshReg$(_c, "App");
 
-  $parcel$ReactRefreshHelpers$c1db.postlude(module);
+  $parcel$ReactRefreshHelpers$1a4f.postlude(module);
 } finally {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
@@ -28351,7 +28351,7 @@ function registerExportsForReactRefresh(module1) {
     }
 }
 
-},{"7422ead32dcc1e6b":"786KC"}],"dg9wB":[function(require,module,exports) {
+},{"7422ead32dcc1e6b":"786KC"}],"ggARf":[function(require,module,exports) {
 /* A helper file that simplifies using the wallet selector */ // near api js
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -28363,15 +28363,11 @@ var _stylesCss = require("@near-wallet-selector/modal-ui/styles.css");
 var _modalUi = require("@near-wallet-selector/modal-ui");
 var _core = require("@near-wallet-selector/core");
 var _myNearWallet = require("@near-wallet-selector/my-near-wallet");
-var Buffer = require("f82bc9c169fd1dff").Buffer;
+var Buffer = require("c910e36c5a21b1cb").Buffer;
 const THIRTY_TGAS = "30000000000000";
 const NO_DEPOSIT = "0";
 class Wallet {
-    walletSelector;
-    wallet;
-    network;
-    createAccessKeyFor;
-    constructor({ createAccessKeyFor, network = "testnet" }){
+    constructor({ createAccessKeyFor = "", network = "testnet" }){
         // Login to a wallet passing a contractId will create a local
         // key, so the user skips signing non-payable transactions.
         // Omitting the accountId will result in the user being
@@ -28406,6 +28402,7 @@ class Wallet {
     // Sign-out method
     signOut() {
         this.wallet.signOut();
+        // @ts-ignore
         this.wallet = this.accountId = this.createAccessKeyFor = null;
         window.location.replace(window.location.origin + window.location.pathname);
     }
@@ -28422,6 +28419,7 @@ class Wallet {
             args_base64: Buffer.from(JSON.stringify(args)).toString("base64"),
             finality: "optimistic"
         });
+        // @ts-ignore
         return JSON.parse(Buffer.from(res.result).toString());
     }
     // Call a method that changes the contract's state
@@ -28455,7 +28453,7 @@ class Wallet {
     }
 }
 
-},{"f82bc9c169fd1dff":"fCgem","near-api-js":"ohc3m","@near-wallet-selector/modal-ui/styles.css":"b4TAP","@near-wallet-selector/modal-ui":"1nDKo","@near-wallet-selector/core":"eEY3a","@near-wallet-selector/my-near-wallet":"bYYGG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fCgem":[function(require,module,exports) {
+},{"c910e36c5a21b1cb":"fCgem","near-api-js":"ohc3m","@near-wallet-selector/modal-ui/styles.css":"b4TAP","@near-wallet-selector/modal-ui":"1nDKo","@near-wallet-selector/core":"eEY3a","@near-wallet-selector/my-near-wallet":"bYYGG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fCgem":[function(require,module,exports) {
 /*!
  * The buffer module from node.js, for the browser.
  *

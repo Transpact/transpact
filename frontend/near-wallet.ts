@@ -6,7 +6,13 @@ import { providers } from "near-api-js";
 // wallet selector
 import "@near-wallet-selector/modal-ui/styles.css";
 import { setupModal } from "@near-wallet-selector/modal-ui";
-import { setupWalletSelector } from "@near-wallet-selector/core";
+import {
+  WalletSelector,
+  setupWalletSelector,
+  Wallet as NearWaller,
+  NetworkId,
+  Network,
+} from "@near-wallet-selector/core";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
 
 const THIRTY_TGAS = "30000000000000";
@@ -14,12 +20,14 @@ const NO_DEPOSIT = "0";
 
 // Wallet that simplifies using the wallet selector
 export class Wallet {
-  walletSelector;
-  wallet;
-  network;
-  createAccessKeyFor;
+  walletSelector: WalletSelector;
+  wallet: NearWaller;
+  network: NetworkId | Network;
+  createAccessKeyFor: string;
 
-  constructor({ createAccessKeyFor = undefined, network = "testnet" }) {
+  accountId: string;
+
+  constructor({ createAccessKeyFor = "", network = "testnet" }) {
     // Login to a wallet passing a contractId will create a local
     // key, so the user skips signing non-payable transactions.
     // Omitting the accountId will result in the user being
@@ -53,12 +61,15 @@ export class Wallet {
       contractId: this.createAccessKeyFor,
       description,
     });
+
     modal.show();
   }
 
   // Sign-out method
   signOut() {
     this.wallet.signOut();
+
+    // @ts-ignore
     this.wallet = this.accountId = this.createAccessKeyFor = null;
     window.location.replace(window.location.origin + window.location.pathname);
   }
@@ -75,6 +86,8 @@ export class Wallet {
       args_base64: Buffer.from(JSON.stringify(args)).toString("base64"),
       finality: "optimistic",
     });
+
+    // @ts-ignore
     return JSON.parse(Buffer.from(res.result).toString());
   }
 
