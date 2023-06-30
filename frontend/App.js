@@ -1,7 +1,8 @@
 import "regenerator-runtime/runtime";
 import React from "react";
 
-import "./assets/global.css";
+// import "./assets/global.css";
+// import "./styles/global.css";
 
 import { EducationalText, SignInPrompt, SignOutButton } from "./ui-components";
 
@@ -65,7 +66,7 @@ export default function App({ isSignedIn, contractId, wallet }) {
       />
 
       <main className={uiPleaseWait ? "please-wait" : ""}>
-        <h1>
+        <h1 className="text-yellow-400">
           The contract says:{" "}
           <span className="greeting">{valueFromBlockchain}</span>
         </h1>
