@@ -11,6 +11,8 @@ node_modules
 
 # keys
 /templates/react/neardev
+/contract/target
+target
 
 # testing
 /coverage
@@ -29,6 +31,3 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Other
-/.parcel-cache
