@@ -18,9 +18,9 @@ interface AppProps {
 const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
   // TODO: Save Web3 objects in Context
 
-  if (!isSignedIn) {
-    return <SignInPrompt greeting={""} onClick={() => wallet.signIn()} />;
-  }
+  // if (!isSignedIn) {
+  //   return <SignInPrompt greeting={""} onClick={() => wallet.signIn()} />;
+  // }
 
   const router = createBrowserRouter([
     {

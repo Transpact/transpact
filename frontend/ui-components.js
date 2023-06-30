@@ -79,3 +79,29 @@ export function EducationalText() {
     </>
   );
 }
+
+// function changeGreeting(e) {
+//   e.preventDefault();
+//   setUiPleaseWait(true);
+//   const { greetingInput } = e.target.elements;
+
+//   // use the wallet to send the greeting to the contract
+//   wallet
+//     .callMethod({
+//       method: "set_greeting",
+//       args: { message: greetingInput.value },
+//       contractId,
+//     })
+//     .then(async () => {
+//       return getGreeting();
+//     })
+//     .then(setValueFromBlockchain)
+//     .finally(() => {
+//       setUiPleaseWait(false);
+//     });
+// }
+
+// function getGreeting() {
+//   // use the wallet to query the contract's greeting
+//   return wallet.viewMethod({ method: "get_greeting", contractId });
+// }
