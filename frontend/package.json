@@ -31,6 +31,7 @@
     "@near-wallet-selector/core": "^8.2.0",
     "@near-wallet-selector/modal-ui": "^8.2.0",
     "@near-wallet-selector/my-near-wallet": "^8.2.0",
+    "@radix-ui/react-toast": "^1.1.4",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "autoprefixer": "^10.4.14",

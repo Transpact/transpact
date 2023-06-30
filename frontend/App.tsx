@@ -7,6 +7,8 @@ import React from "react";
 import { EducationalText, SignInPrompt, SignOutButton } from "./ui-components";
 import { Wallet } from "./near-wallet";
 
+import { Toaster } from "@/components/ui/toaster";
+
 interface AppProps {
   isSignedIn: boolean;
   contractId?: string;
@@ -71,7 +73,6 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
         accountId={wallet.accountId}
         onClick={() => wallet.signOut()}
       />
-
       <main className={uiPleaseWait ? "please-wait" : ""}>
         <h1 className="text-yellow-400">
           The contract says:{" "}
@@ -93,6 +94,7 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
         </form>
         <EducationalText />
       </main>
+      <Toaster />
     </>
   );
 };
