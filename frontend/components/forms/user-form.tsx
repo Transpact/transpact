@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 interface UserFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -33,6 +34,11 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function UserForm({ className, ...props }: UserFormProps) {
+  let [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = React.useState<boolean>(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,14 +51,15 @@ export function UserForm({ className, ...props }: UserFormProps) {
     },
   });
 
-  const [loading, setLoading] = React.useState<boolean>(false);
-
   async function onSubmit(values: FormData) {
     try {
       setLoading(true);
 
       // TODO: Add Logic
       console.log("NEW USER:", values);
+
+      const redirectURL = searchParams.get("redirect") ?? "/";
+      navigate(redirectURL);
     } catch (err: any) {
       const error = err;
 
