@@ -74,13 +74,13 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
     >
       <DashboardShell>
         <DashboardHeader
-          heading="Employees"
-          text="Create and manage employees."
+          heading="My Contracts"
+          text="Create and manage your contracts."
         >
           <a href="/employees/add">
             <Button variant="outline">
               <Icons.add className="mr-2 h-4 w-4" />
-              Add Employee
+              Add Contract
             </Button>
           </a>
         </DashboardHeader>
