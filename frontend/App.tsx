@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/home";
 import { SignInPrompt } from "@/ui-components";
+import StartPage from "./pages/start";
 
 interface AppProps {
   isSignedIn: boolean;
@@ -34,7 +35,17 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
       ),
     },
     {
-      path: "/hello",
+      path: "/start",
+      element: (
+        <StartPage
+          isSignedIn={isSignedIn}
+          contractId={contractId}
+          wallet={wallet}
+        />
+      ),
+    },
+    {
+      path: "/start",
       element: <h1>Hello Near</h1>,
     },
   ]);
