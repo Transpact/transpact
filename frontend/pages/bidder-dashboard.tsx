@@ -18,9 +18,9 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { Link } from "react-router-dom";
 
-interface ListerDashboardProps {}
+interface BidderDashboardProps {}
 
-const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
+const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
   const {} = useContext(WalletContext)!;
 
   const [loading, setLoading] = useState(false);
@@ -68,27 +68,24 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
 
   return (
     <DashboardLayout
-      type="lister"
+      type="bidder"
       loading={loading}
-      heading="Manage Contracts"
-      text="Add and Manage Contracts"
-      buttonLabel="Add Contract"
+      heading="My Bids"
+      text="View and Manage Bids"
+      buttonLabel="Available Contract"
     >
       <DashboardShell>
-        <DashboardHeader
-          heading="My Contracts"
-          text="Create and manage your contracts."
-        >
-          <Link to="/contract/add">
+        <DashboardHeader heading="My Bids" text="View and manage your bids.">
+          <Link to="/bid/all">
             <Button variant="outline">
               <Icons.add className="mr-2 h-4 w-4" />
-              Add Contract
+              Available Bids
             </Button>
           </Link>
         </DashboardHeader>
 
         <Table>
-          <TableCaption>A list of all contracts created by you.</TableCaption>
+          <TableCaption>A list of all bids awarded to you.</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
@@ -128,4 +125,4 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
   );
 };
 
-export default ListerDashboard;
+export default BidderDashboard;

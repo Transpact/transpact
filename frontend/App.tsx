@@ -11,6 +11,7 @@ import StartPage from "./pages/start";
 import { WalletContext, WalletContextType } from "./context/wallet-context";
 import ListerDashboard from "./pages/lister-dashboard";
 import NewContract from "./pages/new-contract";
+import BidderDashboard from "./pages/bidder-dashboard";
 
 interface AppProps {
   isSignedIn: boolean;
@@ -40,10 +41,14 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
     },
     {
       path: "/dashboard/bidder",
-      element: <h1>Hello Near</h1>,
+      element: <BidderDashboard />,
     },
     {
       path: "/contract/add",
+      element: <NewContract />,
+    },
+    {
+      path: "/bid/all",
       element: <NewContract />,
     },
   ]);
