@@ -4,20 +4,28 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { cn } from "@/lib/utils";
-
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { toast } from "@/components/ui/use-toast";
 
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Textarea } from "../ui/textarea";
 
 interface NewContractFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -26,6 +34,8 @@ const formSchema = z.object({
   totalAmount: z.number().positive(),
   startDate: z.date(),
   endDate: z.date(),
+  description: z.string().min(1),
+  files: z.any(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -43,14 +53,12 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  //   const searchParams = useSearchParams();
-  //   const router = useRouter();
-
   async function onSubmit(values: FormData) {
     try {
       setLoading(true);
 
       // TODO: Add Logic
+      console.log("NEW CONTRACT:", values);
     } catch (err: any) {
       const error = err;
 
@@ -97,7 +105,14 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                 <FormItem>
                   <FormLabel>Total Amount</FormLabel>
                   <FormControl>
-                    <Input placeholder="$1000" {...field} />
+                    <Input
+                      placeholder="$1000"
+                      type="number"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(Number.parseFloat(e.target.value))
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,11 +123,40 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               control={form.control}
               name="startDate"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col w-full">
                   <FormLabel>Start Date</FormLabel>
-                  <FormControl>
-                    <Input placeholder="DD/MM/YYYY" type="date" {...field} />
-                  </FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "pl-3 text-left font-normal w-full",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        // @ts-ignore
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {/* <FormDescription> */}
+                  {/* Your date of birth is used to calculate your age. */}
+                  {/* </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -122,10 +166,77 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               control={form.control}
               name="endDate"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col w-full">
                   <FormLabel>End Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "pl-3 text-left font-normal w-full",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        // @ts-ignore
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {/* <FormDescription> */}
+                  {/* Your date of birth is used to calculate your age. */}
+                  {/* </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="DD/MM/YYYY" type="date" {...field} />
+                    <Textarea
+                      placeholder="Enter as much details as possible"
+                      rows={5}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="files"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>File(s)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Select Images or PDFs"
+                      type="file"
+                      accept="image/*, application/pdf"
+                      multiple
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
