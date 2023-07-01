@@ -86,7 +86,7 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
         </DashboardHeader>
 
         <Table>
-          <TableCaption>A list of all employees.</TableCaption>
+          <TableCaption>A list of all contracts created by you.</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>

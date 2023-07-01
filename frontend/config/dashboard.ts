@@ -13,11 +13,12 @@ export const dashboardConfig: DashboardConfig = {
     },
   ],
   sidebarNav: [
-    {
-      title: "All Contracts",
-      href: "/dashboard/lister",
-      icon: "dashboard",
-    },
+    // {
+    //   title: "All Contracts",
+    //   href: "/dashboard/lister",
+    //   icon: "dashboard",
+    // },
+
     {
       title: "My Contracts",
       href: "/dashboard/lister",
@@ -25,33 +26,34 @@ export const dashboardConfig: DashboardConfig = {
     },
     {
       title: "Add Contract",
-      href: "/dashboard/lister",
+      href: "/contract/add",
       icon: "package",
     },
-    {
-      title: "Invoices",
-      href: "/dashboard/invoices",
-      icon: "billing",
-      disabled: true,
-    },
-    {
-      title: "Reports",
-      href: "/dashboard/reports",
-      icon: "post",
-      disabled: true,
-    },
 
-    {
-      title: "Profile",
-      href: "/dashboard/profile",
-      icon: "settings",
-      disabled: true,
-    },
-    {
-      title: "Upgrade to Plus",
-      href: "/dashboard/billing",
-      icon: "settings",
-      disabled: true,
-    },
+    // {
+    //   title: "Invoices",
+    //   href: "/dashboard/invoices",
+    //   icon: "billing",
+    //   disabled: true,
+    // },
+    // {
+    //   title: "Reports",
+    //   href: "/dashboard/reports",
+    //   icon: "post",
+    //   disabled: true,
+    // },
+
+    // {
+    //   title: "Profile",
+    //   href: "/dashboard/profile",
+    //   icon: "settings",
+    //   disabled: true,
+    // },
+    // {
+    //   title: "Upgrade to Plus",
+    //   href: "/dashboard/billing",
+    //   icon: "settings",
+    //   disabled: true,
+    // },
   ],
 };
