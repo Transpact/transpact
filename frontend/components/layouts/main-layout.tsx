@@ -1,5 +1,5 @@
 import "regenerator-runtime/runtime";
-import React from "react";
+import React, { useContext } from "react";
 
 import { SignInPrompt, SignOutButton } from "@/ui-components";
 import { Wallet } from "@/near-wallet";
@@ -9,21 +9,15 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { MainNav } from "@/components/main-nav";
 import { SiteFooter } from "@/components/site-footer";
-import { siteConfig } from "@/config/site";
+import { WalletContext } from "@/context/wallet-context";
 
 interface MainLayoutProps {
-  isSignedIn: boolean;
-  contractId?: string;
-  wallet: Wallet;
   children: React.ReactNode;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({
-  isSignedIn,
-  contractId,
-  wallet,
-  children,
-}) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+  const { wallet, isSignedIn } = useContext(WalletContext)!;
+
   const handleLogin = async () => {
     wallet.signIn();
   };

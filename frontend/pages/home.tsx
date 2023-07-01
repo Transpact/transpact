@@ -1,27 +1,16 @@
 import "regenerator-runtime/runtime";
 import React, { useContext } from "react";
 
-import { Wallet } from "@/near-wallet";
-import { Button } from "@/components/ui/button";
-
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import MainLayout from "@/components/layouts/main-layout";
 import { WalletContext } from "@/context/wallet-context";
 
-interface HomePageProps {
-  isSignedIn: boolean;
-  contractId?: string;
-  wallet: Wallet;
-}
+interface HomePageProps {}
 
-const HomePage: React.FC<HomePageProps> = ({
-  isSignedIn,
-  contractId,
-  wallet,
-}) => {
-  const walletCtx = useContext(WalletContext);
+const HomePage: React.FC<HomePageProps> = ({}) => {
+  const { wallet } = useContext(WalletContext)!;
 
   const stars = 0;
 
@@ -30,7 +19,7 @@ const HomePage: React.FC<HomePageProps> = ({
   };
 
   return (
-    <MainLayout isSignedIn={isSignedIn} contractId={contractId} wallet={wallet}>
+    <MainLayout>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
           <a

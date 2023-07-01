@@ -27,23 +27,11 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <HomePage
-          isSignedIn={isSignedIn}
-          contractId={contractId}
-          wallet={wallet}
-        />
-      ),
+      element: <HomePage />,
     },
     {
       path: "/start",
-      element: (
-        <StartPage
-          isSignedIn={isSignedIn}
-          contractId={contractId}
-          wallet={wallet}
-        />
-      ),
+      element: <StartPage />,
     },
     {
       path: "/start",
