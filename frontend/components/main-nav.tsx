@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { MobileNav } from "@/components/mobile-nav";
+import { Link } from "react-router-dom";
 
 interface MainNavProps {
   items?: MainNavItem[];
@@ -16,18 +17,18 @@ export function MainNav({ items, children }: MainNavProps) {
 
   return (
     <div className="flex gap-6 md:gap-10">
-      <a href="/" className="hidden items-center space-x-2 md:flex">
+      <Link to="/" className="hidden items-center space-x-2 md:flex">
         <Icons.logo />
         <span className="hidden font-bold sm:inline-block">
           {siteConfig.name}
         </span>
-      </a>
+      </Link>
       {items?.length ? (
         <nav className="hidden gap-6 md:flex">
           {items?.map((item, index) => (
-            <a
+            <Link
               key={index}
-              href={item.disabled ? "#" : item.href}
+              to={item.disabled ? "#" : item.href}
               className={cn(
                 "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
                 // item.href.startsWith(`/${segment}`)
@@ -38,7 +39,7 @@ export function MainNav({ items, children }: MainNavProps) {
               )}
             >
               {item.title}
-            </a>
+            </Link>
           ))}
         </nav>
       ) : null}

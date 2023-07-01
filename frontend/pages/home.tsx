@@ -6,6 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import MainLayout from "@/components/layouts/main-layout";
 import { WalletContext } from "@/context/wallet-context";
+import { Link } from "react-router-dom";
 
 interface HomePageProps {}
 
@@ -22,13 +23,13 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
     <MainLayout>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
-          <a
-            href={siteConfig.links.twitter}
+          <Link
+            to={siteConfig.links.twitter}
             className="rounded-2xl bg-muted px-4 py-1.5 text-sm font-medium"
             target="_blank"
           >
             Vote us on Devpost
-          </a>
+          </Link>
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
             Contracts and Tenders made decentralised with <br /> NEAR Protocol.
           </h1>
@@ -37,18 +38,18 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
             Transparent and trustless contract creation and tracking.
           </p>
           <div className="space-x-4">
-            <a className={cn(buttonVariants({ size: "lg" }))} href="/start">
+            <Link className={cn(buttonVariants({ size: "lg" }))} to="/start">
               Get Started
-            </a>
+            </Link>
 
-            <a
-              href={siteConfig.links.github}
+            <Link
+              to={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
               className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
             >
               GitHub
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -166,19 +167,19 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
           <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
             Transpact is open source and powered by open source software. <br />{" "}
             The code is available on{" "}
-            <a
-              href={siteConfig.links.github}
+            <Link
+              to={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
               className="underline underline-offset-4"
             >
               GitHub
-            </a>
+            </Link>
             .{" "}
           </p>
           {stars && (
-            <a
-              href={siteConfig.links.github}
+            <Link
+              to={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
               className="flex"
@@ -200,7 +201,7 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
                   {/* {stars} stars on GitHub */}
                 </div>
               </div>
-            </a>
+            </Link>
           )}
         </div>
       </section>

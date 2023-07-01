@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export function SignInPrompt({ greeting, onClick }) {
   return (
@@ -49,13 +50,13 @@ export function EducationalText() {
         <li>
           Ultimately, this <code>contract</code> code is defined in{" "}
           <code>./contract</code> – this is the source code for your{" "}
-          <a
+          <Link
             target="_blank"
             rel="noreferrer"
-            href="https://docs.near.org/docs/develop/contracts/overview"
+            to="https://docs.near.org/docs/develop/contracts/overview"
           >
             smart contract
-          </a>
+          </Link>
           .
         </li>
         <li>
@@ -67,13 +68,13 @@ export function EducationalText() {
       <hr />
       <p>
         To keep learning, check out{" "}
-        <a target="_blank" rel="noreferrer" href="https://docs.near.org">
+        <Link target="_blank" rel="noreferrer" href="https://docs.near.org">
           the NEAR docs
-        </a>{" "}
+        </Link>{" "}
         or look through some{" "}
-        <a target="_blank" rel="noreferrer" href="https://examples.near.org">
+        <Link target="_blank" rel="noreferrer" href="https://examples.near.org">
           example apps
-        </a>
+        </Link>
         .
       </p>
     </>

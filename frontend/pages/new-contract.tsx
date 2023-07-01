@@ -8,6 +8,7 @@ import { DashboardHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { NewContractForm } from "@/components/forms/new-contract-form";
+import { Link } from "react-router-dom";
 
 interface NewContractProps {}
 
@@ -37,12 +38,12 @@ const NewContract: React.FC<NewContractProps> = ({}) => {
           heading="Add Contract"
           text="Create and manage your contracts."
         >
-          <a href="/dashboard/lister">
+          <Link to="/dashboard/lister">
             <Button variant="outline">
               <Icons.users className="mr-2 h-4 w-4" />
               View My Contracts
             </Button>
-          </a>
+          </Link>
         </DashboardHeader>
 
         <NewContractForm />

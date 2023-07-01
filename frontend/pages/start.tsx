@@ -1,13 +1,11 @@
 import "regenerator-runtime/runtime";
 import React, { useContext } from "react";
 
-import { Wallet } from "@/near-wallet";
-import { Button } from "@/components/ui/button";
-
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import MainLayout from "@/components/layouts/main-layout";
 import { WalletContext } from "@/context/wallet-context";
+import { Link } from "react-router-dom";
 
 interface StartPageProps {}
 
@@ -27,19 +25,19 @@ const StartPage: React.FC<StartPageProps> = ({}) => {
           </p>
 
           <div className="space-x-4">
-            <a
-              href="/dashboard/lister"
+            <Link
+              to="/dashboard/lister"
               className={cn(buttonVariants({ size: "lg" }))}
             >
               Lister
-            </a>
+            </Link>
 
-            <a
-              href="/dashboard/bidder"
+            <Link
+              to="/dashboard/bidder"
               className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
             >
               Bidder
-            </a>
+            </Link>
           </div>
         </div>
       </section>

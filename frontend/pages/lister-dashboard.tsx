@@ -16,6 +16,7 @@ import { DashboardShell } from "@/components/shell";
 import { DashboardHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
+import { Link } from "react-router-dom";
 
 interface ListerDashboardProps {}
 
@@ -77,12 +78,12 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
           heading="My Contracts"
           text="Create and manage your contracts."
         >
-          <a href="/employees/add">
+          <Link to="/employees/add">
             <Button variant="outline">
               <Icons.add className="mr-2 h-4 w-4" />
               Add Contract
             </Button>
-          </a>
+          </Link>
         </DashboardHeader>
 
         <Table>
@@ -107,11 +108,11 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
                 <TableCell>{status}</TableCell>
                 <TableCell>{"X"}</TableCell>
                 <TableCell className="text-right">
-                  <a href={`/`} className="mr-2">
+                  <Link to="/" className="mr-2">
                     <Button className="rounded-full">
                       <Icons.edit className="h-4 w-4" />
                     </Button>
-                  </a>
+                  </Link>
 
                   <Button className="rounded-full" onClick={() => {}}>
                     <Icons.trash className="h-4 w-4" />
