@@ -1,5 +1,5 @@
 import "regenerator-runtime/runtime";
-import React from "react";
+import React, { useState } from "react";
 
 import { Wallet } from "./near-wallet";
 
@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/home";
 import { SignInPrompt } from "@/ui-components";
 import StartPage from "./pages/start";
+import { WalletContext, WalletContextType } from "./context/wallet-context";
 
 interface AppProps {
   isSignedIn: boolean;
@@ -17,11 +18,11 @@ interface AppProps {
 }
 
 const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
-  // TODO: Save Web3 objects in Context
-
-  // if (!isSignedIn) {
-  //   return <SignInPrompt greeting={""} onClick={() => wallet.signIn()} />;
-  // }
+  const [walletContext, setWalletContext] = useState<WalletContextType>({
+    isSignedIn: isSignedIn,
+    contractId: contractId,
+    wallet: wallet,
+  });
 
   const router = createBrowserRouter([
     {
@@ -51,10 +52,10 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
   ]);
 
   return (
-    <>
+    <WalletContext.Provider value={walletContext}>
       <RouterProvider router={router} />
       <Toaster />
-    </>
+    </WalletContext.Provider>
   );
 };
 

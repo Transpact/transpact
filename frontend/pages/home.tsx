@@ -1,5 +1,5 @@
 import "regenerator-runtime/runtime";
-import React from "react";
+import React, { useContext } from "react";
 
 import { Wallet } from "@/near-wallet";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import MainLayout from "@/components/layouts/main-layout";
+import { WalletContext } from "@/context/wallet-context";
 
 interface HomePageProps {
   isSignedIn: boolean;
@@ -20,6 +21,8 @@ const HomePage: React.FC<HomePageProps> = ({
   contractId,
   wallet,
 }) => {
+  const walletCtx = useContext(WalletContext);
+
   const stars = 0;
 
   const handleLogin = async () => {
