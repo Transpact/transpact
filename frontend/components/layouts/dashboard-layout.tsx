@@ -5,12 +5,23 @@ import { SiteFooter } from "@/components/site-footer";
 import { UserAccountNav } from "@/components/user-account-nav";
 import { useContext } from "react";
 import { WalletContext } from "@/context/wallet-context";
+import DashboardSkeleton from "../ui/dashboard-skeleton";
 
 interface DashboardLayoutProps {
+  loading: boolean;
+  heading: string;
+  text: string;
+  buttonLabel: string;
   children?: React.ReactNode;
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout({
+  children,
+  loading,
+  text,
+  buttonLabel,
+  heading,
+}: DashboardLayoutProps) {
   const { wallet } = useContext(WalletContext)!;
 
   return (
@@ -34,7 +45,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <DashboardNav items={dashboardConfig.sidebarNav} />
         </aside>
         <main className="flex w-full flex-1 flex-col overflow-hidden">
-          {children}
+          {loading ? (
+            <DashboardSkeleton
+              text={text}
+              buttonLabel={buttonLabel}
+              heading={heading}
+            />
+          ) : (
+            children
+          )}
         </main>
       </div>
       <SiteFooter className="border-t" />
