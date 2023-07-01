@@ -7,9 +7,9 @@ import { Toaster } from "@/components/ui/toaster";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/home";
-import { SignInPrompt } from "@/ui-components";
 import StartPage from "./pages/start";
 import { WalletContext, WalletContextType } from "./context/wallet-context";
+import ListerDashboard from "./pages/lister-dashboard";
 
 interface AppProps {
   isSignedIn: boolean;
@@ -34,7 +34,11 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
       element: <StartPage />,
     },
     {
-      path: "/start",
+      path: "/dashboard/lister",
+      element: <ListerDashboard />,
+    },
+    {
+      path: "/dashboard/bidder",
       element: <h1>Hello Near</h1>,
     },
   ]);

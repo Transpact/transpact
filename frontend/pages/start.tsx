@@ -28,14 +28,14 @@ const StartPage: React.FC<StartPageProps> = ({}) => {
 
           <div className="space-x-4">
             <a
-              href="/start/lister"
+              href="/dashboard/lister"
               className={cn(buttonVariants({ size: "lg" }))}
             >
               Lister
             </a>
 
             <a
-              href="/start/bidder"
+              href="/dashboard/bidder"
               className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
             >
               Bidder
