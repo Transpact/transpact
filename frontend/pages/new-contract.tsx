@@ -32,7 +32,13 @@ const NewContract: React.FC<NewContractProps> = ({}) => {
   };
 
   return (
-    <DashboardLayout loading={false} heading="" text="" buttonLabel="">
+    <DashboardLayout
+      type="lister"
+      loading={false}
+      heading=""
+      text=""
+      buttonLabel=""
+    >
       <DashboardShell>
         <DashboardHeader
           heading="Add Contract"
