@@ -66,19 +66,21 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       <DashboardShell>
         <DashboardHeader heading={contract?.name ?? ""} text={""} />
 
-        <p>
-          <span className="font-bold">START: </span>{" "}
-          {formatDate(contract?.startDate ?? new Date())}
-        </p>
+        <div className="grid grid-cols-2">
+          <p>
+            <span className="font-bold">START: </span>{" "}
+            {formatDate(contract?.startDate ?? new Date())}
+          </p>
 
-        <p>
-          <span className="font-bold">DEADLINE: </span>{" "}
-          {formatDate(contract?.endDate ?? new Date())}
-        </p>
+          <p>
+            <span className="font-bold">DEADLINE: </span>{" "}
+            {formatDate(contract?.endDate ?? new Date())}
+          </p>
 
-        <p>
-          <span className="font-bold">QUATATION: </span> ${contract?.amount}
-        </p>
+          <p>
+            <span className="font-bold">QUATATION: </span> ${contract?.amount}
+          </p>
+        </div>
 
         <p className="mt-6">{contract?.description}</p>
       </DashboardShell>

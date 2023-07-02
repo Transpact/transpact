@@ -31,6 +31,7 @@ import {
   Edit,
   UserPlus,
   PlusCircle,
+  Info,
   type Icon as LucideIcon,
 } from "lucide-react";
 
@@ -63,6 +64,7 @@ export const Icons = {
   edit: Edit,
   userPlus: UserPlus,
   plusCircle: PlusCircle,
+  info: Info,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

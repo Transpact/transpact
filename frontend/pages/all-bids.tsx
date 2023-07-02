@@ -19,6 +19,49 @@ import { Icons } from "@/components/icons";
 import { Link } from "react-router-dom";
 import { SAMPLE_CONTRACT } from "@/lib/data";
 
+export const ContractTable: React.FC<{
+  contracts: Contract[];
+}> = ({ contracts }) => {
+  return (
+    <Table>
+      <TableCaption>A list of all available bids.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Owner</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>X</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {contracts.map(({ name, amount, owner, status, id }, i) => (
+          <TableRow key={i}>
+            <TableCell className="font-medium">{name}</TableCell>
+            <TableCell>{`${owner}`}</TableCell>
+            <TableCell>{amount}</TableCell>
+            <TableCell>{status}</TableCell>
+            <TableCell>{"X"}</TableCell>
+            <TableCell className="text-right">
+              <Link to={`/contract/${id}`} className="mr-2">
+                <Button className="rounded-full">
+                  <Icons.info className="h-4 w-4" />
+                </Button>
+              </Link>
+
+              {/* <Button className="rounded-full" onClick={() => {}}>
+                <Icons.trash className="h-4 w-4" />
+              </Button> */}
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
 interface AllBidsPageProps {}
 
 const AllBidsPage: React.FC<AllBidsPageProps> = ({}) => {
@@ -66,42 +109,7 @@ const AllBidsPage: React.FC<AllBidsPageProps> = ({}) => {
           </Link>
         </DashboardHeader>
 
-        <Table>
-          <TableCaption>A list of all available bids.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Owner</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>X</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {contracts.map(({ name, amount, owner, status }, i) => (
-              <TableRow key={i}>
-                <TableCell className="font-medium">{name}</TableCell>
-                <TableCell>{`${owner}`}</TableCell>
-                <TableCell>{amount}</TableCell>
-                <TableCell>{status}</TableCell>
-                <TableCell>{"X"}</TableCell>
-                <TableCell className="text-right">
-                  <Link to="/" className="mr-2">
-                    <Button className="rounded-full">
-                      <Icons.edit className="h-4 w-4" />
-                    </Button>
-                  </Link>
-
-                  <Button className="rounded-full" onClick={() => {}}>
-                    <Icons.trash className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <ContractTable contracts={contracts} />
       </DashboardShell>
     </DashboardLayout>
   );
