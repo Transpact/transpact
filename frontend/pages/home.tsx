@@ -63,10 +63,11 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
             className="rounded-2xl bg-muted px-4 py-1.5 text-sm font-medium"
             target="_blank"
           >
-            Vote us on Devpost
+            Like our project on Devpost
           </Link>
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-            Contracts and Tenders made decentralised with <br /> NEAR Protocol.
+            Seize control, contracts unfold, <br />
+            funds tracked, corruption controlled
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             An Decentralised App based on React and NEAR Protocol. <br />
