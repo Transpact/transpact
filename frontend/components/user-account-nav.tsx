@@ -9,6 +9,7 @@ import { UserAvatar } from "@/components/user-avatar";
 import { WalletContext } from "@/context/wallet-context";
 import { deleteAccount } from "@/lib/utils";
 import { useContext } from "react";
+import { globalLoading } from "react-global-loading";
 import { useNavigate } from "react-router-dom";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -48,13 +49,12 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
         <DropdownMenuItem
           className="cursor-pointer"
           onSelect={async (event) => {
+            globalLoading.show();
             event.preventDefault();
-            let result = await deleteAccount(wallet,contractId);
-            console.log(result)
-            if (result.status === "REMOVED"){
-              wallet.signOut();
-              navigator("/");
-            }
+            deleteAccount(wallet,contractId);
+            wallet.signOut();
+            navigator("/");
+            globalLoading.hide();
           }}
         >
           Delete Account

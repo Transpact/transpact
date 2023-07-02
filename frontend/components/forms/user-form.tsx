@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { WalletContext } from "@/context/wallet-context";
+import { globalLoading } from "react-global-loading";
 
 interface UserFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -57,19 +58,30 @@ export function UserForm({ className, ...props }: UserFormProps) {
 
   async function onSubmit(values: FormData) {
     try {
-      setLoading(true);
+
+      globalLoading.show();
       let userType: string | null = searchParams.get("user");
       const form_values = form.getValues();
 
       if (userType==="lister"){
         let result = await registerLister(wallet,contractId,form_values.firstName,form_values.email);
         if(result.status==="LISTER CREATED"){
+          toast({
+            title: "Lister Account",
+            description: "Successfully registered as Lister",
+            variant: "destructive",
+          });
           navigate("/dashboard/lister");
         }
       }
       else if (userType==="bidder"){
         let result = await registerContractor(wallet,contractId,form_values.firstName,form_values.email);
         if(result.status==="CONTRACTOR CREATED"){
+          toast({
+            title: "Contractor Account",
+            description: "Successfully registered as Contractor",
+            variant: "destructive",
+          });
           navigate("/dashboard/bidder");
         }
       }
@@ -84,7 +96,7 @@ export function UserForm({ className, ...props }: UserFormProps) {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      globalLoading.hide()
     }
   }
 

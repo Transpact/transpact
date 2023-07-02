@@ -7,6 +7,8 @@ import { siteConfig } from "@/config/site";
 import MainLayout from "@/components/layouts/main-layout";
 import { WalletContext } from "@/context/wallet-context";
 import { Link, useNavigate } from "react-router-dom";
+import { globalLoading } from "react-global-loading";
+import { toast } from "@/components/ui/use-toast";
 
 interface HomePageProps {}
 
@@ -23,12 +25,23 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
     if (!isSignedIn) {
       handleLogin();
     } else {
+      globalLoading.show();
       let res = await checkValidUser(wallet, contractId);
-
+      globalLoading.hide();
       if (res.status === "LISTER") {
+        toast({
+          title: "Listner Account Found",
+          description: "You are Successfully Logged in",
+          variant: "destructive",
+        });
         navigator("/dashboard/lister");
       }
       if (res.status === "CONTRACTOR") {
+        toast({
+          title: "Contractor Account Found",
+          description: "You are Successfully Logged in",
+          variant: "destructive",
+        });
         navigator("/dashboard/bidder");
       }
       if (res.status === "NOTCREATED") {
