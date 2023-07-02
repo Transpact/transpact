@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { Link } from "react-router-dom";
 import { SAMPLE_CONTRACT } from "@/lib/data";
+import { formatDate } from "@/lib/utils";
 
 export const ContractTable: React.FC<{
   contracts: Contract[];
@@ -28,35 +29,37 @@ export const ContractTable: React.FC<{
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
-          <TableHead>Owner</TableHead>
           <TableHead>Amount</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead>X</TableHead>
+          <TableHead>Start</TableHead>
+          <TableHead>Deadline</TableHead>
           <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
 
       <TableBody>
-        {contracts.map(({ name, amount, owner, status, id }, i) => (
-          <TableRow key={i}>
-            <TableCell className="font-medium">{name}</TableCell>
-            <TableCell>{`${owner}`}</TableCell>
-            <TableCell>{amount}</TableCell>
-            <TableCell>{status}</TableCell>
-            <TableCell>{"X"}</TableCell>
-            <TableCell className="text-right">
-              <Link to={`/contract/${id}`} className="mr-2">
-                <Button className="rounded-full">
-                  <Icons.info className="h-4 w-4" />
-                </Button>
-              </Link>
+        {contracts.map(
+          ({ name, amount, owner, status, id, startDate, endDate }, i) => (
+            <TableRow key={i}>
+              <TableCell className="font-medium">{name}</TableCell>
+              <TableCell>{amount}</TableCell>
+              <TableCell>{status}</TableCell>
+              <TableCell>{formatDate(startDate ?? new Date())}</TableCell>
+              <TableCell>{formatDate(startDate ?? new Date())}</TableCell>
+              <TableCell className="text-right">
+                <Link to={`/contract/${id}`} className="mr-2">
+                  <Button className="rounded-full">
+                    <Icons.info className="h-4 w-4" />
+                  </Button>
+                </Link>
 
-              {/* <Button className="rounded-full" onClick={() => {}}>
+                {/* <Button className="rounded-full" onClick={() => {}}>
                 <Icons.trash className="h-4 w-4" />
               </Button> */}
-            </TableCell>
-          </TableRow>
-        ))}
+              </TableCell>
+            </TableRow>
+          )
+        )}
       </TableBody>
     </Table>
   );
