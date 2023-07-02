@@ -66,12 +66,11 @@ pub struct Contractor{
     user_hash: String,
     account_id: AccountId,
     account_status: AccountStatus,
-    license_number: String,
 }
 
 
 impl Contractor {
-    fn new(name: String, email: String, account_id:AccountId, license_number:String) -> Self {
+    fn new(name: String, email: String, account_id:AccountId) -> Self {
 
         let user_hash = generate_user_hash(&name,&email);
         Self {
@@ -80,7 +79,6 @@ impl Contractor {
             user_hash,
             account_id,
             account_status: AccountStatus::UNVERIFIED,
-            license_number,
         }
     }
 }
@@ -184,7 +182,6 @@ pub struct Contract {
 impl Default for Contract{
     fn default() -> Self {
 
-        let pk = env::signer_account_pk();
         Self { 
             listers: UnorderedMap::new(b"hlakj1".to_vec()),
             contractors: UnorderedMap::new(b"9834hdjf".to_vec()),
@@ -202,18 +199,6 @@ impl Contract {
         let listers_account_id = env::signer_account_id();
         let listers_pub_key = env::signer_account_pk();
 
-        // match self.contractors.get(&listers_pub_key) {
-        //     Some(_) =>{
-        //         return Response{
-        //             status: String::from("NOTCREATED"),
-        //             message: String::from("User Exists"),
-        //             data: None
-        //         }; 
-        //     }
-        //     None => {
-
-        //     }
-        // }
 
         let mut lister = Lister::new(name,email,listers_account_id);
         lister.account_status = AccountStatus::VERIFIED;
@@ -223,20 +208,20 @@ impl Contract {
 
         log!("Lister is created successfully name: {}, Total listners: {}", lister.name, self.listers.len());
         return Response{
-            status: String::from("CREATED"),
-            message: String::from("Lister is created successfully"),
-            data: None
+            status: String::from("LISTER CREATED"),
+            message: String::from("Lister created successfully"),
+            data: Some(lister.user_hash)
         };
     }
 
-    pub fn create_contractor(&mut self, name: String, email: String,license_number:String) -> Response{
+    pub fn create_contractor(&mut self, name: String, email: String) -> Response{
 
         
         let contractors_account_id = env::signer_account_id();
         let contractors_pub_key = env::signer_account_pk();
         
        
-        let mut contractor = Contractor::new(name,email,contractors_account_id,license_number);
+        let mut contractor = Contractor::new(name,email,contractors_account_id);
         contractor.account_status = AccountStatus::VERIFIED;
 
         self.contractors.insert(&contractors_pub_key,&contractor);
@@ -244,9 +229,9 @@ impl Contract {
 
         log!("Contractor is created successfully name: {}, Total Contractors: {}", contractor.name, self.contractors.len());
         return Response{
-            status: String::from("CREATED"),
+            status: String::from("CONTRACTOR CREATED"),
             message: String::from("Contractor is created successfully"),
-            data: None
+            data: Some(contractor.user_hash)
         };
     }
 
@@ -259,13 +244,13 @@ impl Contract {
 
         match lister {
             Some(lis) =>{
-                Response { status: "NOTCREATED".to_string(), message: "User exists".to_string(), data: Some(lis.user_hash)}
+                Response { status: "LISTER".to_string(), message: "User exists".to_string(), data: Some(lis.user_hash)}
             }
             None => {
 
                 match contractors {
                     Some(contr) =>{
-                        Response { status: "NOTCREATED".to_string(), message: "User exists".to_string(), data: Some(contr.user_hash)}
+                        Response { status: "CONTRACTOR".to_string(), message: "User exists".to_string(), data: Some(contr.user_hash)}
                     }
                     None => {
                         Response { status: "NOTCREATED".to_string(), message: "User Does Not exists".to_string(), data: None}
@@ -282,8 +267,8 @@ impl Contract {
 
         let pub_id = env::signer_account_pk();
 
-        let mut lister: Option<Lister> = self.listers.get(&pub_id);
-        let mut contractors: Option<Contractor> = self.contractors.get(&pub_id);
+        let lister: Option<Lister> = self.listers.get(&pub_id);
+        let contractors: Option<Contractor> = self.contractors.get(&pub_id);
 
         match lister {
             Some(lis) =>{
@@ -317,7 +302,8 @@ impl Contract {
         let lister = self.listers.get(&lister_pub_key);
         match lister {
             Some(litr) => {
-                assert_ne!(litr.account_status,AccountStatus::VERIFIED, "User is prohibitted by Community");
+
+                // assert_ne!(litr.account_status,AccountStatus::VERIFIED, "User is prohibitted by Community");
 
                 let contract = BuisnessContract::new(
                     title,
@@ -329,7 +315,7 @@ impl Contract {
                     end_date,
                 );
 
-                return Response { status: "NOTCREATED".to_string(), message: "Invalid/Unregisterd User".to_string(), data: None}
+                return Response { status: "CREATED".to_string(), message: "Contract created successfully".to_string(), data: Some(contract.contract_id)}
 
 
             }
@@ -337,18 +323,6 @@ impl Contract {
                 return Response { status: "NOTCREATED".to_string(), message: "Invalid/Unregisterd User".to_string(), data: None}
             }
         }
-
-        // let contract = 
-
-        // contract_id: String,
-        // title: String,
-        // description: String,
-        // contractor: PublicKey,
-        // lister: PublicKey,
-        // is_milestoned: bool,
-        // start_date: Timestamp,
-        // end_date: Timestamp,
-        // wallet: MultiSigWallet,
 
     }   
 

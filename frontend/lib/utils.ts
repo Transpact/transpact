@@ -41,7 +41,7 @@ export async function checkValidUser(wallet:Wallet,contractId: string|undefined)
 }
 
 
-export async function registerLister(wallet:Wallet,contractId:string,name:string,email:string) {
+export async function registerLister(wallet:Wallet,contractId:string|undefined,name:string,email:string) {
 
   try{
     let resp = await wallet.callMethod({
@@ -53,6 +53,80 @@ export async function registerLister(wallet:Wallet,contractId:string,name:string
 
     let res = await wallet.getTransactionResult(resp.transaction.hash)
     return res;
+  }
+
+  catch(err){
+    console.log("error in check user",err);
+  }
+
+}
+
+export async function registerContractor(wallet:Wallet,contractId:string|undefined,name:string,email:string) {
+
+  try{
+    let resp = await wallet.callMethod({
+      method:'create_contractor',
+      contractId:contractId,
+      args:{name,email},
+      gas:"3000000000000"
+    });
+
+    let res = await wallet.getTransactionResult(resp.transaction.hash)
+    return res;
+  }
+
+  catch(err){
+    console.log("error in check user",err);
+  }
+
+}
+
+export async function deleteAccount(wallet:Wallet,contractId:string|undefined) {
+
+  try{
+    let resp = await wallet.callMethod({
+      method:'remove_user',
+      contractId:contractId,
+      args:{},
+      gas:"3000000000000"
+    });
+
+    let res = await wallet.getTransactionResult(resp.transaction.hash)
+    return res;
+  }
+
+  catch(err){
+    console.log("error in check user",err);
+  }
+
+}
+
+
+
+export async function createContract(wallet:Wallet,contractId:string|undefined,title:string,description:string,is_milestoned:boolean,start_date:Date,end_date:Date) {
+
+  try{
+
+
+    let resp = await wallet.callMethod({
+      method:'create_contract',
+      contractId:contractId,
+      args:{
+        title,
+        description,
+        is_milestoned,
+        start_date: start_date.getTime(),
+        end_date: end_date.getTime()
+      },
+      gas:"3000000000000"
+    });
+
+    let res = await wallet.getTransactionResult(resp.transaction.hash)
+    return res;
+  }
+
+  catch(err){
+    console.log("error in check user",err);
   }
 
 }

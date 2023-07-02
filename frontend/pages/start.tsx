@@ -26,14 +26,14 @@ const StartPage: React.FC<StartPageProps> = ({}) => {
 
           <div className="space-x-4">
             <Link
-              to="/verify-user?redirect=/dashboard/lister"
+              to="/verify-user?redirect=/dashboard/lister&user=lister"
               className={cn(buttonVariants({ size: "lg" }))}
             >
               Lister
             </Link>
 
             <Link
-              to="/verify-user?redirect=/dashboard/bidder"
+              to="/verify-user?redirect=/dashboard/bidder&user=bidder"
               className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
             >
               Bidder

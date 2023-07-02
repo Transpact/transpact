@@ -7,7 +7,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/user-avatar";
 import { WalletContext } from "@/context/wallet-context";
+import { deleteAccount } from "@/lib/utils";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user: {
@@ -18,7 +20,8 @@ interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function UserAccountNav({ user }: UserAccountNavProps) {
-  const { wallet } = useContext(WalletContext)!;
+  const { wallet,contractId } = useContext(WalletContext)!;
+  const navigator = useNavigate();
 
   return (
     <DropdownMenu>
@@ -41,6 +44,21 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
           </div>
         </div>
         <DropdownMenuSeparator />
+
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onSelect={async (event) => {
+            event.preventDefault();
+            let result = await deleteAccount(wallet,contractId);
+            console.log(result)
+            if (result.status === "REMOVED"){
+              wallet.signOut();
+              navigator("/");
+            }
+          }}
+        >
+          Delete Account
+        </DropdownMenuItem>
 
         <DropdownMenuItem
           className="cursor-pointer"

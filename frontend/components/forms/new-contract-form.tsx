@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { cn } from "@/lib/utils";
+import { cn, createContract } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -26,6 +26,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "../ui/textarea";
+import { useNavigate } from "react-router-dom";
+import { WalletContext } from "@/context/wallet-context";
 
 interface NewContractFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -41,6 +43,10 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function NewContractForm({ className, ...props }: NewContractFormProps) {
+
+  const navigate = useNavigate();
+  const { isSignedIn,wallet,contractId } = React.useContext(WalletContext)!;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,7 +61,14 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
 
   async function onSubmit(values: FormData) {
     try {
-      setLoading(true);
+      setLoading(true); 
+      let values = form.getValues()
+
+      let result = await createContract(wallet,contractId,values.title,values.description,false,values.startDate,values.endDate);
+      console.log(result)
+      if(result.status==="CREATED"){
+        navigate("/dashboard/lister");
+      }
 
       // TODO: Add Logic
       console.log("NEW CONTRACT:", values);

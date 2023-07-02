@@ -2,7 +2,7 @@ import "regenerator-runtime/runtime";
 import React, { useContext, useEffect } from "react";
 
 import { checkValidUser, cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants,Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import MainLayout from "@/components/layouts/main-layout";
 import { WalletContext } from "@/context/wallet-context";
@@ -20,22 +20,29 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
     wallet.signIn();
   };
 
-  const initUserSetup = async () => {
+  const getStarted = async () => {
     
     if(!isSignedIn){
-      return;
+      handleLogin();
     }
-    let res = await checkValidUser(wallet,contractId);
-    console.log(res);
-    if (res.message==="User exists"){
-      navigator("/dashboard/lister");
+    else{
+      let res = await checkValidUser(wallet,contractId);
+
+      if (res.status==="LISTER"){
+        navigator("/dashboard/lister");
+      }
+      if (res.status==="CONTRACTOR"){
+        navigator("/dashboard/bidder");
+      }
+      if (res.status==="NOTCREATED"){
+        navigator("/start");
+      }
     }
     
   }
   
   useEffect(()=>{
     wallet.startUp();
-    initUserSetup();
   })
 
   return (
@@ -57,9 +64,9 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
             Transparent and trustless contract creation and tracking.
           </p>
           <div className="space-x-4">
-            <Link className={cn(buttonVariants({ size: "lg" }))} to="/start">
+            <Button className={cn(buttonVariants({ size: "lg" }))} onClick={getStarted}>
               Get Started
-            </Link>
+            </Button>
 
             <Link
               to={siteConfig.links.github}

@@ -37,17 +37,10 @@ impl ContractorVerification {
         }
     }
 
-    // Checks if a contractor with the given ID is verified.
-    pub fn is_contractor_verified(&self, contractor_id: String) -> bool {
-        if let Some(contractor) = self.contractors.get(&contractor_id) {
-            return contractor.verified;
-        }
-        false
-    }
-
-    // DUMMY IMPLEMENTATION: Checks the validity of a license number (not real implementation)
-    fn check_license_validity(&self, license_number: &str) -> bool {
-        // logic for license number verification with the government DB
-        license_number == "VALID_LICENSE_NUMBER"
-    }
+  // DUMMY IMPLEMENTATION: Checks the validity of a license no.
+  fn check_license_validity(&self, license_number: &str) -> bool {
+    //simple check that returns true if the license number matches a predefined valid license number
+    let valid_license_number = "VALID_LICENSE_NUMBER";
+    license_number == valid_license_number
+}
 }

@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { cn, registerLister } from "@/lib/utils";
+import { cn, registerContractor, registerLister } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,18 +58,23 @@ export function UserForm({ className, ...props }: UserFormProps) {
   async function onSubmit(values: FormData) {
     try {
       setLoading(true);
-
+      let userType: string | null = searchParams.get("user");
       const form_values = form.getValues();
-      // TODO: Add Logic
-      if (contractId!==undefined){
-        
-        let result = await registerLister(wallet,contractId,form_values.firstName,form_values.email);
-        if(result.status==="CREATED"){
-          const redirectURL = searchParams.get("redirect") ?? "/";
-          navigate(redirectURL);
-        }
 
+      if (userType==="lister"){
+        let result = await registerLister(wallet,contractId,form_values.firstName,form_values.email);
+        if(result.status==="LISTER CREATED"){
+          navigate("/dashboard/lister");
+        }
       }
+      else if (userType==="bidder"){
+        let result = await registerContractor(wallet,contractId,form_values.firstName,form_values.email);
+        if(result.status==="CONTRACTOR CREATED"){
+          navigate("/dashboard/bidder");
+        }
+      }
+      
+      
     } catch (err: any) {
       const error = err;
 
