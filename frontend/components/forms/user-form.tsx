@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { cn } from "@/lib/utils";
+import { cn, registerLister } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { WalletContext } from "@/context/wallet-context";
 
 interface UserFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -34,6 +35,9 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function UserForm({ className, ...props }: UserFormProps) {
+
+  const { isSignedIn,wallet,contractId } = React.useContext(WalletContext)!;
+
   let [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -55,11 +59,17 @@ export function UserForm({ className, ...props }: UserFormProps) {
     try {
       setLoading(true);
 
+      const form_values = form.getValues();
       // TODO: Add Logic
-      console.log("NEW USER:", values);
+      if (contractId!==undefined){
+        
+        let result = await registerLister(wallet,contractId,form_values.firstName,form_values.email);
+        if(result.status==="CREATED"){
+          const redirectURL = searchParams.get("redirect") ?? "/";
+          navigate(redirectURL);
+        }
 
-      const redirectURL = searchParams.get("redirect") ?? "/";
-      navigate(redirectURL);
+      }
     } catch (err: any) {
       const error = err;
 

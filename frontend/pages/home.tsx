@@ -1,23 +1,42 @@
 import "regenerator-runtime/runtime";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
-import { cn } from "@/lib/utils";
+import { checkValidUser, cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import MainLayout from "@/components/layouts/main-layout";
 import { WalletContext } from "@/context/wallet-context";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 interface HomePageProps {}
 
 const HomePage: React.FC<HomePageProps> = ({}) => {
-  const { wallet } = useContext(WalletContext)!;
-
+  const { wallet,contractId,isSignedIn } = useContext(WalletContext)!;
+  const navigator = useNavigate();
   const stars = 0;
 
   const handleLogin = async () => {
     wallet.signIn();
   };
+
+  const initUserSetup = async () => {
+    
+    if(!isSignedIn){
+      return;
+    }
+    let res = await checkValidUser(wallet,contractId);
+    console.log(res);
+    if (res.message==="User exists"){
+      navigator("/dashboard/lister");
+    }
+    
+  }
+  
+  useEffect(()=>{
+    wallet.startUp();
+    initUserSetup();
+  })
 
   return (
     <MainLayout>

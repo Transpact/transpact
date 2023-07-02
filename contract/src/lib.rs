@@ -183,9 +183,11 @@ pub struct Contract {
 
 impl Default for Contract{
     fn default() -> Self {
+
+        let pk = env::signer_account_pk();
         Self { 
-            listers: UnorderedMap::new(Vec::new()),
-            contractors: UnorderedMap::new(Vec::new()),
+            listers: UnorderedMap::new(b"hlakj1".to_vec()),
+            contractors: UnorderedMap::new(b"9834hdjf".to_vec()),
             lister_contracts: UnorderedMap::new(Vec::new()),
             contractor_contracts: UnorderedMap::new(Vec::new()),
         }
@@ -200,8 +202,18 @@ impl Contract {
         let listers_account_id = env::signer_account_id();
         let listers_pub_key = env::signer_account_pk();
 
-        let userExists = self.contractors.get(&listers_pub_key);
-        assert_ne!(userExists,None,"User already Exists");
+        // match self.contractors.get(&listers_pub_key) {
+        //     Some(_) =>{
+        //         return Response{
+        //             status: String::from("NOTCREATED"),
+        //             message: String::from("User Exists"),
+        //             data: None
+        //         }; 
+        //     }
+        //     None => {
+
+        //     }
+        // }
 
         let mut lister = Lister::new(name,email,listers_account_id);
         lister.account_status = AccountStatus::VERIFIED;
@@ -223,11 +235,7 @@ impl Contract {
         let contractors_account_id = env::signer_account_id();
         let contractors_pub_key = env::signer_account_pk();
         
-        let userExists = self.contractors.get(&contractors_pub_key);
-        assert_ne!(userExists,None,"User already Exists");
        
-        // assert_eq!(userExists,),"User already exists");
-
         let mut contractor = Contractor::new(name,email,contractors_account_id,license_number);
         contractor.account_status = AccountStatus::VERIFIED;
 
@@ -259,6 +267,36 @@ impl Contract {
                     Some(contr) =>{
                         Response { status: "NOTCREATED".to_string(), message: "User exists".to_string(), data: Some(contr.user_hash)}
                     }
+                    None => {
+                        Response { status: "NOTCREATED".to_string(), message: "User Does Not exists".to_string(), data: None}
+                    }
+                }
+
+            }
+
+        }
+        
+    }
+
+    pub fn remove_user(&mut self) -> Response{
+
+        let pub_id = env::signer_account_pk();
+
+        let mut lister: Option<Lister> = self.listers.get(&pub_id);
+        let mut contractors: Option<Contractor> = self.contractors.get(&pub_id);
+
+        match lister {
+            Some(lis) =>{
+                
+                self.listers.remove(&pub_id);
+                Response { status: "REMOVED".to_string(), message: "Lister REMOVED".to_string(), data: Some(lis.user_hash)}
+            }
+            None => {
+
+                match contractors {
+                    Some(contr) =>{
+                        self.listers.remove(&pub_id);
+                        Response { status: "REMOVED".to_string(), message: "Contractor REMOVED".to_string(), data: Some(contr.user_hash)}                    }
                     None => {
                         Response { status: "NOTCREATED".to_string(), message: "User Does Not exists".to_string(), data: None}
                     }
@@ -317,31 +355,32 @@ impl Contract {
 
 }
 
-/*
- * The rest of this file holds the inline tests for the code above
- * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
- */
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-//     #[test]
-//     fn get_default_greeting() {
-//         let contract = Contract::default();
-//         // this test did not call set_greeting so should return the default "Hello" greeting
-//         assert_eq!(
-//             contract.get_greeting(),
-//             "Hello".to_string()
-//         );
-//     }
+    #[test]
+    fn create_lister(){
+         let mut contract = Contract::default();
+         let a: Response = contract.create_lister("swapnil".to_string(),"swapnil@gmail.com".to_string());
+         let b = contract.create_lister("swapnil".to_string(),"swapnil@gmail.com".to_string());
+         contract.create_lister("swapnil".to_string(),"swapnil@gmail.com".to_string());
+         contract.create_lister("swapnil".to_string(),"swapnil@gmail.com".to_string());
 
-//     #[test]
-//     fn set_then_get_greeting() {
-//         let mut contract = Contract::default();
-//         contract.set_greeting("howdy".to_string());
-//         assert_eq!(
-//             contract.get_greeting(),
-//             "howdy".to_string()
-//         );
-//     }
-// }
+         assert_eq!(contract.listers.len(),1);
+         assert_eq!(a.status,"CREATED");
+         assert_eq!(b.status,"CREATED");
+ 
+    }
+
+
+   #[test]
+   fn get_me(){
+        let mut contract = Contract::default();
+        contract.create_lister("swapnil".to_string(),"swapnil@gmail.com".to_string());
+
+        let a: Response = contract.get_user();
+        assert_eq!(a.message,"NOTCREATED");
+
+   }
+}
