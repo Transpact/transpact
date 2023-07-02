@@ -15,6 +15,7 @@ import BidderDashboard from "./pages/bidder-dashboard";
 import VerifyUser from "./pages/verify-user";
 import AllBidsPage from "./pages/all-bids";
 import { GlobalLoading } from "react-global-loading";
+import ContractDetailsPage from "./pages/contract-detail";
 
 interface AppProps {
   isSignedIn: boolean;
@@ -58,6 +59,10 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
       {
         path: "/verify-user",
         element: <VerifyUser />,
+      },
+      {
+        path: "/contract/:id",
+        element: <ContractDetailsPage />,
       },
     ],
     {}

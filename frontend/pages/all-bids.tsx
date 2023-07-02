@@ -17,6 +17,7 @@ import { DashboardHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { Link } from "react-router-dom";
+import { SAMPLE_CONTRACT } from "@/lib/data";
 
 interface AllBidsPageProps {}
 
@@ -33,26 +34,7 @@ const AllBidsPage: React.FC<AllBidsPageProps> = ({}) => {
 
     try {
       // TODO: Get from blockchain
-      const contracts: Contract[] = [
-        {
-          name: "Test",
-          owner: "prathamesh_m.testnet",
-          amount: "1000",
-          status: "progress",
-        },
-        {
-          name: "Test",
-          owner: "prathamesh_m.testnet",
-          amount: "1000",
-          status: "progress",
-        },
-        {
-          name: "Test",
-          owner: "prathamesh_m.testnet",
-          amount: "1000",
-          status: "progress",
-        },
-      ];
+      const contracts: Contract[] = SAMPLE_CONTRACT;
 
       setContracts(contracts);
     } catch (e) {

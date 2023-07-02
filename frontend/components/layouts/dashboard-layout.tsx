@@ -8,7 +8,7 @@ import { WalletContext } from "@/context/wallet-context";
 import DashboardSkeleton from "../ui/dashboard-skeleton";
 
 interface DashboardLayoutProps {
-  type: "lister" | "bidder";
+  type: "lister" | "bidder" | "none";
   loading: boolean;
   heading: string;
   text: string;
@@ -46,7 +46,9 @@ export default function DashboardLayout({
         <aside className="hidden w-[200px] flex-col md:flex">
           <DashboardNav
             items={
-              type === "lister"
+              type === "none"
+                ? []
+                : type === "lister"
                 ? dashboardConfig.sidebarNav
                 : dashboardConfig.sidebarNavBidder
             }
