@@ -11,7 +11,7 @@ The core problem we aim to address is the inefficiency and lack of transparency 
 - With our platform, contract participants can enjoy increased trust and transparency in their business dealings. Contractors can have confidence that their work will be compensated appropriately, while listers can have peace of mind knowing that funds will be used responsibly. By combining the security and transparency of blockchain technology with contract management, we aim to revolutionize the way business contracts are created and managed.
 
 ## 🛠  How we built it
-
+For building Frontend we use React.js and TailwindCSS for animation. For storing data we use NEAR protocol. For writing Smart Contact we use Rust. Here the contractor registry smart contract implements a contract verification system using the NEAR blockchain platform. It allows for verifying contractors by checking their license numbers with a government database. The system maintains a HashMap to store contractor information, including their license numbers and verification status. When verifying a contractor, the system checks if the contractor is already verified and then validates the license number. If the license number is valid, the contractor is marked as verified and added to the HashMap. If the license number is invalid, an error is thrown.
 
 ## 💪Challenges we ran into
 - It is our first time building a complete Dapp on NEAR Protocol as well as working with Rust and Smart Contract writing at first we are unable to understand the working on the same. But we are able to do it after reading documentation or searching more about it.
