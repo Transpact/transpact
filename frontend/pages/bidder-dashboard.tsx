@@ -19,6 +19,7 @@ import { Icons } from "@/components/icons";
 import { Link } from "react-router-dom";
 import { SAMPLE_CONTRACT } from "@/lib/data";
 import { ContractTable } from "./all-bids";
+import { ContractContext } from "@/context/contract-context";
 
 interface BidderDashboardProps {}
 
@@ -26,7 +27,8 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
   const {} = useContext(WalletContext)!;
 
   const [loading, setLoading] = useState(false);
-  const [contracts, setContracts] = useState<Contract[]>([]);
+  // const [contracts, setContracts] = useState<Contract[]>([]);
+  const { contracts, setContracts } = useContext(ContractContext)!;
 
   const getContracts = async () => {
     if (loading) return;

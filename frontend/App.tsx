@@ -16,6 +16,11 @@ import VerifyUser from "./pages/verify-user";
 import AllBidsPage from "./pages/all-bids";
 import { GlobalLoading } from "react-global-loading";
 import ContractDetailsPage from "./pages/contract-detail";
+import {
+  ContractContext,
+  ContractContextType,
+} from "./context/contract-context";
+import { SAMPLE_CONTRACT } from "./lib/data";
 
 interface AppProps {
   isSignedIn: boolean;
@@ -29,6 +34,8 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
     contractId: contractId,
     wallet: wallet,
   });
+
+  const [contract, setContract] = useState(SAMPLE_CONTRACT);
 
   const router = createBrowserRouter(
     [
@@ -70,10 +77,17 @@ const App: React.FC<AppProps> = ({ isSignedIn, contractId, wallet }) => {
 
   return (
     <WalletContext.Provider value={walletContext}>
-      <RouterProvider router={router} />
+      <ContractContext.Provider
+        value={{
+          contracts: contract,
+          setContracts: setContract,
+        }}
+      >
+        <RouterProvider router={router} />
 
-      <GlobalLoading zIndex={50} />
-      <Toaster />
+        <GlobalLoading zIndex={50} />
+        <Toaster />
+      </ContractContext.Provider>
     </WalletContext.Provider>
   );
 };

@@ -19,14 +19,15 @@ import { Icons } from "@/components/icons";
 import { Link } from "react-router-dom";
 import { SAMPLE_CONTRACT } from "@/lib/data";
 import { ContractTable } from "./all-bids";
+import { ContractContext } from "@/context/contract-context";
 
 interface ListerDashboardProps {}
 
 const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
   const {} = useContext(WalletContext)!;
+  const { contracts, setContracts } = useContext(ContractContext)!;
 
   const [loading, setLoading] = useState(false);
-  const [contracts, setContracts] = useState<Contract[]>([]);
 
   const getContracts = async () => {
     if (loading) return;
@@ -37,7 +38,7 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
       // TODO: Get from blockchain
       const contracts: Contract[] = SAMPLE_CONTRACT;
 
-      setContracts(contracts);
+      // setContract(contracts);
     } catch (e) {
       console.log(e);
     } finally {

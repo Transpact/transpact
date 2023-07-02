@@ -28,6 +28,8 @@ import {
 import { Textarea } from "../ui/textarea";
 import { useNavigate } from "react-router-dom";
 import { WalletContext } from "@/context/wallet-context";
+import { ContractContext } from "@/context/contract-context";
+import { globalLoading } from "react-global-loading";
 
 interface NewContractFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -43,9 +45,9 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function NewContractForm({ className, ...props }: NewContractFormProps) {
-
   const navigate = useNavigate();
-  const { isSignedIn,wallet,contractId } = React.useContext(WalletContext)!;
+  const { isSignedIn, wallet, contractId } = React.useContext(WalletContext)!;
+  const { contracts, setContracts } = React.useContext(ContractContext)!;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,17 +63,39 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
 
   async function onSubmit(values: FormData) {
     try {
-      setLoading(true); 
-      let values = form.getValues()
+      setLoading(true);
+      let values = form.getValues();
 
-      let result = await createContract(wallet,contractId,values.title,values.description,false,values.startDate,values.endDate);
-      console.log(result)
-      if(result.status==="CREATED"){
+      globalLoading.show();
+      let result = await createContract(
+        wallet,
+        contractId,
+        values.title,
+        values.description,
+        false,
+        values.startDate,
+        values.endDate
+      );
+
+      console.log(result);
+      if (result.status === "CREATED") {
         navigate("/dashboard/lister");
       }
 
-      // TODO: Add Logic
-      console.log("NEW CONTRACT:", values);
+      const newContract: Contract = {
+        name: values.title,
+        amount: values.totalAmount.toString(),
+        description: values.description,
+        startDate: values.startDate,
+        endDate: values.endDate,
+        files: [""],
+        owner: "",
+        id: Math.round(Math.random() * 100).toString(),
+        status: "progress",
+      };
+
+      setContracts([...contracts, newContract]);
+      globalLoading.hide();
     } catch (err: any) {
       const error = err;
 

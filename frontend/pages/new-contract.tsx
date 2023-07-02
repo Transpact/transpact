@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { NewContractForm } from "@/components/forms/new-contract-form";
 import { Link } from "react-router-dom";
+import { ContractContext } from "@/context/contract-context";
 
 interface NewContractProps {}
 
 const NewContract: React.FC<NewContractProps> = ({}) => {
   const {} = useContext(WalletContext)!;
+  const { contracts, setContracts } = useContext(ContractContext)!;
 
   const [loading, setLoading] = useState(false);
 
