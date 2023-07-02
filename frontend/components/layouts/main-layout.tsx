@@ -1,8 +1,6 @@
 import "regenerator-runtime/runtime";
 import React, { useContext } from "react";
 
-import { SignInPrompt, SignOutButton } from "@/ui-components";
-import { Wallet } from "@/near-wallet";
 import { Button } from "@/components/ui/button";
 import { marketingConfig } from "@/config/marketing";
 import { cn } from "@/lib/utils";

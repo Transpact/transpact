@@ -2,17 +2,16 @@ import "regenerator-runtime/runtime";
 import React, { useContext, useEffect } from "react";
 
 import { checkValidUser, cn } from "@/lib/utils";
-import { buttonVariants,Button } from "@/components/ui/button";
+import { buttonVariants, Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import MainLayout from "@/components/layouts/main-layout";
 import { WalletContext } from "@/context/wallet-context";
 import { Link, useNavigate } from "react-router-dom";
 
-
 interface HomePageProps {}
 
 const HomePage: React.FC<HomePageProps> = ({}) => {
-  const { wallet,contractId,isSignedIn } = useContext(WalletContext)!;
+  const { wallet, contractId, isSignedIn } = useContext(WalletContext)!;
   const navigator = useNavigate();
   const stars = 0;
 
@@ -21,29 +20,26 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
   };
 
   const getStarted = async () => {
-    
-    if(!isSignedIn){
+    if (!isSignedIn) {
       handleLogin();
-    }
-    else{
-      let res = await checkValidUser(wallet,contractId);
+    } else {
+      let res = await checkValidUser(wallet, contractId);
 
-      if (res.status==="LISTER"){
+      if (res.status === "LISTER") {
         navigator("/dashboard/lister");
       }
-      if (res.status==="CONTRACTOR"){
+      if (res.status === "CONTRACTOR") {
         navigator("/dashboard/bidder");
       }
-      if (res.status==="NOTCREATED"){
+      if (res.status === "NOTCREATED") {
         navigator("/start");
       }
     }
-    
-  }
-  
-  useEffect(()=>{
+  };
+
+  useEffect(() => {
     wallet.startUp();
-  })
+  }, []);
 
   return (
     <MainLayout>
@@ -64,7 +60,10 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
             Transparent and trustless contract creation and tracking.
           </p>
           <div className="space-x-4">
-            <Button className={cn(buttonVariants({ size: "lg" }))} onClick={getStarted}>
+            <Button
+              className={cn(buttonVariants({ size: "lg" }))}
+              onClick={getStarted}
+            >
               Get Started
             </Button>
 
