@@ -29,7 +29,7 @@ It was hard to make a fully responsive and beautiful UI of Transpact. But we are
 
 ## 🛠 What's next for Transpact
 Adding some amazing features like :- 
-- ** Platform Licensing:**     Offer different licensing options for businesses and enterprises to use your contract management platform. Charge a licensing fee based on the number of users, contracts, or specific features included in the license.
+- **Platform Licensing:**     Offer different licensing options for businesses and enterprises to use your contract management platform. Charge a licensing fee based on the number of users, contracts, or specific features included in the license.
  - **Enterprise Integration:** Provide integration services with existing enterprise systems such as CRM, ERP, or project management software. Charge a fee for seamless integration and data synchronization between your platform and their systems.
 - **Customization and Consulting:** Offer customization services to tailor your platform to the unique requirements of individual businesses. Provide consulting services to help businesses optimize their contract management processes. 
 - **Premium Support:**   Offer enhanced support services such as dedicated account managers, priority assistance, and extended support hours. Charge a subscription fee or premium support package for access to these services.
