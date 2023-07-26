@@ -8,12 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/icons";
+import { useTheme } from "next-themes";
 
 export function ModeToggle() {
-  // const { setTheme } = useTheme();
-
-  // TODO: Fix Theme
-  const setTheme = console.log;
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>

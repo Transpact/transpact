@@ -8,6 +8,8 @@ import { SAMPLE_CONTRACT } from "@/lib/data";
 import { ContractContext } from "@/context/contract-context";
 import { GlobalLoading } from "react-global-loading";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/theme-provider";
+
 const CONTRACT_ADDRESS = "dev-1688285985299-62443913276139";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -36,18 +38,20 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <WalletContext.Provider value={walletContext}>
-      <ContractContext.Provider
-        value={{
-          contracts: contract,
-          setContracts: setContract,
-        }}
-      >
-        <Component {...pageProps} />
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <WalletContext.Provider value={walletContext}>
+        <ContractContext.Provider
+          value={{
+            contracts: contract,
+            setContracts: setContract,
+          }}
+        >
+          <Component {...pageProps} />
 
-        <GlobalLoading zIndex={50} />
-        <Toaster />
-      </ContractContext.Provider>
-    </WalletContext.Provider>
+          <GlobalLoading zIndex={50} />
+          <Toaster />
+        </ContractContext.Provider>
+      </WalletContext.Provider>
+    </ThemeProvider>
   );
 }
