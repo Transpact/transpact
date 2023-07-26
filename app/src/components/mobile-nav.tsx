@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLockBody } from "@/hooks/use-lock-body";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
-import { MainNavItem } from "@/../types";
+import { MainNavItem } from "~/types";
 
 interface MobileNavProps {
   items: MainNavItem[];

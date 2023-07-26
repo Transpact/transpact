@@ -1,4 +1,4 @@
-import { SidebarNavItem } from "@/../types";
+import { SidebarNavItem } from "~/types";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { useRouter } from "next/router";
