@@ -160,7 +160,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               control={form.control}
               name="startDate"
               render={({ field }) => (
-                <FormItem className="flex flex-col w-full">
+                <FormItem className="flex w-full flex-col">
                   <FormLabel>Start Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -168,7 +168,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "pl-3 text-left font-normal w-full",
+                            "w-full pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -203,7 +203,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               control={form.control}
               name="endDate"
               render={({ field }) => (
-                <FormItem className="flex flex-col w-full">
+                <FormItem className="flex w-full flex-col">
                   <FormLabel>End Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -211,7 +211,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "pl-3 text-left font-normal w-full",
+                            "w-full pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground"
                           )}
                         >

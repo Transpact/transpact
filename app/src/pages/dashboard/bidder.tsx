@@ -3,15 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { WalletContext } from "@/context/wallet-context";
 import DashboardLayout from "@/components/layouts/dashboard-layout";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { DashboardShell } from "@/components/shell";
 import { DashboardHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";

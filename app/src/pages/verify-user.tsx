@@ -20,7 +20,7 @@ const VerifyUser: React.FC<VerifyUserProps> = ({}) => {
   return (
     <MainLayout>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
-        <Card className="max-w-md mx-auto">
+        <Card className="mx-auto max-w-md">
           <CardHeader />
           <CardContent>
             <UserForm className="max-w-sm" />
