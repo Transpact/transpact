@@ -10,7 +10,7 @@ interface DashboardNavProps {
 
 export function DashboardNav({ items }: DashboardNavProps) {
   const router = useRouter();
-  const path = location.pathname;
+  const path = router.pathname;
 
   if (!items?.length) {
     return null;
