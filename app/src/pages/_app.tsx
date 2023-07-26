@@ -14,7 +14,7 @@ const CONTRACT_ADDRESS = "dev-1688285985299-62443913276139";
 
 export default function App({ Component, pageProps }: AppProps) {
   const wallet = new Wallet({ createAccessKeyFor: CONTRACT_ADDRESS });
-  const isSignedIn = wallet.startUp();
+  // const isSignedIn = wallet.startUp();
   const [contract, setContract] = useState(SAMPLE_CONTRACT);
 
   const [walletContext, setWalletContext] = useState<WalletContextType>({
