@@ -1,0 +1,4 @@
+{
+  "eslint.workingDirectories": ["./app", "./integration-tests"],
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}
