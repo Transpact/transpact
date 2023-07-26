@@ -2,14 +2,10 @@ import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
 import { cn, registerContractor, registerLister } from "@/lib/utils";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { toast } from "@/components/ui/use-toast";
-
 import {
   Form,
   FormControl,
@@ -18,9 +14,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useSearchParams, useNavigate } from "react-router-dom";
 import { WalletContext } from "@/context/wallet-context";
 import { globalLoading } from "react-global-loading";
+import { useRouter } from "next/router";
 
 interface UserFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -36,11 +32,9 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function UserForm({ className, ...props }: UserFormProps) {
+  const { isSignedIn, wallet, contractId } = React.useContext(WalletContext)!;
 
-  const { isSignedIn,wallet,contractId } = React.useContext(WalletContext)!;
-
-  let [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -58,35 +52,41 @@ export function UserForm({ className, ...props }: UserFormProps) {
 
   async function onSubmit(values: FormData) {
     try {
-
       globalLoading.show();
-      let userType: string | null = searchParams.get("user");
+      let userType: string | null = router.query.user?.toString() ?? null;
       const form_values = form.getValues();
 
-      if (userType==="lister"){
-        let result = await registerLister(wallet,contractId,form_values.firstName,form_values.email);
-        if(result.status==="LISTER CREATED"){
+      if (userType === "lister") {
+        let result = await registerLister(
+          wallet,
+          contractId,
+          form_values.firstName,
+          form_values.email
+        );
+        if (result.status === "LISTER CREATED") {
           toast({
             title: "Lister Account",
             description: "Successfully registered as Lister",
             variant: "destructive",
           });
-          navigate("/dashboard/lister");
+          router.replace("/dashboard/lister");
         }
-      }
-      else if (userType==="bidder"){
-        let result = await registerContractor(wallet,contractId,form_values.firstName,form_values.email);
-        if(result.status==="CONTRACTOR CREATED"){
+      } else if (userType === "bidder") {
+        let result = await registerContractor(
+          wallet,
+          contractId,
+          form_values.firstName,
+          form_values.email
+        );
+        if (result.status === "CONTRACTOR CREATED") {
           toast({
             title: "Contractor Account",
             description: "Successfully registered as Contractor",
             variant: "destructive",
           });
-          navigate("/dashboard/bidder");
+          router.replace("/dashboard/bidder");
         }
       }
-      
-      
     } catch (err: any) {
       const error = err;
 
@@ -96,7 +96,7 @@ export function UserForm({ className, ...props }: UserFormProps) {
         variant: "destructive",
       });
     } finally {
-      globalLoading.hide()
+      globalLoading.hide();
     }
   }
 

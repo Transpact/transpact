@@ -26,10 +26,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "../ui/textarea";
-import { useNavigate } from "react-router-dom";
 import { WalletContext } from "@/context/wallet-context";
 import { ContractContext } from "@/context/contract-context";
 import { globalLoading } from "react-global-loading";
+import { useRouter } from "next/router";
 
 interface NewContractFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -45,7 +45,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function NewContractForm({ className, ...props }: NewContractFormProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { isSignedIn, wallet, contractId } = React.useContext(WalletContext)!;
   const { contracts, setContracts } = React.useContext(ContractContext)!;
 
@@ -79,7 +79,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
 
       console.log(result);
       if (result.status === "CREATED") {
-        navigate("/dashboard/lister");
+        router.replace("/dashboard/lister");
       }
 
       const newContract: Contract = {
