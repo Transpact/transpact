@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { useRouter } from "next/router";
-import RegisterBidderForm1 from "@/components/forms/register-bidder-form.tsx/Form1";
-import RegisterBidderForm2 from "@/components/forms/register-bidder-form.tsx/Form2";
-import RegisterBidderForm3Props from "@/components/forms/register-bidder-form.tsx/Form3";
+import RegisterBidderForm1 from "@/components/forms/register-bidder-form/Form1";
+import RegisterBidderForm2 from "@/components/forms/register-bidder-form/Form2";
+import RegisterBidderForm3Props from "@/components/forms/register-bidder-form/Form3";
 
 interface RegisterBidderProps {}
 
