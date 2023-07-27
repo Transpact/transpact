@@ -73,37 +73,37 @@ const RegisterUser: React.FC<RegisterBidderProps> = ({}) => {
 
         return(
             <MainLayout>
-                <section className="w-[100vw] py-10 flex justify-center items-center">
-                    <div className="w-full md:w-1/2 py-10 h-[95%] flex flex-col items-center shadow-md border-[1px] border-gray-300 rounded-xl">
-                        <div className="w-full flex justify-center">
+                <section className="flex w-[100vw] items-center justify-center py-10">
+                    <div className="flex h-[95%] w-full flex-col items-center rounded-xl border-[1px] border-gray-300 py-10 shadow-md md:w-1/2">
+                        <div className="flex w-full justify-center">
                             <p className="text-3xl font-bold">Sign up to find contracts</p>
                         </div>
     
-                        <div className="w-[65%] mt-10 flex flex-col items-center">
-                            <div className="w-full h-12 cursor-pointer border-[1px] dark:border-white border-black rounded-md flex items-center justify-center active:scale-95 transition-transform">
-                                <FaGoogle className="w-5 h-5"/>
+                        <div className="mt-10 flex w-[65%] flex-col items-center">
+                            <div className="flex h-12 w-full cursor-pointer items-center justify-center rounded-md border-[1px] border-black transition-transform active:scale-95 dark:border-white">
+                                <FaGoogle className="h-5 w-5"/>
                                 <p className="ml-3">Sign in with google</p>
                             </div>
                         </div>
     
-                        <div className="w-[65%] mt-5 flex flex-col items-center">
-                            <div className="w-full h-12 cursor-pointer border-[1px] dark:border-white border-black rounded-md flex items-center justify-center active:scale-95 transition-transform">
-                                <Icons.twitter className="w-6 h-6"/>
+                        <div className="mt-5 flex w-[65%] flex-col items-center">
+                            <div className="flex h-12 w-full cursor-pointer items-center justify-center rounded-md border-[1px] border-black transition-transform active:scale-95 dark:border-white">
+                                <Icons.twitter className="h-6 w-6"/>
                                 <p className="ml-3">Sign in with twitter</p>
                             </div>
                         </div>
     
-                        <div className="w-[65%] mt-5 flex flex-col items-center">
-                            <div className="w-full h-12 cursor-pointer border-[1px] dark:border-white border-black rounded-md flex items-center justify-center active:scale-95 transition-transform">
-                                <Icons.gitHub className="w-6 h-6"/>
+                        <div className="mt-5 flex w-[65%] flex-col items-center">
+                            <div className="flex h-12 w-full cursor-pointer items-center justify-center rounded-md border-[1px] border-black transition-transform active:scale-95 dark:border-white">
+                                <Icons.gitHub className="h-6 w-6"/>
                                 <p className="ml-3">Sign in with github</p>
                             </div>
                         </div>
     
-                        <div className="w-[65%] my-4 flex items-center">
-                            <div className="w-[50%] h-px bg-black dark:bg-white"></div>
+                        <div className="my-4 flex w-[65%] items-center">
+                            <div className="h-px w-[50%] bg-black dark:bg-white"></div>
                             <p className="mx-4">Or</p>
-                            <div className="w-[50%] h-px bg-black dark:bg-white"></div>
+                            <div className="h-px w-[50%] bg-black dark:bg-white"></div>
                         </div>
     
                         <div className="w-[65%] flex-col justify-center">
