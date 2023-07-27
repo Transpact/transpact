@@ -4,11 +4,14 @@ https://docs.google.com/document/d/1wagRcowKMCwG3biyS9FG_TQrkVfRicVRpuHLfM3_ZGI/
 Transpact PRD:-
 https://docs.google.com/document/d/1wagRcowKMCwG3biyS9FG_TQrkVfRicVRpuHLfM3_ZGI/edit?usp=sharing
 
+Transpact GTM Strategy and Architecture Overview:-
+https://docs.google.com/document/d/1qfCsGMDV2BPC_REGWwOMTIEkVjEcXa-8RKsZgi72ZZg/edit
+
 Ken Kickoff Document:- 
 https://docs.google.com/document/d/1pMclgT6s8rf5mfS6KdLz83P348IUNqYxku3u0LABwwk/edit?usp=sharing
 
 High Level Design 1:-
 https://lucid.app/lucidchart/23ad2154-7e5e-48ae-8f8f-a67e11b3867c/edit?invitationId=inv_797e5c2c-0dab-4aa3-85d7-ef29881fafc3
 
-High Level Design 2:-
-https://lucid.app/lucidchart/30a45537-8cf2-4dd5-aef0-565e4d43a18a/edit?viewport_loc=-760%2C56%2C3288%2C1634%2C0_0&invitationId=inv_afa0961c-1fa6-4d5e-93e5-9bd92e3392cc
+Transpact Workflow HLD:-
+https://app.diagrams.net/#G1hPWTpCAD0SBL32xgzG2Kte1Ka1VRwXVE
