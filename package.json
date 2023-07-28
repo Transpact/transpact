@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@near-wallet-selector/core": "^8.2.0",
-    "@near-wallet-selector/my-near-wallet": "^8.2.0"
+    "@near-wallet-selector/my-near-wallet": "^8.2.0",
+    "dotenv": "^16.3.1"
   }
 }
