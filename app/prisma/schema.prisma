@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
@@ -22,23 +22,24 @@ model User {
   id             String    @id @default(uuid())
   email          String    @unique
   password       String
-  wallet_address String    @db.VarChar(100)
-  industry_type  String    @db.VarChar(100)
-  user_type      UserTypes
+  wallet_address String?    @db.VarChar(100)
+  industry_type  String?    @db.VarChar(100)
+  user_type      UserTypes?
 
   // Company Location Info
-  country     String @db.VarChar(50)
-  region      String @db.VarChar(150)
-  postal_code String @db.VarChar(20)
-  address     String @db.MediumText
+  country     String? @db.VarChar(50)
+  region      String? @db.VarChar(150)
+  postal_code String? @db.VarChar(20)
+  address     String? @db.Text
 
   // company info
 
-  company_name                   String @db.VarChar(150)
-  company_logo                   String @db.Text
-  tax_identification_number      String @db.VarChar(100)
-  registration_document_type     String @db.VarChar(100)
-  buisness_registration_document String @db.Text
+  company_name                   String? @db.VarChar(150)
+  company_logo                   String? @db.Text
+  tax_identification_number      String? @db.VarChar(100)
+  registration_document_type     String? @db.VarChar(100)
+  buisness_registration_document String? @db.Text
+  user_completed                 Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
