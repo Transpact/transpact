@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import sha256 from 'js-sha256';
 import { generateToken, getUser } from '@/lib/TokenAuth';
-import { prisma } from "@/lib/utils"
+import { prisma } from "../index";
 
 
 async function GET(req:NextApiRequest,res:NextApiResponse){
@@ -22,8 +22,9 @@ async function POST(req:NextApiRequest,res:NextApiResponse){
                 password
             }
         });
-        const token = generateToken(email,newUser);
-        return res.status(200).json({token});
+        const token = generateToken(newUser.email,newUser.id);
+
+        return res.status(201).json({token});
     }
 
     catch (error:any) {
@@ -37,9 +38,9 @@ async function POST(req:NextApiRequest,res:NextApiResponse){
 async function PUT(req:NextApiRequest,res:NextApiResponse){
 
     const user = await getUser(req);
-    
+
     if (user===undefined){
-        return res.status(401);
+        return res.status(401).json("INVALID TOKEN");
     }
 
     const data = req.body;
@@ -67,10 +68,13 @@ export default function handler(req:NextApiRequest,res:NextApiResponse){
     switch (req.method) {
         case 'GET':
             GET(req,res);
+            break;
         case 'POST':
             POST(req,res);
+            break;
         case 'PUT':
             PUT(req,res);
+            break;
     }
 
 }

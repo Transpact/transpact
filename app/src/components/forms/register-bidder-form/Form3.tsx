@@ -33,6 +33,7 @@ import { useRouter } from "next/router";
 import { UserForm } from "@/components/forms/user-form";
 import { Textarea } from "@/components/ui/textarea";
 import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
+import { endpoints } from "@/lib/utils";
 
 interface RegisterBidderForm3Props {
     setPageNo: React.Dispatch<React.SetStateAction<number>>   
@@ -49,6 +50,8 @@ const formSchemaPage3 = z.object({
 
 const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) => {
 
+    const [loading,setLoading] = useState(false);
+
     const formPage3 = useForm<z.infer<typeof formSchemaPage3>>({
         resolver: zodResolver(formSchemaPage3),
         defaultValues: {
@@ -57,7 +60,35 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) =>
         },
       });    
     
-    async function onSubmit() {}
+      async function onSubmit() {
+        
+        if(loading) return;
+
+        setLoading(true);
+        
+        const resp = await fetch(endpoints.register,{
+            method:'PUT',
+            headers:{
+                'Content-Type': 'application/json',
+                'authorization': localStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                tax_identification_number: formPage3.getValues("taxIdentificationNumber"),
+                registration_document_type: formPage3.getValues("documentType"),
+                buisness_registration_document: formPage3.getValues("businessRegistrationDocument"),
+                user_completed: true
+            })
+        });
+        let resp_json = await resp.json()
+        setLoading(false);
+
+        if (resp.status !== 200 ){
+            console.log("failed",resp_json);
+            return;
+        }
+        setLoading(false);
+        setPageNo(3);
+    }
 
     return(
             <MainLayout>
@@ -69,7 +100,7 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) =>
 
                         <div className="w-[65%] mt-10 flex-col justify-center">
                             <Form {...formPage3}>
-                                <form onSubmit={formPage3.handleSubmit(()=>setPageNo(3))} className="space-y-5">
+                                <form onSubmit={formPage3.handleSubmit(onSubmit)} className="space-y-5">
                                 
 
                                     <FormField

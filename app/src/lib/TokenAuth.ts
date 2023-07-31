@@ -1,7 +1,7 @@
 
 import jwt from 'jsonwebtoken';
 import { NextApiRequest } from 'next';
-import { prisma } from "@/lib/utils"
+import { prisma } from "@/pages/api/index";
 
 export const generateToken = (userEmail:string,userId:string): string => {
     // Generate the JWT token with user data

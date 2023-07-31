@@ -33,6 +33,7 @@ import { useRouter } from "next/router";
 import { UserForm } from "@/components/forms/user-form";
 import { Textarea } from "@/components/ui/textarea";
 import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
+import { endpoints } from "@/lib/utils";
 
 interface RegisterBidderForm2Props {
     setPageNo: React.Dispatch<React.SetStateAction<number>>   
@@ -50,6 +51,7 @@ const formSchemaPage2 = z.object({
 
 const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo}) => {
 
+    const [loading,setLoading] = useState(false);
     const formPage2 = useForm<z.infer<typeof formSchemaPage2>>({
         resolver: zodResolver(formSchemaPage2),
         defaultValues: {
@@ -58,7 +60,35 @@ const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo}) =>
         },
       });    
     
-    async function onSubmit() {}
+      async function onSubmit() {
+        
+            if(loading) return;
+
+            setLoading(true);
+        
+            const resp = await fetch(endpoints.register,{
+                method:'PUT',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem("token")
+                },
+                body: JSON.stringify({
+                    country: formPage2.getValues("country"),
+                    region: formPage2.getValues("region"),
+                    postal_code: formPage2.getValues("pincode"),
+                    address: formPage2.getValues("address")
+                })
+            });
+            let resp_json = await resp.json()
+            setLoading(false);
+
+            if (resp.status !== 200 ){
+                console.log("failed",resp_json);
+                return;
+            }
+            setLoading(false);
+            setPageNo(3);
+        }
 
     return(
             <MainLayout>
@@ -70,7 +100,7 @@ const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo}) =>
 
                         <div className="w-[65%] mt-10 flex-col justify-center">
                             <Form {...formPage2}>
-                                <form onSubmit={formPage2.handleSubmit(()=>setPageNo(3))} className="space-y-5">
+                                <form onSubmit={formPage2.handleSubmit(onSubmit)} className="space-y-5">
                                 <FormField
                                     control={formPage2.control}
                                     name="country"

@@ -2,6 +2,7 @@ import React, { useState } from "react"
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { endpoints } from "@/lib/utils";
 
 import {
     Form,
@@ -45,9 +46,9 @@ type FormData = z.infer<typeof formSchema>;
 
 const RegisterUser: React.FC<RegisterBidderProps> = ({}) => {
 
-    const [pageNo,setPageNo] = useState<number>(1);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
-
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -58,11 +59,35 @@ const RegisterUser: React.FC<RegisterBidderProps> = ({}) => {
       });    
       
     async function onSubmit(values: FormData) {
+
+        if(loading) return;
+
+        setLoading(true);
+
+        const resp = await fetch(endpoints.register,{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: form.getValues("email"),
+                password: form.getValues("password")
+            })
+        });
+        let resp_jsn = await resp.json();
+        
+        setLoading(false);
+
+        if (resp.status != 201 ){
+            console.log("failed",resp_jsn);
+            return;
+        }
+
+        localStorage.removeItem("token");
+        localStorage.setItem("token",resp_jsn.token);
+
         router.replace({
-            pathname: "/register/bidder",
-            query: {
-                token: "asdsdasdad"
-            }
+            pathname: "/register/bidder"
         })
     }
 
@@ -73,8 +98,14 @@ const RegisterUser: React.FC<RegisterBidderProps> = ({}) => {
                     <div className="w-full flex justify-center">
                         <p className="text-3xl font-bold">Sign up to find contracts</p>
                     </div>
-
-                    <div className="w-[65%] mt-10 flex flex-col items-center">
+                    <ClerkProvider
+                    appearance={{
+                        baseTheme: dark
+                    }}
+                    >
+                        <SignIn />
+                    </ClerkProvider>
+                    {/* <div className="w-[65%] mt-10 flex flex-col items-center">
                         <div className="w-full h-12 cursor-pointer border-[1px] dark:border-white border-black rounded-md flex items-center justify-center active:scale-95 transition-transform">
                             <FaGoogle className="w-5 h-5"/>
                             <p className="ml-3">Sign in with google</p>
@@ -93,7 +124,7 @@ const RegisterUser: React.FC<RegisterBidderProps> = ({}) => {
                             <Icons.gitHub className="w-6 h-6"/>
                             <p className="ml-3">Sign in with github</p>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="w-[65%] my-4 flex items-center">
                         <div className="w-[50%] h-px bg-black dark:bg-white"></div>

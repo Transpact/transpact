@@ -5,9 +5,11 @@ import { PublicKey } from "near-api-js/lib/utils";
 import { twMerge } from "tailwind-merge";
 import { SignAndSendTransactionOptions } from "near-api-js/lib/account";
 import { CreateAccount, Transaction } from "near-api-js/lib/transaction";
-import { PrismaClient } from '@prisma/client';
 
-export const prisma = new PrismaClient();
+export const endpoints = {
+  register: "/api/register/user",
+  login: "/api/login",
+}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

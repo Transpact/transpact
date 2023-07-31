@@ -1,7 +1,7 @@
 import { generateToken,verifyToken } from "@/lib/TokenAuth";
 import { NextApiRequest,NextApiResponse } from "next";
 import sha256 from 'js-sha256';
-import { prisma } from "@/lib/utils";
+import { prisma } from "../index";
 
 
 

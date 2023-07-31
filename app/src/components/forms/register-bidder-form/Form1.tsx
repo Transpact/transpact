@@ -26,6 +26,8 @@ import MainLayout from "@/components/layouts/main-layout";
 
 
 import { useForm } from "react-hook-form";
+import { endpoints } from "@/lib/utils";
+import { getCookie } from 'js-cookie';
 
 interface RegisterBidderForm1Props {
     setPageNo: React.Dispatch<React.SetStateAction<number>>
@@ -41,6 +43,8 @@ const formSchemaPage1 = z.object({
 
 const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo}) => {
 
+    const [loading, setLoading] = useState(false);
+    
     const formPage1 = useForm<z.infer<typeof formSchemaPage1>>({
         resolver: zodResolver(formSchemaPage1),
         defaultValues: {
@@ -49,7 +53,34 @@ const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo}) =>
         },
       });       
     
-    async function onSubmit() {}
+    async function onSubmit() {
+        
+        if(loading) return;
+
+        setLoading(true);
+
+        const resp = await fetch(endpoints.register,{
+            method:'PUT',
+            headers:{
+                'Content-Type': 'application/json',
+                'authorization': localStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                company_name: formPage1.getValues("company_name"),
+                wallet_address: formPage1.getValues("walletAddress"),
+                industry_type: formPage1.getValues("industryType"),
+            })
+        });
+        let resp_json = await resp.json()
+        setLoading(false);
+
+        if (resp.status !== 200 ){
+            console.log("failed",resp_json);
+            return;
+        }
+        setLoading(false);
+        setPageNo(2);
+    }
     
 
     return(
@@ -62,7 +93,7 @@ const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo}) =>
 
                     <div className="w-[65%] mt-10 flex-col justify-center">
                         <Form {...formPage1}>
-                            <form onSubmit={formPage1.handleSubmit(()=>setPageNo(2))} className="space-y-5">
+                            <form onSubmit={formPage1.handleSubmit(onSubmit)} className="space-y-5">
                                 <FormField
                                 control={formPage1.control}
                                 name="company_name"

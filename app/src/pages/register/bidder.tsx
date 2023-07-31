@@ -10,7 +10,6 @@ const RegisterBidder: React.FC<RegisterBidderProps> = ({}) => {
 
     const router = useRouter();
     const [pageNo,setPageNo] = useState(1);
-    const {token} = router.query;
 
     return(
         <>
