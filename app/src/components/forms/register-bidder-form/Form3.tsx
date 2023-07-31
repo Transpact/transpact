@@ -34,6 +34,7 @@ import { UserForm } from "@/components/forms/user-form";
 import { Textarea } from "@/components/ui/textarea";
 import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
 import { endpoints } from "@/lib/utils";
+import { useToast } from "@/components/ui/use-toast";
 
 interface RegisterBidderForm3Props {
     setPageNo: React.Dispatch<React.SetStateAction<number>>   
@@ -51,6 +52,7 @@ const formSchemaPage3 = z.object({
 const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) => {
 
     const [loading,setLoading] = useState(false);
+    const {toast} = useToast();
 
     const formPage3 = useForm<z.infer<typeof formSchemaPage3>>({
         resolver: zodResolver(formSchemaPage3),
@@ -61,7 +63,6 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) =>
       });    
     
       async function onSubmit() {
-        
         if(loading) return;
 
         setLoading(true);
@@ -69,8 +70,7 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) =>
         const resp = await fetch(endpoints.register,{
             method:'PUT',
             headers:{
-                'Content-Type': 'application/json',
-                'authorization': localStorage.getItem("token")
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 tax_identification_number: formPage3.getValues("taxIdentificationNumber"),
@@ -83,9 +83,16 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) =>
         setLoading(false);
 
         if (resp.status !== 200 ){
-            console.log("failed",resp_json);
+            toast({
+                title: "Request Failed",
+                description:resp_json,
+                variant:"destructive"
+            })
             return;
         }
+        toast({
+            title:"Company Created",
+        })
         setLoading(false);
         setPageNo(3);
     }
@@ -100,7 +107,7 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) =>
 
                         <div className="w-[65%] mt-10 flex-col justify-center">
                             <Form {...formPage3}>
-                                <form onSubmit={formPage3.handleSubmit(onSubmit)} className="space-y-5">
+                                <form onSubmit={formPage3.handleSubmit(()=>onSubmit())} className="space-y-5">
                                 
 
                                     <FormField

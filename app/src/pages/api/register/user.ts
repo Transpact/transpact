@@ -1,30 +1,77 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import sha256 from 'js-sha256';
-import { generateToken, getUser } from '@/lib/TokenAuth';
 import { prisma } from "../index";
+import { getAuth } from "@clerk/nextjs/server";
 
 
 async function GET(req:NextApiRequest,res:NextApiResponse){
+    
+    let user = getAuth(req);
 
-    const users = await prisma.user.findMany();
+    if (user === null){
+        return res.status(401).json("UNAUTHORISED_USER")
+    }
 
-    return res.status(200).json(users);
+     try{
+
+        const alreadyExists = await prisma.user.findFirst({
+            where:{
+                id: user.userId as string,
+            }
+        })
+
+        if (!alreadyExists){
+            return res.status(401).json("USER_NOT_EXISTS");
+        }
+
+        if (alreadyExists.user_completed){
+            return res.status(200).json({user_completed:true});
+        }
+        else{
+            return res.status(200).json({user_completed:false});
+        }
+
+    }
+
+    catch (error:any) {
+        return res.status(400).json({message:error.message})
+    }
+
+    // const users = await prisma.user.deleteMany();
+
+    // return res.status(200).json(users);
 }
 async function POST(req:NextApiRequest,res:NextApiResponse){
 
-    let email = req.body["email"];
-    let password = sha256.sha256(req.body["password"]);
+    let user = getAuth(req);
+    let userDetails = req.body;
+    
+
+    if (user === null){
+        return res.status(401).json("UNAUTHORISED_USER")
+    }
 
     try{
-        const newUser = await prisma.user.create({
+
+        const alreadyExists = await prisma.user.findFirst({
+            where:{
+                id: user.userId as string,
+            }
+        })
+
+        if (alreadyExists){
+            console.log(user)
+            return res.status(200).json("USER_ALREADY_EXISTS");
+        }
+
+        await prisma.user.create({
             data:{
-                email,
-                password
+                id: user.userId as string,
+                email: userDetails.email,
+                password: userDetails.password
             }
         });
-        const token = generateToken(newUser.email,newUser.id);
 
-        return res.status(201).json({token});
+        return res.status(201).json('SUCCESS');
     }
 
     catch (error:any) {
@@ -37,18 +84,17 @@ async function POST(req:NextApiRequest,res:NextApiResponse){
 
 async function PUT(req:NextApiRequest,res:NextApiResponse){
 
-    const user = await getUser(req);
+    let user = getAuth(req);
 
-    if (user===undefined){
-        return res.status(401).json("INVALID TOKEN");
+    if (user === null){
+        return res.status(401).json("UNAUTHORISED_USER");
     }
-
     const data = req.body;
 
     try{
         await prisma.user.update({
             where:{
-                id: user?.id
+                id: user.userId as string
             },
             data:data
         });

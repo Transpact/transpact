@@ -34,6 +34,8 @@ import { UserForm } from "@/components/forms/user-form";
 import { Textarea } from "@/components/ui/textarea";
 import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
 import { endpoints } from "@/lib/utils";
+import { useClerk } from "@clerk/nextjs";
+import { useToast } from "@/components/ui/use-toast";
 
 interface RegisterBidderForm2Props {
     setPageNo: React.Dispatch<React.SetStateAction<number>>   
@@ -52,6 +54,8 @@ const formSchemaPage2 = z.object({
 const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo}) => {
 
     const [loading,setLoading] = useState(false);
+    const {toast} = useToast();
+    
     const formPage2 = useForm<z.infer<typeof formSchemaPage2>>({
         resolver: zodResolver(formSchemaPage2),
         defaultValues: {
@@ -69,8 +73,7 @@ const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo}) =>
             const resp = await fetch(endpoints.register,{
                 method:'PUT',
                 headers:{
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem("token")
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     country: formPage2.getValues("country"),
@@ -83,7 +86,11 @@ const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo}) =>
             setLoading(false);
 
             if (resp.status !== 200 ){
-                console.log("failed",resp_json);
+                toast({
+                    title: "Request Failed",
+                    description:resp_json,
+                    variant:"destructive"
+                })
                 return;
             }
             setLoading(false);
