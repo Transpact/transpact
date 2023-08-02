@@ -8,6 +8,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { MainNav } from "@/components/main-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { WalletContext } from "@/context/wallet-context";
+import { SignInButton, SignOutButton, SignedIn, SignedOut, UserButton, UserProfile } from "@clerk/nextjs";
+import Link from "next/link";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -31,7 +33,21 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <MainNav items={marketingConfig.mainNav} />
 
           <nav>
-            <Button
+            <SignedIn>
+              <UserButton 
+                afterSignOutUrl="/register"
+              />
+            </SignedIn>
+            <SignedOut>
+              <Link href="/register" className={cn(
+                buttonVariants({ variant: "secondary", size: "sm" }),
+                "px-4"
+              )}>
+                Login
+              </Link>
+            </SignedOut>
+            
+            {/* <Button
               className={cn(
                 buttonVariants({ variant: "secondary", size: "sm" }),
                 "px-4"
@@ -39,7 +55,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               onClick={isSignedIn ? handleLogout : handleLogin}
             >
               {isSignedIn ? `Logout ${wallet.accountId}` : "Login"}
-            </Button>
+            </Button> */}
           </nav>
         </div>
       </header>

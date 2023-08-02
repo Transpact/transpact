@@ -1,10 +1,15 @@
-import { generateToken, verifyToken } from "@/lib/TokenAuth"
-import { NextApiRequest, NextApiResponse } from "next"
-import sha256 from "js-sha256"
-import { prisma } from "@/lib/db"
+import { generateToken,verifyToken } from "@/lib/TokenAuth";
+import { NextApiRequest,NextApiResponse } from "next";
+import sha256 from 'js-sha256';
+import { prisma } from "../index";
+import { auth, currentUser, useAuth } from "@clerk/nextjs";
+import { getAuth } from "@clerk/nextjs/server";
 
-async function GET(req: NextApiRequest, res: NextApiResponse) {
-  res.status(200).json({})
+
+
+async function GET(req:NextApiRequest,res:NextApiResponse){
+    const users = await prisma.user.findMany();
+    res.status(200).json(users);
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
