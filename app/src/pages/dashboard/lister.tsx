@@ -13,13 +13,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DashboardShell } from "@/components/shell";
+
 import { DashboardHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { SAMPLE_CONTRACT } from "@/lib/data";
+import { Contract as ContractType } from "@/lib/data";
+
 import { ContractTable } from "../bid/all";
 import { ContractContext } from "@/context/contract-context";
 import Link from "next/link";
+import { UserOutlined } from '@ant-design/icons';
+import { AutoComplete, Input } from 'antd';
+import { Tabs, Card } from 'antd';
+import AllContracts from "@/components/AllContracts"
+import PendingContracts from "@/components/PendingContracts";
+import ListedContracts from "@/components/ListedContracts";
+import CompletedContracts from "@/components/CompletedContracts";
+
 
 interface ListerDashboardProps {}
 
@@ -33,10 +44,13 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
     if (loading) return;
 
     setLoading(true);
-
+    setTimeout(() => {
+      setContracts(dummyContracts);
+      setLoading(false);
+    }, 1000);
     try {
       // TODO: Get from blockchain
-      const contracts: Contract[] = SAMPLE_CONTRACT;
+      //const contracts: Contract[] = SAMPLE_CONTRACT;
 
       // setContract(contracts);
     } catch (e) {
@@ -45,6 +59,98 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
       setLoading(false);
     }
   };
+  const dummyContracts: Contract[] = [
+    {
+      id: "1",
+      name: "Smart City Street Lighting Project",
+      amount: 250000,
+      owner: "Infrastructure Development Co.",
+      status: "Progress",
+      startDate: new Date("2023-08-01"),
+      endDate: new Date("2023-12-31"),
+      description: "Contract description goes here...",
+    },
+    {
+      id: "2",
+      name: "Smart Transportation System Development",
+      amount: 500000,
+      owner: "Urban Mobility Solutions Ltd.",
+      status: "Pending",
+      startDate: new Date("2023-09-15"),
+      endDate: new Date("2024-06-30"),
+      description: "Contract description goes here...",
+    },
+  ];
+  
+  const renderTitle = (title: string) => (
+    <span>
+      {title}
+      <a
+        style={{ float: 'right' }}
+        href="https://www.google.com/search?q=antd"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        more
+      </a>
+    </span>
+  );
+  
+  const renderItem = (title: string, count: number) => ({
+    value: title,
+    label: (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        {title}
+        <span>
+          <UserOutlined /> {count}
+        </span>
+      </div>
+    ),
+  });
+  
+  const options = [
+    {
+      label: renderTitle('Libraries'),
+      options: [renderItem('AntDesign', 10000), renderItem('AntDesign UI', 10600)],
+    },
+    {
+      label: renderTitle('Solutions'),
+      options: [renderItem('AntDesign UI FAQ', 60100), renderItem('AntDesign FAQ', 30010)],
+    },
+    {
+      label: renderTitle('Articles'),
+      options: [renderItem('AntDesign design language', 100000)],
+    },
+  ];
+  
+  const App: React.FC = () => (
+    <AutoComplete
+      popupClassName="certain-category-search-dropdown"
+      dropdownMatchSelectWidth={500}
+      style={{ width: 250 }}
+      options={options}
+    >
+    </AutoComplete>
+  );
+
+  const getStatusColor = (status: string): string => {
+    switch (status) {
+      case "progress":
+        return "blue";
+      case "pending":
+        return "orange";
+      case "completed":
+        return "green";
+      default:
+        return "default";
+    }
+  };
+  
 
   useEffect(() => {
     getContracts();
@@ -56,7 +162,7 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
       loading={loading}
       heading="Manage Contracts"
       text="Add and Manage Contracts"
-      buttonLabel="Add Contract"
+      buttonLabel="List Contract"
     >
       <DashboardShell>
         <DashboardHeader
@@ -66,10 +172,27 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
           <Link href="/contract/add">
             <Button variant="outline">
               <Icons.add className="mr-2 h-4 w-4" />
-              Add Contract
+              List Contract
             </Button>
           </Link>
         </DashboardHeader>
+        <Input.Search size="large" placeholder="Search Contracts" />
+        
+        <Tabs defaultActiveKey="all">
+  <Tabs.TabPane tab="All" key="all">
+    <AllContracts contracts={contracts} getStatusColor={getStatusColor} />
+  </Tabs.TabPane>
+  <Tabs.TabPane tab="Listed" key="listed">
+    <ListedContracts contracts={contracts} />
+  </Tabs.TabPane>
+  <Tabs.TabPane tab="Pending" key="pending">
+    <PendingContracts contracts={contracts} />
+  </Tabs.TabPane>
+  <Tabs.TabPane tab="Completed" key="completed">
+    <CompletedContracts contracts={contracts} />
+  </Tabs.TabPane>
+  </Tabs>
+
 
         <ContractTable contracts={contracts} />
       </DashboardShell>

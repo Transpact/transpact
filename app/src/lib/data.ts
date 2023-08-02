@@ -1,8 +1,19 @@
+export interface Contract {
+  id: string;
+  name: string;
+  amount: number;
+  files: string[];
+  owner: string;
+  status: string;
+  startDate: Date;
+  endDate: Date;
+  description: string;
+}
 export const SAMPLE_CONTRACT: Contract[] = [
   {
     id: "1",
     name: "Infrastructure Development Contract for Smart City Project",
-    amount: "100000",
+    amount: 100000,
     files: [],
     owner: "",
     status: "progress",
