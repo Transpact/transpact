@@ -121,7 +121,9 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
                 href="#"
                 className="flex w-4/5 flex-row items-center gap-x-2"
               >
-                Learn More <Icons.arrowRight size={20} />
+                <Button variant="secondary" className="gap-1">
+                  Learn More <Icons.arrowRight size={20} />
+                </Button>
               </Link>
             </div>
 
@@ -130,6 +132,7 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
                 src="/images/landing/video.webm"
                 className="h-auto w-full object-right p-4"
                 autoPlay
+                playsInline
               />
             </div>
           </div>

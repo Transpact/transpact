@@ -44,6 +44,8 @@ export default function App({ Component, pageProps }: AppProps) {
     const resp = await fetch(endpoints.register)
     const jsn = await resp.json()
 
+    console.log(jsn)
+
     if (resp.status !== 200) {
       router.replace({
         pathname: "/register",
@@ -57,19 +59,19 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }
 
-  useEffect(() => {
-    const init = async () => {
-      const isSignedIn = await wallet.startUp()
+  // useEffect(() => {
+  //   const init = async () => {
+  //     const isSignedIn = await wallet.startUp()
 
-      setWalletContext((prev) => ({
-        ...prev,
-        isSignedIn: isSignedIn,
-      }))
-    }
-    getUserData()
-    init()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  //     setWalletContext((prev) => ({
+  //       ...prev,
+  //       isSignedIn: isSignedIn,
+  //     }))
+  //   }
+  //   getUserData()
+  //   init()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
 
   return (
     <ClerkProvider {...pageProps}>
