@@ -17,7 +17,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     })
 
     if (!alreadyExists) {
-      return res.status(401).json("USER_NOT_EXISTS")
+      return res.status(200).json({ user_completed: false })
     }
 
     if (alreadyExists.user_completed) {
