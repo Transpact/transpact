@@ -10,6 +10,8 @@ import { GlobalLoading } from "react-global-loading";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { endpoints } from "@/lib/utils";
+import { useRouter } from "next/router";
 
 const CONTRACT_ADDRESS = "dev-1688285985299-62443913276139";
 
@@ -17,12 +19,30 @@ export default function App({ Component, pageProps }: AppProps) {
   const wallet = new Wallet({ createAccessKeyFor: CONTRACT_ADDRESS });
   // const isSignedIn = wallet.startUp();
   const [contract, setContract] = useState(SAMPLE_CONTRACT);
+  const router = useRouter();
 
   const [walletContext, setWalletContext] = useState<WalletContextType>({
     isSignedIn: false,
     contractId: CONTRACT_ADDRESS,
     wallet: wallet,
   });
+  
+  async function getUserData(){
+    const resp = await fetch(endpoints.register);
+    const jsn = await resp.json();
+
+    if (resp.status !== 200){
+        router.replace({
+            pathname: "/register"
+        });
+    }
+
+    if(!jsn.user_completed){
+        router.replace({
+            pathname: "/register/user"
+        });
+    }
+  }
 
   useEffect(() => {
     const init = async () => {
@@ -33,7 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
         isSignedIn: isSignedIn,
       }));
     };
-
+    getUserData();
     init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

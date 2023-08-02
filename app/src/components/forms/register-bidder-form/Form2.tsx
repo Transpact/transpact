@@ -39,6 +39,8 @@ import { useToast } from "@/components/ui/use-toast";
 
 interface RegisterBidderForm2Props {
     setPageNo: React.Dispatch<React.SetStateAction<number>>   
+    userType: string
+
 }
 
 
@@ -51,7 +53,7 @@ const formSchemaPage2 = z.object({
 
 
 
-const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo}) => {
+const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo,userType}) => {
 
     const [loading,setLoading] = useState(false);
     const {toast} = useToast();

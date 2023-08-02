@@ -19,8 +19,8 @@ enum UserTypes {
 }
 
 model User {
-  id             String    @id @default(uuid())
-  email          String    @unique
+  id             String     @id @default(uuid())
+  email          String     @unique
   password       String
   wallet_address String?    @db.VarChar(100)
   industry_type  String?    @db.VarChar(100)
@@ -40,6 +40,8 @@ model User {
   registration_document_type     String? @db.VarChar(100)
   buisness_registration_document String? @db.Text
   user_completed                 Boolean @default(false)
+  website                        String? @default("")
+  experience                     Int?    @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

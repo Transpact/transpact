@@ -28,10 +28,6 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
   } catch (error: any) {
     return res.status(400).json({ message: error.message })
   }
-
-  // const users = await prisma.user.deleteMany();
-
-  // return res.status(200).json(users);
 }
 async function POST(req: NextApiRequest, res: NextApiResponse) {
   let user = getAuth(req)

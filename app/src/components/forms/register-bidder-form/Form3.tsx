@@ -38,6 +38,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 interface RegisterBidderForm3Props {
     setPageNo: React.Dispatch<React.SetStateAction<number>>   
+    userType: string
 }
 
 
@@ -49,10 +50,11 @@ const formSchemaPage3 = z.object({
 
 
 
-const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) => {
+const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo,userType}) => {
 
     const [loading,setLoading] = useState(false);
     const {toast} = useToast();
+    const router = useRouter();
 
     const formPage3 = useForm<z.infer<typeof formSchemaPage3>>({
         resolver: zodResolver(formSchemaPage3),
@@ -79,7 +81,8 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) =>
                 user_completed: true
             })
         });
-        let resp_json = await resp.json()
+        
+        let resp_json = await resp.json();
         setLoading(false);
 
         if (resp.status !== 200 ){
@@ -90,11 +93,27 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({setPageNo}) =>
             })
             return;
         }
+
+        setLoading(false);
+
+        setTimeout(() => {
+            if (userType === "BIDDER"){
+                router.replace({
+                    pathname: "/dashboard/bidder"
+                })
+            }             
+            else if(userType === "LISTER"){
+                router.replace({
+                    pathname: "/dashboard/lister"
+                })
+            }
+        }, 1000);
+
         toast({
             title:"Company Created",
         })
-        setLoading(false);
-        setPageNo(3);
+
+
     }
 
     return(

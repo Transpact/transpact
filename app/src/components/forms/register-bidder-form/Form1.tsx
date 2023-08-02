@@ -27,29 +27,29 @@ import MainLayout from "@/components/layouts/main-layout";
 
 import { useForm } from "react-hook-form";
 import { endpoints } from "@/lib/utils";
- import { useAuth, useClerk, useUser } from "@clerk/nextjs";
+ import { useClerk } from "@clerk/nextjs";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/router";
 
 interface RegisterBidderForm1Props {
     setPageNo: React.Dispatch<React.SetStateAction<number>>
+    userType: string
 }
 
 const formSchemaPage1 = z.object({
     company_name: z.string().min(1).max(100),
     walletAddress: z.string().min(10).max(100),
-    industryType: z.string({required_error:"Please select an Industry Type"}).min(1)
+    industryType: z.string({required_error:"Please select an Industry Type"}).min(1),
+    website: z.string(),
+    experience: z.string().default("0")
 });
 
 
 
-const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo}) => {
+const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo,userType}) => {
 
     const [loading, setLoading] = useState(false);
     const clerk = useClerk();
     const {toast} = useToast();
-    const router = useRouter();
-    const {user_type} = router.query;
     
 
     const formPage1 = useForm<z.infer<typeof formSchemaPage1>>({
@@ -57,6 +57,8 @@ const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo}) =>
         defaultValues: {
             company_name: "",
             walletAddress: "",
+            experience: "0",
+            website: ""
         },
       });    
 
@@ -97,7 +99,9 @@ const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo}) =>
                 company_name: formPage1.getValues("company_name"),
                 wallet_address: formPage1.getValues("walletAddress"),
                 industry_type: formPage1.getValues("industryType"),
-                user_type: user_type
+                website: formPage1.getValues("website"),
+                experience: parseInt(formPage1.getValues("experience")),
+                user_type: userType
             })
         });
 
@@ -123,7 +127,13 @@ const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo}) =>
             <section className="w-[100vw] py-10 flex justify-center items-center">
                 <div className="w-full md:w-1/2 py-10 h-[95%] flex flex-col items-center shadow-md border-[1px] border-gray-300 rounded-xl">
                     <div className="w-full flex justify-center">
-                        <p className="text-3xl font-bold">Sign up to find contracts</p>
+                        <p className="text-3xl font-bold">
+                            {
+                                userType === "BIDDER" 
+                                ? "Sign up to find contracts"
+                                : "Sign up to create and manage contracts"
+                            }
+                        </p>
                     </div>
 
                     <div className="w-[65%] mt-10 flex-col justify-center">
@@ -162,6 +172,35 @@ const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo}) =>
 
                                 <FormField
                                 control={formPage1.control}
+                                name="website"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Company Website</FormLabel>
+                                        <FormControl>
+                                            <Input type="url" placeholder="https://transpact.xyz (Optional)" {...field}/>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+
+                                <FormField
+                                control={formPage1.control}
+                                name="experience"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Year's of Experience</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" {...field}/>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                                
+
+                                <FormField
+                                control={formPage1.control}
                                 name="industryType"
                                 render={({ field }) => (
                                     <FormItem>
@@ -173,9 +212,9 @@ const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo}) =>
                                             </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                            <SelectItem value="m@example.com">Infrastructure</SelectItem>
-                                            <SelectItem value="m@google.com">Technology</SelectItem>
-                                            <SelectItem value="m@support.com">Logistics</SelectItem>
+                                            <SelectItem value="Infrastructure">Infrastructure</SelectItem>
+                                            <SelectItem value="Technology">Technology</SelectItem>
+                                            <SelectItem value="Logistics">Logistics</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
