@@ -140,14 +140,14 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
 
   const getStatusColor = (status: string): string => {
     switch (status) {
-      case "progress":
-        return "blue";
-      case "pending":
-        return "orange";
-      case "completed":
-        return "green";
+      case 'progress':
+        return 'blue';
+      case 'pending':
+        return 'orange';
+      case 'completed':
+        return 'green';
       default:
-        return "default";
+        return 'default';
     }
   };
   

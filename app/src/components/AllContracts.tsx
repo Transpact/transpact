@@ -1,6 +1,8 @@
 import React from "react";
 import { Contract } from "@/lib/data";
 import { Card, Tag } from "antd";
+import { format } from 'date-fns';
+
 
 interface AllContractsProps {
   contracts: Contract[];
@@ -21,8 +23,9 @@ const AllContracts: React.FC<AllContractsProps> = ({ contracts, getStatusColor }
             <p>{contract.description}</p>
             {contract.startDate instanceof Date && contract.endDate instanceof Date ? (
               <>
-                <p>Start Date: {contract.startDate.toLocaleDateString()}</p>
-                <p>End Date: {contract.endDate.toLocaleDateString()}</p>
+                <p>Start Date: {format(contract.startDate, 'MM/dd/yyyy')}</p>
+                <p>End Date: {format(contract.endDate, 'MM/dd/yyyy')}</p>
+
               </>
             ) : (
               <>

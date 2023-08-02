@@ -1,6 +1,7 @@
 import React from "react";
 import { Contract } from "@/lib/data";
 import { Card, Tag } from "antd";
+import { format } from 'date-fns';
 
 interface CompletedContractsProps {
   contracts: Contract[];
