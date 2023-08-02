@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 import { NextApiRequest } from "next"
-import { prisma } from "@/pages/api/index"
+import { prisma } from "@/lib/db"
 import { env } from "@/env.mjs"
 
 export const generateToken = (userEmail: string, userId: string): string => {
