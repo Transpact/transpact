@@ -1,14 +1,11 @@
 import { generateToken,verifyToken } from "@/lib/TokenAuth";
 import { NextApiRequest,NextApiResponse } from "next";
 import sha256 from 'js-sha256';
-import { prisma } from "../index";
-import { auth, currentUser, useAuth } from "@clerk/nextjs";
-import { getAuth } from "@clerk/nextjs/server";
-
+import { prisma } from "@/lib/db"
 
 
 async function GET(req:NextApiRequest,res:NextApiResponse){
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.deleteMany();
     res.status(200).json(users);
 }
 
