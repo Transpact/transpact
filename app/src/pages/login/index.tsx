@@ -24,7 +24,7 @@ import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import Link from "next/link"
 import { useRouter } from "next/router";
-import { SignUp } from "@clerk/nextjs";
+import { SignIn, SignUp } from "@clerk/nextjs";
 
 
 interface RegisterBidderProps {}
@@ -51,7 +51,7 @@ const RegisterUser: React.FC<RegisterBidderProps> = ({}) => {
     return(
         <MainLayout>
             <section className="w-[100vw] py-10 flex justify-center items-center">
-                <SignUp signInUrl="/login"/>
+                <SignIn/>
             </section>
         </MainLayout>
     )

@@ -39,11 +39,17 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               />
             </SignedIn>
             <SignedOut>
+              <Link href="/login" className={cn(
+                buttonVariants({ variant: "secondary", size: "sm" }),
+                "px-4 mr-5"
+              )}>
+                Login
+              </Link>
               <Link href="/register" className={cn(
                 buttonVariants({ variant: "secondary", size: "sm" }),
                 "px-4"
               )}>
-                Login
+                Signup
               </Link>
             </SignedOut>
             
