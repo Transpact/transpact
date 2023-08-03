@@ -34,20 +34,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       window.removeEventListener('scroll', changeNavBg);
     };
   }, []);
-  // const [textColor,setTextColor] = useState('white');
 
-  // useEffect(() => {
-  //   const changeColor = () => {
-  //     if(window.screenY >= 90) {
-  //       setcolor('red');
-  //       setTextColor('#000000');
-  //     } else {
-  //       setcolor('transparent');
-  //       setTextColor('#ffffff');
-  //     }
-  //   };
-  //   window.addEventListener('scroll', changeColor );
-  // }, []);
   const mb = () => {
     
   }
