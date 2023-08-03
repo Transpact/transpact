@@ -13,6 +13,8 @@ import { useRouter } from "next/router"
 import Link from "next/link"
 import { Icons } from "@/components/icons"
 
+import Image from "next/image"
+
 interface HomePageProps {}
 
 const HomePage: React.FC<HomePageProps> = ({}) => {
@@ -135,6 +137,61 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
                 playsInline
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
+        <div className="container text-center">
+          <h1 className="mb-16 text-center text-xl sm:text-2xl md:text-3xl lg:text-5xl">
+            One Stop Solution to,{" "}
+            <span className="font-bold">Tender Management</span>
+          </h1>
+
+          <Image
+            src="/images/landing/features.png"
+            height={500}
+            width={1250}
+            alt="Features"
+            className="mx-auto"
+          />
+        </div>
+      </section>
+
+      <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-24">
+        <div className="container ">
+          <h1 className="mb-32 text-center text-xl sm:text-2xl md:text-3xl lg:text-5xl">
+            Hassel Free, <span className="font-bold">Tendering Process</span>
+          </h1>
+
+          <div className="relative mx-auto space-y-10">
+            <div className="left- top-0 max-w-sm space-y-7 lg:absolute">
+              <h2 className="w-4/5 text-2xl font-bold">
+                Swift. Reliant. Secure
+              </h2>
+
+              <p className="w-4/5 text-lg text-gray-600">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Maecenas ut metus dui.
+              </p>
+
+              <Link
+                href="#"
+                className="flex w-4/5 flex-row items-center gap-x-2"
+              >
+                <Button variant="secondary" className="gap-1">
+                  Learn More <Icons.arrowRight size={20} />
+                </Button>
+              </Link>
+            </div>
+
+            <Image
+              src="/images/landing/process.png"
+              height={500}
+              width={1100}
+              alt="Process"
+              className="mx-auto h-auto w-full"
+            />
           </div>
         </div>
       </section>
