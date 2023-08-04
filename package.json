@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "Transpact",
   "version": "1.0.0",
   "license": "(MIT AND Apache-2.0)",
@@ -98,3 +97,5 @@
     "typed.js": "^2.0.16"
   }
 }
+}
+  
