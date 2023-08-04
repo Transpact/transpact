@@ -2,12 +2,13 @@ import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn, createContract } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ChevronDownIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -30,7 +31,15 @@ import { WalletContext } from "@/context/wallet-context";
 import { ContractContext } from "@/context/contract-context";
 import { globalLoading } from "react-global-loading";
 import { useRouter } from "next/router";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 
+} from "@/components/ui/dropdown-menu"
 interface NewContractFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z.object({
@@ -40,7 +49,53 @@ const formSchema = z.object({
   endDate: z.date(),
   description: z.string().min(1),
   files: z.any(),
+  contractType: z.string(),
+  skillsRequired: z.string(),
+  deliverables: z.string(),
+  proposalDeadline: z.date().optional(),
+  numBiddersToAccept: z.number().int().positive().optional(),
+  confidentialContract: z.boolean().optional(),
+  communicationPreferences: z.array(z.string()),
+  paymentTerms: z.string(),
+  experienceLevel: z.string(),
+  requiredCertifications: z.string(),
+  portfolioRequest: z.boolean().optional(),
+  projectTimeline: z.string(),
+  locationPreference: z.string().optional(),
+  references: z.string().optional(),
+  renewalOption: z.boolean().optional(),
+  contractVisibility: z.string(),
+  budgetRange: z.string(),
+  contractDuration: z.string(),
+  preferredLanguage: z.string(),
+  contractDescription: z.string(),
+  geographicalLocation: z.string().optional(),
+  legalRequirements: z.string(),
+  paymentMethod: z.string(),
+  contractAttachments: z.any(),
+  communicationGuidelines: z.string(),
+  evaluationCriteria: z.string(),
+  terminationClause: z.string(),
+  conflictResolution: z.string(),
+  contractApproval: z.boolean().optional(),
+  nonCompeteClause: z.boolean().optional(),
+  contractExtensions: z.string().optional(),
 });
+
+const legalRequirementOptions = [
+  { label: "No specific legal requirements", value: "no_requirements" },
+  { label: "Valid licenses or permits required", value: "licenses_permits" },
+  { label: "Compliance with industry regulations", value: "industry_regulations" },
+  { label: "Non-disclosure agreement (NDA) needed", value: "nda_needed" },
+  { label: "Other legal requirements", value: "other_requirements" },
+];
+
+const paymentMethodOptions = [
+  { label: "Bank Transfer", value: "bank_transfer" },
+  { label: "PayPal", value: "paypal" },
+  { label: "Credit Card", value: "credit_card" },
+  { label: "Other", value: "other" },
+];
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -118,6 +173,25 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <fieldset disabled={loading} className="grid grid-cols-2 gap-4">
+          <FormField
+              control={form.control}
+              name="totalAmount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contract Type</FormLabel>
+                  <FormControl>                    
+                    <select {...field} className="input">
+                      <option value="">Select a contract type</option>
+                      <option value="Fixed-Price">Fixed-Price</option>
+                      <option value="Hourly">Hourly</option>
+                      <option value="Milestone-based">Milestone-based</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
             <FormField
               control={form.control}
               name="title"
@@ -134,6 +208,196 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="skillsRequired"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Skills Required</FormLabel>
+                  <FormControl>                   
+                    <Input
+                      placeholder="Enter required skills or expertise"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="skillsRequired"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Skills Required</FormLabel>
+                  <FormControl>                   
+                    <Input
+                      placeholder="Enter required skills or expertise"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="deliverables"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Deliverables</FormLabel>
+                  <FormControl>                  
+                    <Textarea
+                      placeholder="Describe the expected deliverables or outcomes"
+                      rows={5}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="proposalDeadline"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Proposal Deadline</FormLabel>
+                  <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+            control={form.control}
+            name="legalRequirements"
+            render={({ field }) => (
+              <FormItem className="col-span-2">
+                <FormLabel>Legal Requirements</FormLabel>
+                <FormControl>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          legalRequirementOptions.find((option) => option.value === field.value)?.label
+                        ) : (
+                          <span>Select an option</span>
+                        )}
+                        <ChevronDownIcon
+                          className={cn(
+                            "ml-auto h-4 w-4 transition-transform",
+                            field.value ? "rotate-180" : ""
+                          )}
+                        />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-auto p-0" align="start">
+                      {legalRequirementOptions.map((option) => (
+                        <DropdownMenuItem
+                          key={option.value}
+                          onSelect={() => field.onChange(option.value)}
+                          className="px-3 py-2 cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                        >
+                          {option.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+                <FormField
+                control={form.control}
+                name="paymentMethod"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Payment Method</FormLabel>
+                    <FormControl>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              paymentMethodOptions.find((option) => option.value === field.value)?.label
+                            ) : (
+                              <span>Select a payment method</span>
+                            )}
+                            <ChevronDownIcon
+                              className={cn(
+                                "ml-auto h-4 w-4 transition-transform",
+                                field.value ? "rotate-180" : ""
+                              )}
+                            />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-auto p-0" align="start">
+                          {paymentMethodOptions.map((option) => (
+                            <DropdownMenuItem
+                              key={option.value}
+                              onSelect={() => field.onChange(option.value)}
+                              className="px-3 py-2 cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                            >
+                              {option.label}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+              control={form.control}
+              name="contractAttachments"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>Contract Attachments</FormLabel>
+                  <FormControl>
+                  <Input
+                      placeholder="Select Images or PDFs"
+                      type="file"
+                      accept="image/*, application/pdf"
+                      multiple
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+             
 
             <FormField
               control={form.control}
@@ -151,6 +415,20 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                       }
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="renewalOption"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Renewal Option</FormLabel>
+                  <FormControl>
+                    {/*checkbox */}
+                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -216,7 +494,8 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+             
+               format(field.value, "PPP")
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -241,7 +520,6 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="description"
@@ -250,7 +528,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter as much details as possible"
+                      placeholder="Provide a detailed description of the contract, its goals, and any other relevant information"
                       rows={5}
                       {...field}
                     />
@@ -259,6 +537,88 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                 </FormItem>
               )}
             />
+
+             <FormField
+              control={form.control}
+              name="contractVisibility"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contract Visibility</FormLabel>
+                  <FormControl>
+                    <select {...field} className="input">
+                      <option value="">Select contract visibility</option>
+                      <option value="Public">Public</option>
+                      <option value="Private">Private</option>
+                      <option value="Invitation-only">Invitation-only</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="contractDuration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contract Duration</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="e.g., 1 month, 3 months, 6 months, etc."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="budgetRange"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Budget Range</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="e.g., Low, Medium, High"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="preferredLanguage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Preferred Language</FormLabel>
+                  <FormControl>
+                    <select {...field} className="input">
+                      <option value="">Select preferred language</option>
+                      <option value="English">English</option>
+                      <option value="Hindi">Hindi</option>
+                      <option value="Spanish">Spanish</option>
+                      <option value="French">French</option>
+                      <option value="German">German</option>
+                      <option value="Italian">Italian</option>
+                      <option value="Japanese">Japanese</option>
+                      <option value="Russian">Russian</option>
+                      <option value="Chinese">Chinese</option>
+                      <option value="Korean">Korean</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+
 
             <FormField
               control={form.control}
