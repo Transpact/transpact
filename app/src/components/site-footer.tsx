@@ -1,9 +1,10 @@
-import * as React from "react";
+import * as React from "react"
 
-import { siteConfig } from "@/config/site";
-import { cn } from "@/lib/utils";
-import { Icons } from "@/components/icons";
-import { ModeToggle } from "@/components/mode-toggle";
+import { siteConfig } from "@/config/site"
+import { cn } from "@/lib/utils"
+import { Icons } from "@/components/icons"
+import { ModeToggle } from "@/components/mode-toggle"
+import Link from "next/link"
 
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (
@@ -12,11 +13,15 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
         <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
           <Icons.logo />
           <p className="text-center text-sm leading-loose md:text-left">
-            Built with React and NEAR Protocol.
+            Built with React and NEAR Protocol. Images from{" "}
+            <Link href="https://www.detectbox.io/" target="_blank" className="">
+              detectbox.io
+            </Link>{" "}
+            for representation only
           </p>
         </div>
         <ModeToggle />
       </div>
     </footer>
-  );
+  )
 }
