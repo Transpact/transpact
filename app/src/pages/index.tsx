@@ -1,5 +1,5 @@
 import "regenerator-runtime/runtime"
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
 import { checkValidUser, cn } from "@/lib/utils"
 import { buttonVariants, Button } from "@/components/ui/button"
@@ -14,6 +14,8 @@ import Link from "next/link"
 import { Icons } from "@/components/icons"
 
 import Image from "next/image"
+import RotatingText from './RotatingText';
+
 
 interface HomePageProps {}
 
@@ -21,6 +23,7 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
   const { wallet, contractId, isSignedIn } = useContext(WalletContext)!
   const router = useRouter()
   const stars = 0
+  const [text, setText] = useState('');
 
   const handleLogin = async () => {
     wallet.signIn()
@@ -60,12 +63,14 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
 
   useEffect(() => {
     wallet.startUp()
-  }, [])
+  }, [text])
 
   return (
     <MainLayout>
+      <br></br>
+      <br></br>
       <section className="space-y-6 pb-8 pt-6  md:pb-12 md:pt-10 lg:py-32">
-        <div className="container flex flex-col  items-center gap-4 text-center">
+        <div className="container flex flex-col  items-start gap-4 text-center">
           <Link
             href={siteConfig.links.twitter}
             className="rounded-2xl bg-muted px-4 py-1.5 text-sm font-medium"
@@ -73,9 +78,8 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
           >
             Like our project on Devpost
           </Link>
-          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-            Seize control, contracts unfold, <br />
-            funds tracked, corruption controlled
+          <h1 className="item-start font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
+            <RotatingText texts={["Seize Control", "Contracts Unfold", "Funds Tracked", "Corruption Controlled"]} period={1000} />
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             An Decentralised App based on React and NEAR Protocol. <br />
@@ -86,7 +90,7 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
               className={cn(buttonVariants({ size: "lg" }))}
               onClick={getStarted}
             >
-              Get Started
+              Request a Bidder
             </Button>
 
             <Link
@@ -95,7 +99,7 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
               rel="noreferrer"
               className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
             >
-              GitHub
+              Perform a Bid
             </Link>
           </div>
         </div>

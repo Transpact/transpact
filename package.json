@@ -21,18 +21,17 @@
   "dependencies": {
     "@near-wallet-selector/core": "^8.2.0",
     "@near-wallet-selector/my-near-wallet": "^8.2.0",
-    "dotenv": "^16.3.1"
-=======
-  "name": "transpact",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
+    "dotenv": "^16.3.1",
+    "name": "transpact",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
-  },
+    },
   "dependencies": {
     "@clerk/nextjs": "^4.23.1",
     "@clerk/themes": "^1.7.5",
@@ -92,7 +91,10 @@
     "eslint-plugin-tailwindcss": "^3.11.0",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.1.13",
-    "prisma": "^5.1.0"
->>>>>>> 84e24d2 (Updated the landing page)
+    "prisma": "^5.1.0",
+    "@types/typed.js": "^2.0.9",
+    "dotenv": "^16.3.1",
+    "framer-motion": "^10.15.0",
+    "typed.js": "^2.0.16"
   }
 }
