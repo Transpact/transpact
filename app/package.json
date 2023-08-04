@@ -1,28 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "Transpact",
-  "version": "1.0.0",
-  "license": "(MIT AND Apache-2.0)",
-  "scripts": {
-    "start": "cd app && npm run dev",
-    "install": "cd app && npm install",
-    "deploy": "cd contract && ./deploy.sh",
-    "build": "npm run build:contract && npm run build:web",
-    "build:web": "cd app && npm run build",
-    "build:contract": "cd contract && ./build.sh",
-    "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "cd contract && cargo test",
-    "test:integration": "npm run build:contract && cd integration-tests && npm test -- -- \"./contract/build/hello_near.wasm\"",
-    "postinstall": "cd app && npm install && cd .. && cd integration-tests && npm install && cd .. && cd contract && npm install"
-  },
-  "devDependencies": {
-    "near-cli": "^3.3.0"
-  },
-  "dependencies": {
-    "@near-wallet-selector/core": "^8.2.0",
-    "@near-wallet-selector/my-near-wallet": "^8.2.0",
-    "dotenv": "^16.3.1"
-=======
   "name": "transpact",
   "version": "0.1.0",
   "private": true,
@@ -93,6 +69,5 @@
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "prisma": "^5.1.0"
->>>>>>> 84e24d2 (Updated the landing page)
   }
 }
