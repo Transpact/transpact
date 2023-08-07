@@ -1,14 +1,3 @@
-export interface Contract {
-  id: string;
-  name: string;
-  amount: number;
-  files: string[];
-  owner: string;
-  status: string;
-  startDate: Date;
-  endDate: Date;
-  description: string;
-}
 export const SAMPLE_CONTRACT: Contract[] = [
   {
     id: "1",
@@ -16,7 +5,7 @@ export const SAMPLE_CONTRACT: Contract[] = [
     amount: 100000,
     files: [],
     owner: "",
-    status: "progress",
+    status: "Progress",
     startDate: new Date(),
     endDate: new Date(),
     description: `
@@ -39,4 +28,4 @@ export const SAMPLE_CONTRACT: Contract[] = [
     This sample infrastructure development contract provides a solid foundation for the implementation of infrastructure projects in our app's dummy data. It covers essential aspects related to project scope, timeline, technical specifications, budget, roles, and dispute resolution.
     `,
   },
-];
+]

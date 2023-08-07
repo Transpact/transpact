@@ -1,23 +1,20 @@
-import * as React from "react";
-import { MainNavItem } from "~/types";
-import { siteConfig } from "@/config/site";
-import { cn } from "@/lib/utils";
-import { Icons } from "@/components/icons";
-import { MobileNav } from "@/components/mobile-nav";
-import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
+import * as React from "react"
+import { MainNavItem } from "~/types"
+import { siteConfig } from "@/config/site"
+import { cn } from "@/lib/utils"
+import { Icons } from "@/components/icons"
+import { MobileNav } from "@/components/mobile-nav"
+import Link from "next/link"
+import { Button, buttonVariants } from "@/components/ui/button"
 
 interface MainNavProps {
-  items?: MainNavItem[];
-  children?: React.ReactNode;
+  items?: MainNavItem[]
+  children?: React.ReactNode
 }
 
 export function MainNav({ items, children }: MainNavProps) {
   // const segment = useSelectedLayoutSegment();
-  const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
-  
-
-  
+  const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
 
   return (
     <div className="flex gap-6 md:gap-10">
@@ -45,7 +42,6 @@ export function MainNav({ items, children }: MainNavProps) {
               {item.title}
             </Link>
           ))}
-          
         </nav>
       ) : null}
       <button
@@ -59,5 +55,5 @@ export function MainNav({ items, children }: MainNavProps) {
         <MobileNav items={items}>{children}</MobileNav>
       )}
     </div>
-  );
+  )
 }

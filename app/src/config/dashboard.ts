@@ -1,4 +1,4 @@
-import { DashboardConfig } from "~/types";
+import { DashboardConfig } from "~/types"
 
 export const dashboardConfig: DashboardConfig = {
   mainNav: [
@@ -25,8 +25,13 @@ export const dashboardConfig: DashboardConfig = {
   ],
   sidebarNavBidder: [
     {
-      title: "My Bids",
+      title: "Dashboard",
       href: "/dashboard/bidder",
+      icon: "home",
+    },
+    {
+      title: "My Bids",
+      href: "/dashboard/bidder/bids",
       icon: "users",
     },
     {
@@ -35,7 +40,7 @@ export const dashboardConfig: DashboardConfig = {
       icon: "package",
     },
   ],
-};
+}
 
 // {
 //   title: "All Contracts",

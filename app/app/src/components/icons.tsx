@@ -32,10 +32,11 @@ import {
   UserPlus,
   PlusCircle,
   Info,
+  ChevronsUpDown,
   type XIcon as LucideIcon,
-} from "lucide-react";
+} from "lucide-react"
 
-export type Icon = typeof LucideIcon;
+export type Icon = typeof LucideIcon
 
 export const Icons = {
   logo: Command,
@@ -65,6 +66,7 @@ export const Icons = {
   userPlus: UserPlus,
   plusCircle: PlusCircle,
   info: Info,
+  chevronsUpDown: ChevronsUpDown,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"
@@ -85,4 +87,4 @@ export const Icons = {
   twitter: Twitter,
   check: Check,
   users: Users,
-};
+}
