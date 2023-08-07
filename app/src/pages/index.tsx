@@ -1,4 +1,3 @@
-import "regenerator-runtime/runtime"
 import React, { useContext, useEffect, useState } from "react"
 
 import { checkValidUser, cn } from "@/lib/utils"
@@ -14,8 +13,7 @@ import Link from "next/link"
 import { Icons } from "@/components/icons"
 
 import Image from "next/image"
-import RotatingText from './RotatingText';
-
+import RotatingText from "@/components/landing/rotating-text"
 
 interface HomePageProps {}
 
@@ -23,7 +21,7 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
   const { wallet, contractId, isSignedIn } = useContext(WalletContext)!
   const router = useRouter()
   const stars = 0
-  const [text, setText] = useState('');
+  const [text, setText] = useState("")
 
   const handleLogin = async () => {
     wallet.signIn()
@@ -79,7 +77,15 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
             Like our project on Devpost
           </Link>
           <h1 className="item-start font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-            <RotatingText texts={["Seize Control", "Contracts Unfold", "Funds Tracked", "Corruption Controlled"]} period={1000} />
+            <RotatingText
+              texts={[
+                "Seize Control",
+                "Contracts Unfold",
+                "Funds Tracked",
+                "Corruption Controlled",
+              ]}
+              period={1000}
+            />
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             An Decentralised App based on React and NEAR Protocol. <br />
