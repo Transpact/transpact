@@ -189,7 +189,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                       <CardHeader>
                         <CardTitle>Recent Contracts</CardTitle>
                         <CardDescription>
-                          You finished 73 contracts this month.
+                        Contractors who have recently completed your contracts.
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
