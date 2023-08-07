@@ -88,7 +88,7 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
             />
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-            An Decentralised App based on React and NEAR Protocol. <br />
+            A Decentralised App based on React and NEAR Protocol. <br />
             Transparent and trustless contract creation and tracking.
           </p>
           <div className="space-x-4">
