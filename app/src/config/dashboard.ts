@@ -12,16 +12,24 @@ export const dashboardConfig: DashboardConfig = {
     },
   ],
   sidebarNav: [
+
+    {
+      title: "Dashboard",
+      href: "/dashboard/lister/listerDashboard",
+      icon: "home",
+    },
+
     {
       title: "My Contracts",
       href: "/dashboard/lister",
       icon: "users",
     },
     {
-      title: "Add Contract",
+      title: "List Contract",
       href: "/contract/add",
       icon: "package",
     },
+    
   ],
   sidebarNavBidder: [
     {

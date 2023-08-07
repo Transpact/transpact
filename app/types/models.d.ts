@@ -3,9 +3,9 @@ type Contract = {
   name: string;
   owner: string;
   amount: number;
-  status: "Progress" | "Listed" | "Pending" | "Completed";
+  status: "progress" | "complete"
   description: string;
   startDate: Date;
   endDate: Date;
-  files?: string[];
-};
+  files: string[];
+}

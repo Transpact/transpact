@@ -5,12 +5,11 @@ export const SAMPLE_CONTRACT: Contract[] = [
     amount: 100000,
     files: [],
     owner: "",
-    status: "Progress",
+    status: "progress",
     startDate: new Date(),
     endDate: new Date(),
     description: `
     This contract outlines the agreement between the government and the infrastructure development company for the implementation of critical infrastructure in a smart city project. The project aims to transform the city's infrastructure to support advanced technologies and improve the quality of life for its residents. The contract includes the following key provisions:
-
     Scope of Work: The contract defines the specific infrastructure development projects to be undertaken, such as building smart roads, installing smart streetlights, implementing an intelligent transportation system, deploying IoT sensors for waste management, etc.
     
     Timeline and Milestones: The contract establishes a timeline for project completion, including specific milestones for each infrastructure component. This ensures timely progress and allows for efficient project monitoring.
@@ -28,4 +27,4 @@ export const SAMPLE_CONTRACT: Contract[] = [
     This sample infrastructure development contract provides a solid foundation for the implementation of infrastructure projects in our app's dummy data. It covers essential aspects related to project scope, timeline, technical specifications, budget, roles, and dispute resolution.
     `,
   },
-]
+];

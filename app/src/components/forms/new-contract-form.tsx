@@ -150,7 +150,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
 
       const newContract: Contract = {
         name: values.title,
-        amount: values.totalAmount.toString(),
+        amount: values.totalAmount, 
         description: values.description,
         startDate: values.startDate,
         endDate: values.endDate,
@@ -159,6 +159,8 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
         id: Math.round(Math.random() * 100).toString(),
         status: "Progress",
       };
+      
+      
 
       setContracts([...contracts, newContract]);
       globalLoading.hide();
