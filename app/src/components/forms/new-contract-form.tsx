@@ -7,7 +7,17 @@ import { cn, createContract } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { CheckIcon } from '@radix-ui/react-icons';
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { ChevronDownIcon } from "lucide-react";
 import {
   Popover,
@@ -16,7 +26,6 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { toast } from "@/components/ui/use-toast";
-
 import {
   Form,
   FormControl,
@@ -90,6 +99,8 @@ const legalRequirementOptions = [
   { label: "Other legal requirements", value: "other_requirements" },
 ];
 
+
+
 const paymentMethodOptions = [
   { label: "Bank Transfer", value: "bank_transfer" },
   { label: "PayPal", value: "paypal" },
@@ -146,7 +157,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
         files: [""],
         owner: "",
         id: Math.round(Math.random() * 100).toString(),
-        status: "progress",
+        status: "Progress",
       };
 
       setContracts([...contracts, newContract]);
@@ -174,24 +185,35 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <fieldset disabled={loading} className="grid grid-cols-2 gap-4">
           <FormField
-              control={form.control}
-              name="totalAmount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contract Type</FormLabel>
-                  <FormControl>                    
-                    <select {...field} className="input">
-                      <option value="">Select a contract type</option>
-                      <option value="Fixed-Price">Fixed-Price</option>
-                      <option value="Hourly">Hourly</option>
-                      <option value="Milestone-based">Milestone-based</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            control={form.control}
+            name="totalAmount"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <FormLabel style={{ marginRight: "1rem" }}>Contract Type</FormLabel>
+                    <Select>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a contract type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem {...field} value="Fixed-Price">
+                          Fixed-Price
+                        </SelectItem>
+                        <SelectItem {...field} value="Hourly">
+                          Hourly
+                        </SelectItem>
+                        <SelectItem {...field} value="Milestone-based">
+                          Milestone-based
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
             />
-            
             <FormField
               control={form.control}
               name="title"
@@ -208,22 +230,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="skillsRequired"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Skills Required</FormLabel>
-                  <FormControl>                   
-                    <Input
-                      placeholder="Enter required skills or expertise"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            
             <FormField
               control={form.control}
               name="skillsRequired"
@@ -421,18 +428,23 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
             />
 
             <FormField
-              control={form.control}
-              name="renewalOption"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Renewal Option</FormLabel>
-                  <FormControl>
-                    {/*checkbox */}
-                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                control={form.control}
+                name="renewalOption"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Renewal Option</FormLabel>
+                    <FormControl>
+                    <label className="flex items-center">
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => field.onChange(!field.value)}
+                      />
+                    </label>
+                      </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
             <FormField
               control={form.control}
@@ -469,10 +481,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                       />
                     </PopoverContent>
                   </Popover>
-                  {/* <FormDescription> */}
-                  {/* Your date of birth is used to calculate your age. */}
-                  {/* </FormDescription> */}
-                  <FormMessage />
+                 <FormMessage />
                 </FormItem>
               )}
             />
@@ -492,10 +501,10 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                             "w-full pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground"
                           )}
-                        >
+                          >
                           {field.value ? (
              
-               format(field.value, "PPP")
+                            format(field.value, "PPP")
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -538,24 +547,35 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               )}
             />
 
-             <FormField
-              control={form.control}
-              name="contractVisibility"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contract Visibility</FormLabel>
-                  <FormControl>
-                    <select {...field} className="input">
-                      <option value="">Select contract visibility</option>
-                      <option value="Public">Public</option>
-                      <option value="Private">Private</option>
-                      <option value="Invitation-only">Invitation-only</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+             
+              <FormField
+                control={form.control}
+                name="contractVisibility"
+                render={({ field }) => (
+                  <FormItem>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <FormLabel style={{ marginRight: "1rem" }}>Contract Visibility </FormLabel>
+                      <Select>
+                        <SelectTrigger className="w-[auto]">
+                          <SelectValue placeholder="Select contract visibility" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem {...field} value="Public">
+                            Public
+                          </SelectItem>
+                          <SelectItem {...field} value="Private">
+                            Private
+                          </SelectItem>
+                          <SelectItem {...field} value="Invitation-only">
+                            Invitation-only
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
             <FormField
               control={form.control}
@@ -591,33 +611,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="preferredLanguage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Preferred Language</FormLabel>
-                  <FormControl>
-                    <select {...field} className="input">
-                      <option value="">Select preferred language</option>
-                      <option value="English">English</option>
-                      <option value="Hindi">Hindi</option>
-                      <option value="Spanish">Spanish</option>
-                      <option value="French">French</option>
-                      <option value="German">German</option>
-                      <option value="Italian">Italian</option>
-                      <option value="Japanese">Japanese</option>
-                      <option value="Russian">Russian</option>
-                      <option value="Chinese">Chinese</option>
-                      <option value="Korean">Korean</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            
 
 
             <FormField
