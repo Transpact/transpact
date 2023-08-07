@@ -1,5 +1,4 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-<<<<<<< HEAD
 # Developer note: near.gitignore will be renamed to .gitignore upon project creation
 # dependencies
 node_modules
@@ -18,43 +17,21 @@ target
 # testing
 /coverage
 
-=======
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
->>>>>>> 84e24d2 (Updated the landing page)
 # production
 /build
 
 # misc
 .DS_Store
-<<<<<<< HEAD
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 /.cache
 
-=======
-*.pem
-
-# debug
->>>>>>> 84e24d2 (Updated the landing page)
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-<<<<<<< HEAD
 # Frontend
 
 /frontend/.parcel-cache
@@ -77,21 +54,3 @@ Cargo.lock
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
-=======
-# local env files
-.env*.local
-.env
-.env.*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# database
-/prisma/db.sqlite
-/prisma/db.sqlite-journal
-
->>>>>>> 84e24d2 (Updated the landing page)
