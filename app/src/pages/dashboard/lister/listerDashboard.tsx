@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-
+import { Icons } from "@/components/icons";
 import DashboardLayout from "@/components/layouts/dashboard-layout"
 import { DashboardShell } from "@/components/shell"
 
@@ -35,7 +35,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
         loading={loading}
         heading="Dashboard"
         text="List and manage your contracts"
-        buttonLabel="Download"
+        buttonLabel="List Contract"
       >
         <DashboardShell>
           <div className="hidden flex-col md:flex">
@@ -45,8 +45,10 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
 
                 <div className="flex items-center space-x-2">
                   <CalendarDateRangePicker />
-                  <Button>Download</Button>
-                </div>
+                  <Button>
+                    <Icons.add className="mr-2 h-4 w-4" />
+                    List Contract
+                  </Button>                </div>
               </div>
 
               <Tabs defaultValue="overview" className="space-y-4">
@@ -94,7 +96,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                     <Card>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                          Subscriptions
+                          Ongoing Contracts
                         </CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +114,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">+2350</div>
+                        <div className="text-2xl font-bold">23</div>
                         <p className="text-xs text-muted-foreground">
                           +180.1% from last month
                         </p>
@@ -122,7 +124,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                     <Card>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                          Sales
+                          Pending Contracts
                         </CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +141,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">+12,234</div>
+                        <div className="text-2xl font-bold">12</div>
                         <p className="text-xs text-muted-foreground">
                           +19% from last month
                         </p>
@@ -149,7 +151,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                     <Card>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                          Active Now
+                          Completed Contracts
                         </CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -165,9 +167,9 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">+573</div>
+                        <div className="text-2xl font-bold">73</div>
                         <p className="text-xs text-muted-foreground">
-                          +201 since last hour
+                          +20 since last month
                         </p>
                       </CardContent>
                     </Card>
@@ -185,9 +187,9 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
 
                     <Card className="col-span-3">
                       <CardHeader>
-                        <CardTitle>Recent Sales</CardTitle>
+                        <CardTitle>Recent Contracts</CardTitle>
                         <CardDescription>
-                          You made 265 sales this month.
+                          You finished 73 contracts this month.
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
