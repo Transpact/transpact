@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { RecentSales } from "@/components/lister/react-sales"
+import { RecentSales } from "@/components/lister/recentContracts"
 import { Overview } from "@/components/lister/overview"
 
 import { CalendarDateRangePicker } from "@/components/ui/date-range-picker"
@@ -46,9 +46,9 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
                 <div className="flex items-center space-x-2">
                   <CalendarDateRangePicker />
                   <Link href="/contract/add">
-              <Button>
+              <Button> 
               <Icons.add className="mr-2 h-4 w-4" />
-                List Contract
+              <span className="text-sm font-bold">List Contract</span>
               </Button>
               </Link>
               </div>
