@@ -2,9 +2,9 @@ import React, { useContext, useState } from "react"
 import { Icons } from "@/components/icons";
 import DashboardLayout from "@/components/layouts/dashboard-layout"
 import { DashboardShell } from "@/components/shell"
-
+import  AnalyticsSection  from "@/components/lister/AnalyticsSection"; 
 import { Button } from "@/components/ui/button"
-
+import Link from "next/link";
 import Head from "next/head"
 
 import {
@@ -15,14 +15,14 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { RecentSales } from "@/components/bidder/react-sales"
-import { Overview } from "@/components/bidder/overview"
+import { RecentSales } from "@/components/lister/react-sales"
+import { Overview } from "@/components/lister/overview"
 
 import { CalendarDateRangePicker } from "@/components/ui/date-range-picker"
 
-interface BidderDashboardProps {}
+interface ListerDashboardProps {}
 
-const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
+const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
   const [loading, setLoading] = useState(false)
 
   return (
@@ -33,7 +33,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
       <DashboardLayout
         type="lister"
         loading={loading}
-        heading="Dashboard"
+        heading="Lister Dashboard"
         text="List and manage your contracts"
         buttonLabel="List Contract"
       >
@@ -41,14 +41,17 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
           <div className="hidden flex-col md:flex">
             <div className="flex-1 space-y-4 p-8 pt-6">
               <div className="flex items-center justify-between space-y-2">
-                <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+                <h2 className="text-3xl font-bold tracking-tight">Lister Dashboard</h2>
 
                 <div className="flex items-center space-x-2">
                   <CalendarDateRangePicker />
-                  <Button>
-                    <Icons.add className="mr-2 h-4 w-4" />
-                    List Contract
-                  </Button>                </div>
+                  <Link href="/contract/add">
+              <Button>
+              <Icons.add className="mr-2 h-4 w-4" />
+                List Contract
+              </Button>
+              </Link>
+              </div>
               </div>
 
               <Tabs defaultValue="overview" className="space-y-4">
@@ -70,7 +73,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                     <Card>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                          Total Revenue
+                          Total Amount spent
                         </CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -207,4 +210,4 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
   )
 }
 
-export default BidderDashboard
+export default ListerDashboard
