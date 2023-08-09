@@ -68,7 +68,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                     <Card>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                          Total Revenue
+                          Total Contracts Bid On
                         </CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -84,9 +84,9 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">$45,231.89</div>
+                        <div className="text-2xl font-bold">35</div>
                         <p className="text-xs text-muted-foreground">
-                          +20.1% from last month
+                          +5 contracts from last month
                         </p>
                       </CardContent>
                     </Card>
@@ -94,7 +94,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                     <Card>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                          Subscriptions
+                          Total Contracts Awarded
                         </CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -112,9 +112,9 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">+2350</div>
+                        <div className="text-2xl font-bold">15</div>
                         <p className="text-xs text-muted-foreground">
-                          +180.1% from last month
+                          40% award rate
                         </p>
                       </CardContent>
                     </Card>
@@ -122,7 +122,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                     <Card>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                          Sales
+                          Total Contracts Completed
                         </CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -139,9 +139,9 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">+12,234</div>
+                        <div className="text-2xl font-bold">12</div>
                         <p className="text-xs text-muted-foreground">
-                          +19% from last month
+                          3 contracts under progress
                         </p>
                       </CardContent>
                     </Card>
@@ -149,7 +149,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                     <Card>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                          Active Now
+                          Total Earnings
                         </CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -165,9 +165,9 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">+573</div>
+                        <div className="text-2xl font-bold">$24,000</div>
                         <p className="text-xs text-muted-foreground">
-                          +201 since last hour
+                          +$4,000 from last month
                         </p>
                       </CardContent>
                     </Card>
@@ -176,7 +176,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                     <Card className="col-span-4">
                       <CardHeader>
-                        <CardTitle>Overview</CardTitle>
+                        <CardTitle>Total Earnings</CardTitle>
                       </CardHeader>
                       <CardContent className="pl-2">
                         <Overview />
@@ -185,9 +185,9 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
 
                     <Card className="col-span-3">
                       <CardHeader>
-                        <CardTitle>Recent Sales</CardTitle>
+                        <CardTitle>Recent Transactions</CardTitle>
                         <CardDescription>
-                          You made 265 sales this month.
+                          You completed 30 transactions this month.
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
