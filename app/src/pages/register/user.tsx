@@ -5,6 +5,7 @@ import RegisterBidderForm2 from "@/components/forms/register-bidder-form/Form2";
 import RegisterBidderForm3Props from "@/components/forms/register-bidder-form/Form3";
 import { endpoints } from "@/lib/utils";
 import RegisterBidderForm0 from "@/components/forms/register-bidder-form/Form0";
+import MainLayout from "@/components/layouts/main-layout";
 
 interface RegisterBidderProps {}
 
@@ -41,12 +42,14 @@ const RegisterBidder: React.FC<RegisterBidderProps> = ({}) => {
     },[])
 
     return(
-        <>
-            {pageNo === 0 && !loading && <RegisterBidderForm0 setPageNo={setPageNo} setUserType={setUserType}/>}
-            {pageNo === 1 && !loading && <RegisterBidderForm1 setPageNo={setPageNo} userType={userType}/>}
-            {pageNo === 2 && !loading && <RegisterBidderForm2 setPageNo={setPageNo} userType={userType}/>}
-            {pageNo === 3 && !loading && <RegisterBidderForm3Props setPageNo={setPageNo} userType={userType}/>}
-        </>
+        <MainLayout>
+            <div className="w-full min-h-[80vh] mt-24 pt-24">
+                {pageNo === 0 && !loading && <RegisterBidderForm0 setPageNo={setPageNo} setUserType={setUserType}/>}
+                {pageNo === 1 && !loading && <RegisterBidderForm1 setPageNo={setPageNo} userType={userType}/>}
+                {pageNo === 2 && !loading && <RegisterBidderForm2 setPageNo={setPageNo} userType={userType}/>}
+                {pageNo === 3 && !loading && <RegisterBidderForm3Props setPageNo={setPageNo} userType={userType}/>}
+            </div>
+        </MainLayout>
     )
     
     

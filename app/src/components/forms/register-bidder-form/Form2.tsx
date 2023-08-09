@@ -24,7 +24,6 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox"
-import MainLayout from "@/components/layouts/main-layout";
 
 
 import { useForm } from "react-hook-form";
@@ -100,7 +99,6 @@ const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo,user
         }
 
     return(
-            <MainLayout>
                 <section className="w-[100vw] py-10 flex justify-center items-center">
                     <div className="w-full md:w-1/2 py-10 h-[95%] flex flex-col items-center shadow-md border-[1px] border-gray-300 rounded-xl">
                         <div className="w-full flex justify-center">
@@ -181,7 +179,6 @@ const RegisterBidderForm2: React.FC<RegisterBidderForm2Props> = ({setPageNo,user
                         </div>
                     </div>
                 </section>
-            </MainLayout>
     )
 
 }
