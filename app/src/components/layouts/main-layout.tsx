@@ -1,62 +1,67 @@
-import "regenerator-runtime/runtime";
-import React, { useContext } from "react";
-import { Button } from "@/components/ui/button";
-import { marketingConfig } from "@/config/marketing";
-import { useEffect, useState } from "react" 
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
-import { MainNav } from "@/components/main-nav";
-import { SiteFooter } from "@/components/site-footer";
-import { WalletContext } from "@/context/wallet-context";
+import "regenerator-runtime/runtime"
+import React, { useContext } from "react"
+import { Button } from "@/components/ui/button"
+import { marketingConfig } from "@/config/marketing"
+import { useEffect, useState } from "react"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
+import { MainNav } from "@/components/main-nav"
+import { SiteFooter } from "@/components/site-footer"
+import { WalletContext } from "@/context/wallet-context"
+import { useRouter } from "next/router"
 
 interface MainLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const { wallet, isSignedIn } = useContext(WalletContext)!;
+  const { wallet, isSignedIn } = useContext(WalletContext)!
+  const router = useRouter()
 
   const handleLogin = async () => {
-    wallet.signIn();
-  };
-
-  const handleLogout = async () => {
-    wallet.signOut();
-  };
-  const [color,setcolor] = useState(false);
-  const changeNavBg = () => {
-    window.scrollY >= 90 ? setcolor(true) : setcolor(false);
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', changeNavBg);
-    return () => {
-      window.removeEventListener('scroll', changeNavBg);
-    };
-  }, []);
-
-  const mb = () => {
-    
+    // wallet.signIn()
+    router.push("/login")
   }
 
+  const handleLogout = async () => {
+    // wallet.signOut()
+  }
+  const [color, setcolor] = useState(false)
+  const changeNavBg = () => {
+    window.scrollY >= 90 ? setcolor(true) : setcolor(false)
+  }
+
+  useEffect(() => {
+    window.addEventListener("scroll", changeNavBg)
+    return () => {
+      window.removeEventListener("scroll", changeNavBg)
+    }
+  }, [])
+
+  const mb = () => {}
 
   return (
-    <div className="flex min-h-scree flex-col">
-      <header style={color ? {backgroundColor: 'rgba(0,0,0,0.4)',} : {}} className="left-0 backdrop-blur top-0 w-full z-10 ease-in duration-300  fixed">
-        <div className="flex h-20  m-auto items-center p-5 justify-between py-6">
+    <div className="min-h-scree flex flex-col">
+      <header
+        style={color ? { backgroundColor: "rgba(0,0,0,0.4)" } : {}}
+        className="fixed left-0 top-0 z-10 w-full backdrop-blur duration-300  ease-in"
+      >
+        <div className="m-auto flex  h-20 items-center justify-between p-5 py-6">
           <MainNav items={marketingConfig.mainNav} />
 
           <nav>
-          <Button
+            <Button
               className={cn(
                 buttonVariants({ variant: "secondary", size: "sm" }),
-                "px-5  m-1"
+                "m-1  px-5"
               )}
-              onClick={() => mb}
+              onClick={() => {
+                router.push("/register")
+              }}
             >
-           Apply as Lister
+              Register
             </Button>
-            <Button
+            {/* <Button
               className={cn(
                 buttonVariants({ variant: "secondary", size: "sm" }),
                 "px-5  m-1 "
@@ -64,11 +69,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               onClick={() => mb}
             >
            Apply as Bidder
-            </Button>
+            </Button> */}
             <Button
               className={cn(
                 buttonVariants({ variant: "secondary", size: "sm" }),
-                "px-4  m-1"
+                "m-1  px-4"
               )}
               onClick={isSignedIn ? handleLogout : handleLogin}
             >
@@ -82,7 +87,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
       <SiteFooter />
     </div>
-  );
-};
+  )
+}
 
-export default MainLayout;
+export default MainLayout
