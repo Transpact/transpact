@@ -9,6 +9,7 @@ import { MainNav } from "@/components/main-nav"
 import { SiteFooter } from "@/components/site-footer"
 import { WalletContext } from "@/context/wallet-context"
 import { useRouter } from "next/router"
+import { SignedIn,SignedOut,UserButton,UserProfile } from "@clerk/nextjs"
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -50,35 +51,43 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <MainNav items={marketingConfig.mainNav} />
 
           <nav>
-            <Button
-              className={cn(
-                buttonVariants({ variant: "secondary", size: "sm" }),
-                "m-1  px-5"
-              )}
-              onClick={() => {
-                router.push("/register")
-              }}
-            >
-              Register
-            </Button>
-            {/* <Button
-              className={cn(
-                buttonVariants({ variant: "secondary", size: "sm" }),
-                "px-5  m-1 "
-              )}
-              onClick={() => mb}
-            >
-           Apply as Bidder
-            </Button> */}
-            <Button
-              className={cn(
-                buttonVariants({ variant: "secondary", size: "sm" }),
-                "m-1  px-4"
-              )}
-              onClick={isSignedIn ? handleLogout : handleLogin}
-            >
-              {isSignedIn ? `Logout ${wallet.accountId}` : "Login"}
-            </Button>
+
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+
+            <SignedOut>
+              <Button
+                className={cn(
+                  buttonVariants({ variant: "secondary", size: "sm" }),
+                  "m-1  px-5"
+                )}
+                onClick={() => {
+                  router.push("/register")
+                }}
+              >
+                Register
+              </Button>
+                {/* <Button
+                  className={cn(
+                    buttonVariants({ variant: "secondary", size: "sm" }),
+                    "px-5  m-1 "
+                  )}
+                  onClick={() => mb}
+                >
+              Apply as Bidder
+                </Button> */}
+              <Button
+                className={cn(
+                  buttonVariants({ variant: "secondary", size: "sm" }),
+                  "m-1  px-4"
+                )}
+                onClick={isSignedIn ? handleLogout : handleLogin}
+              >
+                {isSignedIn ? `Logout ${wallet.accountId}` : "Login"}
+              </Button>
+            </SignedOut>
+
           </nav>
         </div>
       </header>
