@@ -18,6 +18,29 @@ enum UserTypes {
   LISTER
 }
 
+enum ContractTypes {
+  FIXED_PRICE
+  HOURLY
+  MILESTONE_BASED
+}
+
+enum ContractVisibility {
+  PUBLIC
+  PRIVATE
+  INVITE
+}
+
+enum PaymentMethods {
+  BANK_TRANSFER
+  TRANSPACT_FUND_WALLET
+  CASH
+}
+
+enum MilestoneType {
+  SINGLE // when single payment is selected
+  MULTIPLE // when milestone is selected
+}
+
 model User {
   id             String     @id @default(uuid())
   email          String     @unique
@@ -43,6 +66,84 @@ model User {
   website                        String? @default("")
   experience                     Int?    @default(0)
 
+  created_contracts Contract[] @relation("CreatedContracts")
+  bidded_contracts  Contract[] @relation("BiddedContracts")
+
+  // ManytoMany with bidders field in Contract
+  bidded Contract[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Deliverable {
+  id         String   @id @default(uuid())
+  name       String   @db.VarChar(100)
+  start_date DateTime @db.Date
+  end_date   DateTime @db.Date
+
+  // contract deliverable
+  contractId String
+  contract   Contract @relation("ContractDeliverable", fields: [contractId], references: [id])
+
+  // contract milestone deliverable
+  milestoneId String
+  milestone   Milestone @relation("MilestoneDeliverable", fields: [milestoneId], references: [id])
+
+  @@index([contractId])
+  @@index([milestoneId])
+}
+
+model Milestone {
+  id         String        @id @default(uuid())
+  type       MilestoneType
+  name       String        @db.VarChar(100)
+  start_date DateTime      @db.Date
+  end_date   DateTime      @db.Date
+
+  // contract milestone
+  contractId String
+  contract   Contract @relation("ContractMilestone", fields: [contractId], references: [id])
+
+  // we can add deliverables in the milestone for better documentation in the contract
+  deliverable Deliverable[] @relation("MilestoneDeliverable")
+
+  @@index([contractId])
+}
+
+model Contract {
+  id String @id @default(uuid())
+
+  contract_type      ContractTypes
+  title              String         @db.VarChar(100)
+  skills_required    String[]
+  legal_requirements String         @db.VarChar(500)
+  payment_method     PaymentMethods
+  total_amount       Int            @default(0)
+  renewal            Boolean        @default(false)
+  description        String         @db.Text
+
+  contract_visibility ContractVisibility
+  contract_duration   String             @db.VarChar(20)
+  budget_range        String             @db.VarChar(60)
+
+  files String[]
+
+  // Foreignkey relationship for who contrat owner
+  creatorId        String
+  contract_creator User   @relation("CreatedContracts", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  // ForeignKey relation for bidder/contractor
+  bidderId        String?
+  contract_bidder User?   @relation("BiddedContracts", fields: [bidderId], references: [id], onDelete: SetNull)
+
+  // total users bidded in this contract (ManytoManyFor Bidded field in User)
+  bidders      User[]
+  deliverables Deliverable[] @relation("ContractDeliverable")
+
+  // milestones 
+  milestones Milestone[] @relation("ContractMilestone")
+
+  @@index([creatorId])
+  @@index([bidderId])
 }
