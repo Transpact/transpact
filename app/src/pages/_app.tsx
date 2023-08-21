@@ -1,11 +1,12 @@
-import { WalletContext, WalletContextType } from "@/context/wallet-context"
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import { useEffect, useState } from "react"
 
 import { Wallet } from "@/lib/near-wallet"
 import { SAMPLE_CONTRACT } from "@/lib/data"
+import { WalletContext, WalletContextType } from "@/context/wallet-context"
 import { ContractContext } from "@/context/contract-context"
+import { UserContext } from "@/context/user-context"
 import { GlobalLoading } from "react-global-loading"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -30,8 +31,11 @@ const fontHeading = localFont({
 })
 
 export default function App({ Component, pageProps }: AppProps) {
-  const wallet = new Wallet({ createAccessKeyFor: CONTRACT_ADDRESS })
-  const [contract, setContract] = useState(SAMPLE_CONTRACT)
+  
+  const wallet = new Wallet({ createAccessKeyFor: CONTRACT_ADDRESS });
+  const [contract, setContract] = useState(SAMPLE_CONTRACT);
+  const [user, setUser] = useState<User | undefined>(undefined);
+
   const router = useRouter()
 
   const [walletContext, setWalletContext] = useState<WalletContextType>({
@@ -59,20 +63,9 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }
 
-  // useEffect(() => {
-  //   const init = async () => {
-  //     const isSignedIn = await wallet.startUp()
-
-  //     setWalletContext((prev) => ({
-  //       ...prev,
-  //       isSignedIn: isSignedIn,
-  //     }))
-  //   }
-  //   getUserData()
-  //   init()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
-
+  useEffect(() => {
+    getUserData();
+  }, [])
   return (
     <ClerkProvider {...pageProps}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -83,12 +76,19 @@ export default function App({ Component, pageProps }: AppProps) {
               setContracts: setContract,
             }}
           >
-            <main className={cn(fontHeading.variable, fontSans.variable)}>
-              <Component {...pageProps} />
-            </main>
+            <UserContext.Provider
+              value={{
+                user: user,
+                setUser: setUser
+              }}
+            >
+              <main className={cn(fontHeading.variable, fontSans.variable)}>
+                <Component {...pageProps} />
+              </main>
 
-            <GlobalLoading zIndex={50} />
-            <Toaster />
+              <GlobalLoading zIndex={50} />
+              <Toaster />
+            </UserContext.Provider>
           </ContractContext.Provider>
         </WalletContext.Provider>
       </ThemeProvider>

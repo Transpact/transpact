@@ -1,46 +1,62 @@
 import { prisma } from "@/lib/db"
-import { PrismaContract } from "@prisma/client"
+import { getAuth } from "@clerk/nextjs/server"
 import type { NextApiRequest, NextApiResponse } from "next"
 
-const handler = async (
-  req: NextApiRequest,
-  res: NextApiResponse<
-    | PrismaContract[]
-    | PrismaContract
-    | {
-        err: string
-      }
-  >
-) => {
-  try {
-    if (req.method === "GET") {
-      const prismaContracts = await prisma.prismaContract.findMany({})
 
-      return res.status(200).json(prismaContracts)
-    } else if (req.method === "POST") {
-      const { name } = req.body as {
-        name?: string
-      }
+async function POST(req: NextApiRequest, res: NextApiResponse){
 
-      if (!name) {
-        throw new Error("Name is required")
-      }
+  let user = getAuth(req);
+  const contractDetails = req.body;
 
-      const prismaContract = await prisma.prismaContract.create({
-        data: {
-          name: name,
-        },
-      })
-
-      return res.status(200).json(prismaContract)
-    } else {
-      throw new Error("Invalid HTTP request, only GET and POST allowed")
-    }
-  } catch (e: any) {
-    res.status(400).json({
-      err: e?.message ?? "Bad request",
-    })
+  if (user==null){
+    return res.status(401).json("UNAUTHORISED_USER");
   }
+
+  try{
+
+    let userExists = await prisma.user.findFirst({
+      where:{
+        id: user.userId as string, 
+      }
+    })
+
+    if (!userExists){
+      return res.status(401).json("USER_DOES_NOT_EXISTS")
+    }
+    let contract = await prisma.contract.create({
+      data:{
+        ...contractDetails,
+        contract_creator:{
+          connect:{
+            id: userExists.id
+          }
+        },
+        bidders:{
+          connect:{
+            id: userExists.id
+          }
+        }      
+      }
+    })
+
+    res.status(200).json(contract)
+  } catch(error:any){
+    return res.status(400).json({ message: error.message });
+  }
+
 }
 
-export default handler
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  switch (req.method) {
+    // case "GET":
+    //   GET(req, res)
+    //   break
+    case "POST":
+      POST(req, res)
+      break
+    // case "PUT":
+    //   PUT(req, res)
+    //   break
+  }
+}

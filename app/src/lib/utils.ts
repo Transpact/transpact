@@ -9,6 +9,7 @@ import { CreateAccount, Transaction } from "near-api-js/lib/transaction";
 export const endpoints = {
   register: "/api/register/user",
   login: "/api/login",
+  contract: "/api/contract",
 }
 
 export function cn(...inputs: ClassValue[]) {

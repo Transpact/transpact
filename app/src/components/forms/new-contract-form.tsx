@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
-import { cn, createContract } from "@/lib/utils";
+import { cn, createContract, endpoints } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -127,43 +127,85 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  // async function onSubmit(values: FormData) {
+  //   try {
+  //     setLoading(true);
+  //     let values = form.getValues();
+
+  //     globalLoading.show();
+  //     let result = await createContract(
+  //       wallet,
+  //       contractId,
+  //       values.title,
+  //       values.description,
+  //       false,
+  //       values.startDate,
+  //       values.endDate
+  //     );
+
+  //     console.log(result);
+  //     if (result.status === "CREATED") {
+  //       router.replace("/dashboard/lister");
+  //     }
+
+  //     const newContract: Contract = {
+  //       name: values.title,
+  //       amount: values.totalAmount, 
+  //       description: values.description,
+  //       startDate: values.startDate,
+  //       endDate: values.endDate,
+  //       files: [""],
+  //       owner: "",
+  //       id: Math.round(Math.random() * 100).toString(),
+  //       status: "Progress",
+  //     };
+      
+      
+
+  //     setContracts([...contracts, newContract]);
+  //     globalLoading.hide();
+  //   } catch (err: any) {
+  //     const error = err;
+
+  //     toast({
+  //       title: "Failed to signin/signup",
+  //       description: error?.message,
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
   async function onSubmit(values: FormData) {
     try {
       setLoading(true);
-      let values = form.getValues();
-
-      globalLoading.show();
-      let result = await createContract(
-        wallet,
-        contractId,
-        values.title,
-        values.description,
-        false,
-        values.startDate,
-        values.endDate
-      );
-
-      console.log(result);
-      if (result.status === "CREATED") {
-        router.replace("/dashboard/lister");
-      }
-
-      const newContract: Contract = {
-        name: values.title,
-        amount: values.totalAmount, 
-        description: values.description,
-        startDate: values.startDate,
-        endDate: values.endDate,
-        files: [""],
-        owner: "",
-        id: Math.round(Math.random() * 100).toString(),
-        status: "Progress",
-      };
       
-      
+      const resp = await fetch(endpoints.contract,{
+        method:'POST',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          contract_type: "FIXED_PRICE",
+          title: "Test contract",
+          skills_required: ["test","hell"],
+          legal_requirements: "These are legal requirements",
+          payment_method: "TRANSPACT_FUND_WALLET",
+          total_amount: 1000,
+          renewal: false,
+          description: "this is test descriptipn",
 
-      setContracts([...contracts, newContract]);
-      globalLoading.hide();
+          contract_visibility: "PUBLIC",
+          contract_duration: "6 Months",
+          budget_range: "800 USD - 1000 USD"
+        })
+    });
+
+    let json = await resp.json();
+
+    console.log(json);
+
     } catch (err: any) {
       const error = err;
 
@@ -635,7 +677,9 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                 </FormItem>
               )}
             />
-
+            <Button onClick={onSubmit} className="col-span-2 mt-6">
+              Add 1
+            </Button>
             <Button type="submit" className="col-span-2 mt-6">
               Add
             </Button>
