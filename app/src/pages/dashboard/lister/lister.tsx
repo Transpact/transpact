@@ -1,36 +1,36 @@
-import React, { useContext, useEffect, useState } from "react";
-import { WalletContext } from "@/context/wallet-context";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
-import { DashboardShell } from "@/components/shell";
-import { DashboardHeader } from "@/components/header";
+import React, { useContext, useEffect, useState } from "react"
+import { WalletContext } from "@/context/wallet-context"
+import DashboardLayout from "@/components/layouts/dashboard-layout"
+import { DashboardShell } from "@/components/shell"
+import { DashboardHeader } from "@/components/header"
 import { SAMPLE_CONTRACT } from "@/lib/data"
-import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
-import { ContractTable } from "@/pages/bid/all";
-import Link from "next/link";
+import { Button } from "@/components/ui/button"
+import { Icons } from "@/components/icons"
+import { ContractTable } from "@/pages/bid/all"
+import Link from "next/link"
 
 interface ListerDashboardProps {}
 
 interface LocalContract {
-  id: string;
-  name: string;
-  amount: number;
-  owner: string;
-  status: string;
-  startDate: Date;
-  endDate: Date;
-  description: string;
-  files?: string[];
+  id: string
+  name: string
+  amount: number
+  owner: string
+  status: string
+  startDate: Date
+  endDate: Date
+  description: string
+  files?: string[]
 }
 const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
-  const {} = useContext(WalletContext)!;
-  const [loading, setLoading] = useState(false);
+  const {} = useContext(WalletContext)!
+  const [loading, setLoading] = useState(false)
 
   const contracts: Contract[] = SAMPLE_CONTRACT
 
   useEffect(() => {
     // No need for any data fetching since you're using dummyContracts
-  }, []);
+  }, [])
 
   return (
     <DashboardLayout
@@ -45,7 +45,7 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
           heading="My Contracts"
           text="List and manage your contracts."
         >
-          <Link href="/contract/add">
+          <Link href="/dashboard/lister/contract/add">
             <Button variant="outline">
               <Icons.add className="mr-2 h-4 w-4" />
               List Contract
@@ -55,7 +55,7 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
         <ContractTable contracts={contracts} />
       </DashboardShell>
     </DashboardLayout>
-  );
-};
+  )
+}
 
-export default ListerDashboard;
+export default ListerDashboard

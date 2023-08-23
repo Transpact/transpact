@@ -1,46 +1,46 @@
-import "regenerator-runtime/runtime";
-import React, { useContext, useEffect, useState } from "react";
-import { WalletContext } from "@/context/wallet-context";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
-import { DashboardShell } from "@/components/shell";
-import { DashboardHeader } from "@/components/header";
-import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
-import { ContractTable } from "../../bid/all";
-import { ContractContext } from "@/context/contract-context";
-import Link from "next/link";
-import Head from "next/head";
+import "regenerator-runtime/runtime"
+import React, { useContext, useEffect, useState } from "react"
+import { WalletContext } from "@/context/wallet-context"
+import DashboardLayout from "@/components/layouts/dashboard-layout"
+import { DashboardShell } from "@/components/shell"
+import { DashboardHeader } from "@/components/header"
+import { Button } from "@/components/ui/button"
+import { Icons } from "@/components/icons"
+import { ContractTable } from "../../bid/all"
+import { ContractContext } from "@/context/contract-context"
+import Link from "next/link"
+import Head from "next/head"
 
 interface ListerDashboardProps {}
 
 const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
-  const {} = useContext(WalletContext)!;
-  const { contracts, setContracts } = useContext(ContractContext)!;
+  const {} = useContext(WalletContext)!
+  const { contracts, setContracts } = useContext(ContractContext)!
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const getContracts = async () => {
-    if (loading) return;
+    if (loading) return
 
-    setLoading(true);
+    setLoading(true)
 
     try {
       // TODO: Get contracts from the blockchain or API
       const fetchedContracts: Contract[] = [
         // Add your fetched contracts here
-      ];
+      ]
 
-      setContracts(fetchedContracts);
+      setContracts(fetchedContracts)
     } catch (e) {
-      console.log(e);
+      console.log(e)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    getContracts();
-  }, []);
+    getContracts()
+  }, [])
 
   return (
     <>
@@ -59,7 +59,7 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
             heading="My Contracts"
             text="Create and manage your contracts."
           >
-            <Link href="/contract/add">
+            <Link href="/dashboard/lister/contract/add">
               <Button variant="outline">
                 <Icons.add className="mr-2 h-4 w-4" />
                 List Contract
@@ -71,7 +71,7 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
         </DashboardShell>
       </DashboardLayout>
     </>
-  );
-};
+  )
+}
 
-export default ListerDashboard;
+export default ListerDashboard

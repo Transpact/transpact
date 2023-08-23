@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react"
-import { Icons } from "@/components/icons";
+import { Icons } from "@/components/icons"
 import DashboardLayout from "@/components/layouts/dashboard-layout"
 import { DashboardShell } from "@/components/shell"
-import  AnalyticsSection  from "@/components/lister/AnalyticsSection"; 
+import AnalyticsSection from "@/components/lister/AnalyticsSection"
 import { Button } from "@/components/ui/button"
-import Link from "next/link";
+import Link from "next/link"
 import Head from "next/head"
 
 import {
@@ -41,17 +41,19 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
           <div className="hidden flex-col md:flex">
             <div className="flex-1 space-y-4 p-8 pt-6">
               <div className="flex items-center justify-between space-y-2">
-                <h2 className="text-3xl font-bold tracking-tight">Lister Dashboard</h2>
+                <h2 className="text-3xl font-bold tracking-tight">
+                  Lister Dashboard
+                </h2>
 
                 <div className="flex items-center space-x-2">
                   <CalendarDateRangePicker />
-                  <Link href="/contract/add">
-              <Button> 
-              <Icons.add className="mr-2 h-4 w-4" />
-              <span className="text-sm font-bold">List Contract</span>
-              </Button>
-              </Link>
-              </div>
+                  <Link href="/dashboard/lister/contract/add">
+                    <Button>
+                      <Icons.add className="mr-2 h-4 w-4" />
+                      <span className="text-sm font-bold">List Contract</span>
+                    </Button>
+                  </Link>
+                </div>
               </div>
 
               <Tabs defaultValue="overview" className="space-y-4">
@@ -192,7 +194,8 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
                       <CardHeader>
                         <CardTitle>Recent Contracts</CardTitle>
                         <CardDescription>
-                        Contractors who have recently completed your contracts.
+                          Contractors who have recently completed your
+                          contracts.
                         </CardDescription>
                       </CardHeader>
                       <CardContent>

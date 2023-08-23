@@ -12,10 +12,9 @@ export const dashboardConfig: DashboardConfig = {
     },
   ],
   sidebarNav: [
-
     {
       title: "Dashboard",
-      href: "/dashboard/lister/listerDashboard",
+      href: "/dashboard/lister/stats",
       icon: "home",
     },
 
@@ -26,10 +25,9 @@ export const dashboardConfig: DashboardConfig = {
     },
     {
       title: "List Contract",
-      href: "/contract/add",
+      href: "/dashboard/lister/contract/add",
       icon: "package",
     },
-    
   ],
   sidebarNavBidder: [
     {
