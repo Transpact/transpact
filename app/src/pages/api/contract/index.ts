@@ -6,11 +6,6 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
   let user = getAuth(req)
   const contractDetails = req.body
 
-  // console.log(contractDetails)
-  // console.log(user)
-
-  // return res.status(401).json("UNAUTHORISED_USER")
-
   if (user == null) {
     return res.status(401).json("UNAUTHORISED_USER")
   }
@@ -42,7 +37,7 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
     })
 
-    res.status(200).json(contract)
+    return res.status(200).json(contract)
   } catch (error: any) {
     return res.status(400).json({ message: error.message })
   }
@@ -54,8 +49,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     //   GET(req, res)
     //   break
     case "POST":
-      POST(req, res)
-      break
+      return POST(req, res)
+
     // case "PUT":
     //   PUT(req, res)
     //   break

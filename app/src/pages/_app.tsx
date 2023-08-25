@@ -31,10 +31,9 @@ const fontHeading = localFont({
 })
 
 export default function App({ Component, pageProps }: AppProps) {
-  
-  const wallet = new Wallet({ createAccessKeyFor: CONTRACT_ADDRESS });
-  const [contract, setContract] = useState(SAMPLE_CONTRACT);
-  const [user, setUser] = useState<User | undefined>(undefined);
+  const wallet = new Wallet({ createAccessKeyFor: CONTRACT_ADDRESS })
+  const [contract, setContract] = useState(SAMPLE_CONTRACT)
+  const [user, setUser] = useState<User | undefined>(undefined)
 
   const router = useRouter()
 
@@ -44,28 +43,26 @@ export default function App({ Component, pageProps }: AppProps) {
     wallet: wallet,
   })
 
-  async function getUserData() {
-    const resp = await fetch(endpoints.register)
-    const jsn = await resp.json()
-
-    console.log(jsn)
-
-    if (resp.status !== 200) {
-      router.replace({
-        pathname: "/register",
-      })
-    }
-
-    if (!jsn.user_completed) {
-      router.replace({
-        pathname: "/register/user",
-      })
-    }
-  }
-
   useEffect(() => {
-    getUserData();
-  }, [])
+    async function getUserData() {
+      // const resp = await fetch(endpoints.register)
+      // const jsn = await resp.json()
+      // console.log(jsn)
+      // if (resp.status !== 200) {
+      //   router.replace({
+      //     pathname: "/register",
+      //   })
+      // }
+      // if (!jsn.user_completed) {
+      //   // router.replace({
+      //   //   pathname: "/register/user",
+      //   // })
+      // }
+    }
+
+    getUserData()
+  }, [router])
+
   return (
     <ClerkProvider {...pageProps}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -79,7 +76,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <UserContext.Provider
               value={{
                 user: user,
-                setUser: setUser
+                setUser: setUser,
               }}
             >
               <main className={cn(fontHeading.variable, fontSans.variable)}>

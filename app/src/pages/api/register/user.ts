@@ -29,6 +29,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     return res.status(400).json({ message: error.message })
   }
 }
+
 async function POST(req: NextApiRequest, res: NextApiResponse) {
   let user = getAuth(req)
   let userDetails = req.body
@@ -45,7 +46,6 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
     })
 
     if (alreadyExists) {
-      console.log(user)
       return res.status(200).json("USER_ALREADY_EXISTS")
     }
 
@@ -69,6 +69,7 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
   if (user === null) {
     return res.status(401).json("UNAUTHORISED_USER")
   }
+
   const data = req.body
 
   try {
@@ -88,13 +89,10 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case "GET":
-      GET(req, res)
-      break
+      return GET(req, res)
     case "POST":
-      POST(req, res)
-      break
+      return POST(req, res)
     case "PUT":
-      PUT(req, res)
-      break
+      return PUT(req, res)
   }
 }

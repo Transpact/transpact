@@ -9,6 +9,7 @@ export default authMiddleware({
     "/dashboard/bidder/bids",
     "/dashboard/bidder",
     "/api/login",
+    "/api/register/user",
   ],
   ignoredRoutes: ["/api/login"],
 })

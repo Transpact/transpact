@@ -13,7 +13,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     users = await prisma.user.findMany()
   }
 
-  res.status(200).json(users)
+  return res.status(200).json(users)
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -30,17 +30,17 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     let token = generateToken(user.email, user.id)
 
-    res.status(200).json({ token: token })
+    return res.status(200).json({ token: token })
   } catch {
-    res.status(401).json("INVALID CREDENTIALS")
+    return res.status(401).json("INVALID CREDENTIALS")
   }
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case "GET":
-      GET(req, res)
+      return GET(req, res)
     case "POST":
-      POST(req, res)
+      return POST(req, res)
   }
 }
