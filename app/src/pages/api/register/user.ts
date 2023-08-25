@@ -1,12 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { prisma } from "@/lib/db"
 import { getAuth } from "@clerk/nextjs/server"
+import { handleError, handleResponse } from "@/lib/api-helper"
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
   let user = getAuth(req)
 
   if (user === null) {
-    return res.status(401).json("UNAUTHORISED_USER")
+    return handleError({
+      res,
+      statusCode: 401,
+      data: {},
+      message: "You are not authorised",
+    })
   }
 
   try {
@@ -17,14 +23,22 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     })
 
     if (!alreadyExists) {
-      return res.status(200).json({ user_completed: false })
+      return handleResponse({
+        res,
+        data: {
+          user_completed: false,
+        },
+        message: "The user does not exists",
+      })
     }
 
-    if (alreadyExists.user_completed) {
-      return res.status(200).json({ user_completed: true })
-    } else {
-      return res.status(200).json({ user_completed: false })
-    }
+    return handleResponse({
+      res,
+      message: "",
+      data: {
+        user_completed: alreadyExists.user_completed,
+      },
+    })
   } catch (error: any) {
     return res.status(400).json({ message: error.message })
   }
@@ -35,7 +49,12 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
   let userDetails = req.body
 
   if (user === null) {
-    return res.status(401).json("UNAUTHORISED_USER")
+    return handleError({
+      res,
+      statusCode: 401,
+      data: {},
+      message: "You are not authorised",
+    })
   }
 
   try {
@@ -46,7 +65,12 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
     })
 
     if (alreadyExists) {
-      return res.status(200).json("USER_ALREADY_EXISTS")
+      return handleError({
+        res,
+        statusCode: 400,
+        data: {},
+        message: "User already exists",
+      })
     }
 
     await prisma.user.create({
@@ -57,9 +81,19 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
     })
 
-    return res.status(201).json("SUCCESS")
+    return handleResponse({
+      res,
+      statusCode: 201,
+      data: {},
+      message: "Success",
+    })
   } catch (error: any) {
-    return res.status(400).json({ message: error.message })
+    return handleError({
+      res,
+      statusCode: 401,
+      data: {},
+      message: error?.message ?? "Failed to create user",
+    })
   }
 }
 
@@ -67,7 +101,12 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
   let user = getAuth(req)
 
   if (user === null) {
-    return res.status(401).json("UNAUTHORISED_USER")
+    return handleError({
+      res,
+      statusCode: 401,
+      data: {},
+      message: "You are not authorised",
+    })
   }
 
   const data = req.body
@@ -80,9 +119,19 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
       data: data,
     })
 
-    return res.status(200).json("USER UPDATED")
-  } catch (err: any) {
-    return res.status(400).json(err.message)
+    return handleResponse({
+      res,
+      statusCode: 401,
+      data: {},
+      message: "Successfully updated the user",
+    })
+  } catch (error: any) {
+    return handleError({
+      res,
+      statusCode: 401,
+      data: {},
+      message: error?.message ?? "Failed to create user",
+    })
   }
 }
 
@@ -94,5 +143,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return POST(req, res)
     case "PUT":
       return PUT(req, res)
+    default:
+      return handleError({
+        res,
+        data: {},
+        statusCode: 404,
+        message: "Only GET POST and PUT allowed",
+      })
   }
 }
