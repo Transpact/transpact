@@ -48,17 +48,48 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import {
+  Contract as PrismaContract,
+  ContractTypes,
+  PaymentMethods,
+  ContractVisibility,
+} from "@prisma/client"
+
 interface NewContractFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z.object({
+  contractType: z.enum([
+    ContractTypes.FIXED_PRICE,
+    ContractTypes.HOURLY,
+    ContractTypes.MILESTONE_BASED,
+  ]),
   title: z.string().min(1).max(50),
+  skillsRequired: z.string(),
+  legalRequirements: z.string(),
+  paymentMethod: z.enum([
+    PaymentMethods.BANK_TRANSFER,
+    PaymentMethods.CASH,
+    PaymentMethods.TRANSPACT_FUND_WALLET,
+  ]),
   totalAmount: z.number().positive(),
+  renewalOption: z.boolean().optional(),
+  description: z.string().min(1),
+  contractDescription: z.string(),
+
+  contractVisibility: z.enum([
+    ContractVisibility.INVITE,
+    ContractVisibility.PRIVATE,
+    ContractVisibility.PUBLIC,
+  ]),
+  contractDuration: z.string(),
+  budgetRange: z.string(),
+
+  files: z.any(),
+
   startDate: z.date(),
   endDate: z.date(),
-  description: z.string().min(1),
-  files: z.any(),
-  contractType: z.string(),
-  skillsRequired: z.string(),
+
   deliverables: z.string(),
   proposalDeadline: z.date().optional(),
   numBiddersToAccept: z.number().int().positive().optional(),
@@ -71,15 +102,10 @@ const formSchema = z.object({
   projectTimeline: z.string(),
   locationPreference: z.string().optional(),
   references: z.string().optional(),
-  renewalOption: z.boolean().optional(),
-  contractVisibility: z.string(),
-  budgetRange: z.string(),
-  contractDuration: z.string(),
+
   preferredLanguage: z.string(),
-  contractDescription: z.string(),
   geographicalLocation: z.string().optional(),
-  legalRequirements: z.string(),
-  paymentMethod: z.string(),
+
   contractAttachments: z.any(),
   communicationGuidelines: z.string(),
   evaluationCriteria: z.string(),
@@ -179,25 +205,29 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
     try {
       setLoading(true)
 
+      const data: Partial<PrismaContract> = {
+        contract_type: values.contractType,
+        title: values.title,
+        skills_required: values.skillsRequired.split(""),
+        legal_requirements: values.legalRequirements,
+        payment_method: values.paymentMethod,
+        total_amount: values.totalAmount,
+        renewal: values.renewalOption ?? false,
+        description: values.description,
+
+        contract_visibility: values.contractVisibility,
+        contract_duration: values.contractDuration,
+        budget_range: values.budgetRange,
+
+        files: [],
+      }
+
       const resp = await fetch(endpoints.contract, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          contract_type: "FIXED_PRICE",
-          title: "Test contract",
-          skills_required: ["test", "hell"],
-          legal_requirements: "These are legal requirements",
-          payment_method: "TRANSPACT_FUND_WALLET",
-          total_amount: 1000,
-          renewal: false,
-          description: "this is test descriptipn",
-
-          contract_visibility: "PUBLIC",
-          contract_duration: "6 Months",
-          budget_range: "800 USD - 1000 USD",
-        }),
+        body: JSON.stringify(data),
       })
 
       let json = await resp.json()

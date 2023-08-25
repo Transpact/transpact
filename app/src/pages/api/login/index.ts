@@ -1,21 +1,19 @@
-import { generateToken,verifyToken } from "@/lib/TokenAuth";
-import { NextApiRequest,NextApiResponse } from "next";
-import sha256 from 'js-sha256';
+import { generateToken, verifyToken } from "@/lib/TokenAuth"
+import { NextApiRequest, NextApiResponse } from "next"
+import sha256 from "js-sha256"
 import { prisma } from "@/lib/db"
 
+async function GET(req: NextApiRequest, res: NextApiResponse) {
+  const { action } = req.query
+  let users
 
-async function GET(req:NextApiRequest,res:NextApiResponse){
-    
-    const {action} = req.query;
-    let users;
+  if (action === "delete") {
+    users = await prisma.user.deleteMany()
+  } else {
+    users = await prisma.user.findMany()
+  }
 
-    if (action==="delete"){
-      users = await prisma.user.deleteMany();
-    }
-    else{
-      users = await prisma.user.findMany();
-    }
-    res.status(200).json(users);
+  res.status(200).json(users)
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
