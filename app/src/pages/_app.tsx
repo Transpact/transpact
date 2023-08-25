@@ -17,6 +17,8 @@ import { useRouter } from "next/router"
 import { Inter as FontSans } from "next/font/google"
 import localFont from "next/font/local"
 import { cn } from "@/lib/utils"
+import { server, showAxiosError } from "@/lib/api-helper"
+import { AxiosError } from "axios"
 
 const CONTRACT_ADDRESS = "dev-1688285985299-62443913276139"
 
@@ -45,19 +47,26 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     async function getUserData() {
-      // const resp = await fetch(endpoints.register)
-      // const jsn = await resp.json()
-      // console.log(jsn)
-      // if (resp.status !== 200) {
-      //   router.replace({
-      //     pathname: "/register",
-      //   })
-      // }
-      // if (!jsn.user_completed) {
-      //   // router.replace({
-      //   //   pathname: "/register/user",
-      //   // })
-      // }
+      try {
+        const res = await server.get(endpoints.register)
+
+        const data = res.data as {
+          user_completed: boolean
+        }
+
+        if (!data.user_completed) {
+          router.replace({
+            pathname: "/register/user",
+          })
+        }
+      } catch (e: any) {
+        const error = e as AxiosError
+        showAxiosError({
+          error,
+          generic: "Failed to get user data",
+          additionalText: "Please try to login again",
+        })
+      }
     }
 
     getUserData()

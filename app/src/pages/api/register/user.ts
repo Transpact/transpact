@@ -6,7 +6,7 @@ import { handleError, handleResponse } from "@/lib/api-helper"
 async function GET(req: NextApiRequest, res: NextApiResponse) {
   let user = getAuth(req)
 
-  if (user === null) {
+  if (!user || !user.userId) {
     return handleError({
       res,
       statusCode: 401,
@@ -23,8 +23,9 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     })
 
     if (!alreadyExists) {
-      return handleResponse({
+      return handleError({
         res,
+        statusCode: 400,
         data: {
           user_completed: false,
         },
