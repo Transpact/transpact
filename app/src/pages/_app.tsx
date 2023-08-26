@@ -70,7 +70,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
 
     getUserData()
-  }, [router])
+  }, [])
 
   return (
     <ClerkProvider {...pageProps}>
