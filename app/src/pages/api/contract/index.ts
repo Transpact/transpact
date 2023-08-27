@@ -1,3 +1,4 @@
+import { handleError, handleResponse } from "@/lib/api-helper"
 import { prisma } from "@/lib/db"
 import { getAuth } from "@clerk/nextjs/server"
 import type { NextApiRequest, NextApiResponse } from "next"
@@ -43,16 +44,64 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
+async function GET(req: NextApiRequest, res: NextApiResponse) {
+  let user = getAuth(req)
+
+  if (!user || !user.userId) {
+    return handleError({
+      res,
+      statusCode: 401,
+      data: {},
+      message: "You are not authorised",
+    })
+  }
+
+  try {
+    let userExists = await prisma.user.findFirst({
+      where: {
+        id: user.userId as string,
+      },
+    })
+
+    if (!userExists) {
+      return handleError({
+        res,
+        statusCode: 400,
+        data: {
+          user_completed: false,
+        },
+        message: "The user does not exists",
+      })
+    }
+
+    const contracts = await prisma.contract.findMany({
+      where: {
+        creatorId: user.userId,
+      },
+    })
+
+    return handleResponse({
+      res,
+      message: "",
+      data: {
+        contracts,
+      },
+    })
+  } catch (error: any) {
+    return handleError({
+      res,
+      statusCode: 400,
+      data: {},
+      message: error?.message ?? "Failed to fetch contracts",
+    })
+  }
+}
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
-    // case "GET":
-    //   GET(req, res)
-    //   break
+    case "GET":
+      return GET(req, res)
     case "POST":
       return POST(req, res)
-
-    // case "PUT":
-    //   PUT(req, res)
-    //   break
   }
 }

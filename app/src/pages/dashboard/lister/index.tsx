@@ -10,36 +10,47 @@ import { ContractTable } from "../../bid/all"
 import { ContractContext } from "@/context/contract-context"
 import Link from "next/link"
 import Head from "next/head"
+import { AxiosError } from "axios"
+import { server, showAxiosError } from "@/lib/api-helper"
+import { ENDPOINTS } from "@/lib/constants"
+import { Contract as PrismaContract } from "prisma/prisma-client"
 
 interface ListerDashboardProps {}
 
 const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
-  const {} = useContext(WalletContext)!
-  const { contracts, setContracts } = useContext(ContractContext)!
-
+  const [contracts, setContracts] = useState<PrismaContract[]>([])
   const [loading, setLoading] = useState(false)
 
-  const getContracts = async () => {
-    if (loading) return
-
-    setLoading(true)
-
-    try {
-      // TODO: Get contracts from the blockchain or API
-      const fetchedContracts: Contract[] = [
-        // Add your fetched contracts here
-      ]
-
-      setContracts(fetchedContracts)
-    } catch (e) {
-      console.log(e)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   useEffect(() => {
+    async function getContracts() {
+      if (loading) return
+
+      setLoading(true)
+
+      try {
+        const res = await server.get(ENDPOINTS.lister.getContracts)
+
+        const data = res.data.data as {
+          contracts: PrismaContract[]
+        }
+
+        setContracts(data.contracts)
+      } catch (e: any) {
+        const error = e as AxiosError
+
+        showAxiosError({
+          error,
+          generic: "Failed to get contracts",
+          additionalText: "Please try again later",
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
     getContracts()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
