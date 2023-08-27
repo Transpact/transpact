@@ -55,6 +55,9 @@ import {
   PaymentMethods,
   ContractVisibility,
 } from "@prisma/client"
+import { server, showAxiosError } from "@/lib/api-helper"
+import { AxiosError } from "axios"
+import { log } from "console"
 
 interface NewContractFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -64,18 +67,20 @@ const formSchema = z.object({
     ContractTypes.HOURLY,
     ContractTypes.MILESTONE_BASED,
   ]),
+
   title: z.string().min(1).max(50),
-  skillsRequired: z.string(),
+  skillsRequired: z.string().default(""),
   legalRequirements: z.string(),
+
   paymentMethod: z.enum([
     PaymentMethods.BANK_TRANSFER,
     PaymentMethods.CASH,
     PaymentMethods.TRANSPACT_FUND_WALLET,
   ]),
+
   totalAmount: z.number().positive(),
-  renewalOption: z.boolean().optional(),
+  renewalOption: z.boolean().default(false),
   description: z.string().min(1),
-  contractDescription: z.string(),
 
   contractVisibility: z.enum([
     ContractVisibility.INVITE,
@@ -92,29 +97,68 @@ const formSchema = z.object({
 
   deliverables: z.string(),
   proposalDeadline: z.date().optional(),
-  numBiddersToAccept: z.number().int().positive().optional(),
-  confidentialContract: z.boolean().optional(),
-  communicationPreferences: z.array(z.string()),
-  paymentTerms: z.string(),
-  experienceLevel: z.string(),
-  requiredCertifications: z.string(),
-  portfolioRequest: z.boolean().optional(),
-  projectTimeline: z.string(),
-  locationPreference: z.string().optional(),
-  references: z.string().optional(),
-
-  preferredLanguage: z.string(),
-  geographicalLocation: z.string().optional(),
 
   contractAttachments: z.any(),
-  communicationGuidelines: z.string(),
-  evaluationCriteria: z.string(),
-  terminationClause: z.string(),
-  conflictResolution: z.string(),
-  contractApproval: z.boolean().optional(),
-  nonCompeteClause: z.boolean().optional(),
-  contractExtensions: z.string().optional(),
+
+  // contractDescription: z.string().optional(),
+  // numBiddersToAccept: z.number().int().positive().optional(),
+  // confidentialContract: z.boolean().optional(),
+  // communicationPreferences: z.array(z.string()),
+  // paymentTerms: z.string(),
+  // experienceLevel: z.string(),
+  // requiredCertifications: z.string(),
+  // portfolioRequest: z.boolean().optional(),
+  // projectTimeline: z.string(),
+  // locationPreference: z.string().optional(),
+  // references: z.string().optional(),
+
+  // preferredLanguage: z.string(),
+  // geographicalLocation: z.string().optional(),
+
+  // communicationGuidelines: z.string(),
+  // evaluationCriteria: z.string(),
+  // terminationClause: z.string(),
+  // conflictResolution: z.string(),
+  // contractApproval: z.boolean().optional(),
+  // nonCompeteClause: z.boolean().optional(),
+  // contractExtensions: z.string().optional(),
 })
+
+const contractTypeOptions = [
+  {
+    label: "Fixed Price",
+    value: ContractTypes.FIXED_PRICE,
+  },
+  {
+    label: "Hourly",
+    value: ContractTypes.HOURLY,
+  },
+  {
+    label: "Milestone Based",
+    value: ContractTypes.MILESTONE_BASED,
+  },
+]
+
+const paymentMethodOptions = [
+  { label: "Bank Transfer", value: PaymentMethods.BANK_TRANSFER },
+  { label: "Cash", value: PaymentMethods.CASH },
+  { label: "Transpact Wallet", value: PaymentMethods.TRANSPACT_FUND_WALLET },
+]
+
+const contractVisibilityOptions = [
+  {
+    label: "Invite Only",
+    value: ContractVisibility.INVITE,
+  },
+  {
+    label: "Public",
+    value: ContractVisibility.PUBLIC,
+  },
+  {
+    label: "Private",
+    value: ContractVisibility.PRIVATE,
+  },
+]
 
 const legalRequirementOptions = [
   { label: "No specific legal requirements", value: "no_requirements" },
@@ -125,13 +169,6 @@ const legalRequirementOptions = [
   },
   { label: "Non-disclosure agreement (NDA) needed", value: "nda_needed" },
   { label: "Other legal requirements", value: "other_requirements" },
-]
-
-const paymentMethodOptions = [
-  { label: "Bank Transfer", value: "bank_transfer" },
-  { label: "PayPal", value: "paypal" },
-  { label: "Credit Card", value: "credit_card" },
-  { label: "Other", value: "other" },
 ]
 
 type FormData = z.infer<typeof formSchema>
@@ -153,54 +190,6 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
 
   const [loading, setLoading] = React.useState<boolean>(false)
 
-  // async function onSubmit(values: FormData) {
-  //   try {
-  //     setLoading(true);
-  //     let values = form.getValues();
-
-  //     globalLoading.show();
-  //     let result = await createContract(
-  //       wallet,
-  //       contractId,
-  //       values.title,
-  //       values.description,
-  //       false,
-  //       values.startDate,
-  //       values.endDate
-  //     );
-
-  //     console.log(result);
-  //     if (result.status === "CREATED") {
-  //       router.replace("/dashboard/lister");
-  //     }
-
-  //     const newContract: Contract = {
-  //       name: values.title,
-  //       amount: values.totalAmount,
-  //       description: values.description,
-  //       startDate: values.startDate,
-  //       endDate: values.endDate,
-  //       files: [""],
-  //       owner: "",
-  //       id: Math.round(Math.random() * 100).toString(),
-  //       status: "Progress",
-  //     };
-
-  //     setContracts([...contracts, newContract]);
-  //     globalLoading.hide();
-  //   } catch (err: any) {
-  //     const error = err;
-
-  //     toast({
-  //       title: "Failed to signin/signup",
-  //       description: error?.message,
-  //       variant: "destructive",
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
   async function onSubmit(values: FormData) {
     try {
       setLoading(true)
@@ -208,7 +197,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
       const data: Partial<PrismaContract> = {
         contract_type: values.contractType,
         title: values.title,
-        skills_required: values.skillsRequired.split(""),
+        skills_required: values.skillsRequired?.split("") ?? [],
         legal_requirements: values.legalRequirements,
         payment_method: values.paymentMethod,
         total_amount: values.totalAmount,
@@ -222,33 +211,33 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
         files: [],
       }
 
-      const resp = await fetch(endpoints.contract, {
-        method: "POST",
+      console.log(data)
+
+      await server.post(endpoints.contract, data, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
       })
 
-      let json = await resp.json()
-
-      console.log(json)
-    } catch (err: any) {
-      const error = err
-
       toast({
-        title: "Failed to signin/signup",
-        description: error?.message,
-        variant: "destructive",
+        title: "Contract created successfully",
+        description: "Redirecting to dashboard",
+        variant: "default",
+      })
+
+      router.push("/dashboard/lister")
+    } catch (err: any) {
+      const error = err as AxiosError
+
+      showAxiosError({
+        error,
+        generic: "Failed to create contract",
+        additionalText: err?.message,
       })
     } finally {
       setLoading(false)
     }
   }
-
-  React.useEffect(() => {
-    return () => {}
-  }, [])
 
   return (
     <div className={cn("grid gap-6 px-2", className)} {...props}>
@@ -257,35 +246,33 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
           <fieldset disabled={loading} className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="totalAmount"
+              name="contractType"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel style={{ marginRight: "1rem" }}>
                     Contract Type
                   </FormLabel>
 
-                  <FormControl>
-                    <Select>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a contract type" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem {...field} value="Fixed-Price">
-                          Fixed-Price
+                    </FormControl>
+
+                    <SelectContent>
+                      {contractTypeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
                         </SelectItem>
-                        <SelectItem {...field} value="Hourly">
-                          Hourly
-                        </SelectItem>
-                        <SelectItem {...field} value="Milestone-based">
-                          Milestone-based
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="title"
@@ -342,24 +329,36 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               control={form.control}
               name="proposalDeadline"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex w-full flex-col">
                   <FormLabel>Proposal Deadline</FormLabel>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
@@ -370,45 +369,25 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               name="paymentMethod"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Payment Method</FormLabel>
-                  <FormControl>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            paymentMethodOptions.find(
-                              (option) => option.value === field.value
-                            )?.label
-                          ) : (
-                            <span>Select a payment method</span>
-                          )}
-                          <ChevronDownIcon
-                            className={cn(
-                              "ml-auto h-4 w-4 transition-transform",
-                              field.value ? "rotate-180" : ""
-                            )}
-                          />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-auto p-0" align="start">
-                        {paymentMethodOptions.map((option) => (
-                          <DropdownMenuItem
-                            key={option.value}
-                            onSelect={() => field.onChange(option.value)}
-                            className="cursor-pointer px-3 py-2 hover:bg-primary hover:text-primary-foreground"
-                          >
-                            {option.label}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </FormControl>
+                  <FormLabel style={{ marginRight: "1rem" }}>
+                    Payment Method
+                  </FormLabel>
+
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a payment method" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {paymentMethodOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -511,12 +490,11 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                 <FormItem>
                   <FormLabel>Renewal Option</FormLabel>
                   <FormControl>
-                    <label className="flex items-center">
-                      <Checkbox
-                        checked={field.value}
-                        onChange={() => field.onChange(!field.value)}
-                      />
-                    </label>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className="block"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -592,15 +570,11 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        // @ts-ignore
                         onSelect={field.onChange}
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
-                  {/* <FormDescription> */}
-                  {/* Your date of birth is used to calculate your age. */}
-                  {/* </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -632,20 +606,20 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                   <FormLabel style={{ marginRight: "1rem" }}>
                     Contract Visibility
                   </FormLabel>
-                  <Select>
+                  <Select onValueChange={field.onChange}>
                     <SelectTrigger className="">
                       <SelectValue placeholder="Select contract visibility" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem {...field} value="Public">
-                        Public
-                      </SelectItem>
-                      <SelectItem {...field} value="Private">
-                        Private
-                      </SelectItem>
-                      <SelectItem {...field} value="Invitation-only">
-                        Invitation-only
-                      </SelectItem>
+                      {contractVisibilityOptions.map((option) => (
+                        <SelectItem
+                          key={option.value}
+                          {...field}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
 
@@ -707,7 +681,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
             />
 
             <Button type="submit" className="col-span-2 mt-6">
-              Add
+              Create Contract
             </Button>
           </fieldset>
         </form>
