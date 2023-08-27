@@ -28,6 +28,8 @@ import { useForm } from "react-hook-form";
 import { endpoints } from "@/lib/utils";
  import { useClerk } from "@clerk/nextjs";
 import { useToast } from "@/components/ui/use-toast";
+import { server, showAxiosError } from "@/lib/api-helper";
+import { AxiosError } from "axios";
 
 interface RegisterBidderForm1Props {
     setPageNo: React.Dispatch<React.SetStateAction<number>>
@@ -62,39 +64,50 @@ const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo,user
       });    
 
     async function registerUser(){
-        const resp = await fetch(endpoints.register,{
-            method:'POST',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+
+        try{
+
+            const body = JSON.stringify({
                 email: clerk.user?.primaryEmailAddress?.toString(),
                 password:"password"
             })
-        });
 
-        if(resp.status === 201){
+            await server.post(
+                endpoints.register,
+                body,
+                {
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+    
             toast({
                 title: "User created successfully"
             });
+            
+        }
+        catch ( e:any ){
+            const error = e as AxiosError;
+            showAxiosError({
+                error,
+                generic: "Failed to create user",
+                additionalText: "Please try again",
+            })
         }
     }
     
     async function onSubmit() {
-    
-        if(loading) return;
         
-        setLoading(true);
+        if(loading) return;
 
-        await registerUser();
+        try{
 
+            setLoading(true);
 
-        const resp = await fetch(endpoints.register,{
-            method:'PUT',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+            await registerUser();
+
+            const body = JSON.stringify({
                 company_name: formPage1.getValues("company_name"),
                 wallet_address: formPage1.getValues("walletAddress"),
                 industry_type: formPage1.getValues("industryType"),
@@ -102,21 +115,36 @@ const RegisterBidderForm1: React.FC<RegisterBidderForm1Props> = ({setPageNo,user
                 experience: parseInt(formPage1.getValues("experience")),
                 user_type: userType
             })
-        });
 
-        let resp_json = await resp.json()
-        
-        setLoading(false);
+            const headers =  {
+                'Content-Type': 'application/json'
+            }
 
-        if (resp.status !== 200 ){
-            toast({
-                title: "Request Failed",
-                description:resp_json,
-                variant:"destructive"
-            })
-            return;
+            await server.put(
+                endpoints.register,
+                body,
+                {
+                    headers
+                }   
+            )
+
+            setPageNo(2);
         }
-        setPageNo(2);
+
+        catch ( e:any ){
+
+            const error = e as AxiosError;
+
+            showAxiosError({
+                error,
+                generic: "Failed to get user data",
+                additionalText: "Please try to login again",
+            })
+        }
+
+        finally{
+            setLoading(false);
+        }
 
     }
 

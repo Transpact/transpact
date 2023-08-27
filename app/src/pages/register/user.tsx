@@ -6,6 +6,8 @@ import RegisterBidderForm3Props from "@/components/forms/register-bidder-form/Fo
 import { endpoints } from "@/lib/utils";
 import RegisterBidderForm0 from "@/components/forms/register-bidder-form/Form0";
 import MainLayout from "@/components/layouts/main-layout";
+import { server, showAxiosError } from "@/lib/api-helper";
+import { AxiosError } from "axios";
 
 interface RegisterBidderProps {}
 
@@ -16,26 +18,36 @@ const RegisterBidder: React.FC<RegisterBidderProps> = ({}) => {
     const [loading,setLoading] = useState(true);
     const [userType,setUserType] = useState("");
 
-    async function getUserData(){
+    async function getUserData() {
+        try {
+          const res = await server.get(endpoints.register)
+    
+          const data = res.data.data as {
+            user_completed: boolean
+          }
 
-        const resp = await fetch(endpoints.register);
-        const jsn = await resp.json();
-
-        if (resp.status !== 200){
+          // if user has not completed company profile
+          if (data.user_completed === true) {
             router.replace({
-                pathname: "/register"
-            });
+              pathname: "/",
+            })
+          }
+        } catch (e: any) {
+          const error = e as AxiosError
+    
+          // if user does not have company
+          if (error.response?.status !== 400){
+            showAxiosError({
+                error,
+                generic: "Failed to get user data",
+                additionalText: "Please try to login again",
+              })
+          }
+        } finally{
+            setLoading(false);
         }
 
-        if(jsn.user_completed){
-            router.replace({
-                pathname: "/"
-            });
-        }
-
-        setLoading(false);
-
-    }
+      }
 
     useEffect(()=>{
         getUserData()

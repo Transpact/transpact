@@ -44,23 +44,32 @@ export default function App({ Component, pageProps }: AppProps) {
     contractId: CONTRACT_ADDRESS,
     wallet: wallet,
   })
+  
+  async function getUserData() {
+    try {
+      const res = await server.get(endpoints.register)
 
-  useEffect(() => {
-    async function getUserData() {
-      try {
-        const res = await server.get(endpoints.register)
+      const data = res.data.data as {
+        user_completed: boolean
+      }
 
-        const data = res.data as {
-          user_completed: boolean
-        }
+      // if user has not completed company profile
+      if (data.user_completed === false) {
+        router.replace({
+          pathname: "/register/user",
+        })
+      }
+    } catch (e: any) {
+      const error = e as AxiosError
 
-        if (!data.user_completed) {
-          router.replace({
-            pathname: "/register/user",
-          })
-        }
-      } catch (e: any) {
-        const error = e as AxiosError
+      // if user does not have company
+      if (error.response?.status === 400){
+        router.replace({
+          pathname: "/register/user",
+        })
+      }
+
+      else{
         showAxiosError({
           error,
           generic: "Failed to get user data",
@@ -68,7 +77,8 @@ export default function App({ Component, pageProps }: AppProps) {
         })
       }
     }
-
+  }
+  useEffect(() => {
     getUserData()
   }, [])
 

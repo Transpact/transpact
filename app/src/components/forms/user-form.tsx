@@ -100,9 +100,6 @@ export function UserForm({ className, ...props }: UserFormProps) {
     }
   }
 
-  React.useEffect(() => {
-    return () => {};
-  }, []);
 
   return (
     <div className={cn("grid gap-6 px-2", className)} {...props}>

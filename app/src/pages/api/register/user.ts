@@ -46,6 +46,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
+  
   let user = getAuth(req)
   let userDetails = req.body
 
@@ -68,7 +69,7 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
     if (alreadyExists) {
       return handleError({
         res,
-        statusCode: 400,
+        statusCode: 200,
         data: {},
         message: "User already exists",
       })
@@ -122,7 +123,7 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
 
     return handleResponse({
       res,
-      statusCode: 401,
+      statusCode: 200,
       data: {},
       message: "Successfully updated the user",
     })
@@ -131,7 +132,7 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
       res,
       statusCode: 401,
       data: {},
-      message: error?.message ?? "Failed to create user",
+      message: error?.message ?? "Failed to update user",
     })
   }
 }
