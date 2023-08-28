@@ -24,6 +24,14 @@ enum ContractTypes {
   MILESTONE_BASED
 }
 
+enum ContractStatus {
+  CREATED
+  BIDDER_FOUND
+  APPROVAL_PENDING
+  APPROVED
+  SIGNED
+}
+
 enum ContractVisibility {
   PUBLIC
   PRIVATE
@@ -115,6 +123,7 @@ model Contract {
   id String @id @default(uuid())
 
   contract_type      ContractTypes
+  status             ContractStatus @default(CREATED)
   title              String         @db.VarChar(100)
   skills_required    String[]
   legal_requirements String         @db.VarChar(500)
