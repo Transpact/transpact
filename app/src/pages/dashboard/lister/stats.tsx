@@ -50,7 +50,7 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
                   <Link href="/dashboard/lister/contract/add">
                     <Button>
                       <Icons.add className="mr-2 h-4 w-4" />
-                      <span className="text-sm font-bold">List Contract</span>
+                      <span className="text-sm font-bold">Create Contract</span>
                     </Button>
                   </Link>
                 </div>

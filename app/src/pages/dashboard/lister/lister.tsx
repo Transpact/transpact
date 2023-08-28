@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import { ContractTable } from "@/pages/bid/all"
 import Link from "next/link"
+import { server } from "@/lib/api-helper"
+import { endpoints } from "@/lib/utils"
 
 interface ListerDashboardProps {}
 
@@ -26,7 +28,24 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
   const {} = useContext(WalletContext)!
   const [loading, setLoading] = useState(false)
 
-  const contracts: Contract[] = SAMPLE_CONTRACT
+  const contracts: Contract[] = SAMPLE_CONTRACT;
+
+  async function getContracts(){
+
+    try{
+
+      let res = await server.get(endpoints.contract)
+      let data = res.data.data as {
+        contracts: Contract[]
+      }
+
+    } catch( e:any ){
+
+    } finally {
+
+    }
+
+  }
 
   useEffect(() => {
     // No need for any data fetching since you're using dummyContracts
@@ -52,6 +71,7 @@ const ListerDashboard: React.FC<ListerDashboardProps> = ({}) => {
             </Button>
           </Link>
         </DashboardHeader>
+        
         <ContractTable contracts={contracts} />
       </DashboardShell>
     </DashboardLayout>

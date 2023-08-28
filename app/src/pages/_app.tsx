@@ -50,7 +50,8 @@ export default function App({ Component, pageProps }: AppProps) {
       const res = await server.get(endpoints.register)
 
       const data = res.data.data as {
-        user_completed: boolean
+        user_completed: boolean,
+        user_type: String
       }
 
       // if user has not completed company profile
@@ -59,6 +60,19 @@ export default function App({ Component, pageProps }: AppProps) {
           pathname: "/register/user",
         })
       }
+
+      if (data.user_type === "BIDDER"){
+        router.replace({
+          pathname: "/dashboard/bidder",
+        })
+      }
+
+      else if (data.user_type === "LISTER"){
+        router.replace({
+          pathname: "/dashboard/lister",
+        })
+      }
+
     } catch (e: any) {
       const error = e as AxiosError
 

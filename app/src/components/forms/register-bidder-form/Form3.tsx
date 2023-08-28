@@ -96,7 +96,6 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({
         description: resp_json,
         variant: "destructive",
       })
-      return
     }
 
     setLoading(false)

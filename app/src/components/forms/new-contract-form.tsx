@@ -57,7 +57,6 @@ import {
 } from "@prisma/client"
 import { server, showAxiosError } from "@/lib/api-helper"
 import { AxiosError } from "axios"
-import { log } from "console"
 
 interface NewContractFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -77,11 +76,9 @@ const formSchema = z.object({
     PaymentMethods.CASH,
     PaymentMethods.TRANSPACT_FUND_WALLET,
   ]),
-
-  totalAmount: z.number().positive(),
-  renewalOption: z.boolean().default(false),
+  renewalOption: z.boolean().optional(),
   description: z.string().min(1),
-
+  
   contractVisibility: z.enum([
     ContractVisibility.INVITE,
     ContractVisibility.PRIVATE,
@@ -89,18 +86,11 @@ const formSchema = z.object({
   ]),
   contractDuration: z.string(),
   budgetRange: z.string(),
-
+  
   files: z.any(),
+  
 
-  startDate: z.date(),
-  endDate: z.date(),
-
-  deliverables: z.string(),
   proposalDeadline: z.date().optional(),
-
-  contractAttachments: z.any(),
-
-  // contractDescription: z.string().optional(),
   // numBiddersToAccept: z.number().int().positive().optional(),
   // confidentialContract: z.boolean().optional(),
   // communicationPreferences: z.array(z.string()),
@@ -115,6 +105,7 @@ const formSchema = z.object({
   // preferredLanguage: z.string(),
   // geographicalLocation: z.string().optional(),
 
+  contractAttachments: z.any(),
   // communicationGuidelines: z.string(),
   // evaluationCriteria: z.string(),
   // terminationClause: z.string(),
@@ -171,6 +162,7 @@ const legalRequirementOptions = [
   { label: "Other legal requirements", value: "other_requirements" },
 ]
 
+
 type FormData = z.infer<typeof formSchema>
 
 export function NewContractForm({ className, ...props }: NewContractFormProps) {
@@ -181,26 +173,24 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      totalAmount: 0,
-      startDate: undefined,
-      endDate: undefined,
+      title: ""
     },
   })
 
   const [loading, setLoading] = React.useState<boolean>(false)
 
   async function onSubmit(values: FormData) {
+    
     try {
+
       setLoading(true)
 
-      const data: Partial<PrismaContract> = {
+      const body: Partial<PrismaContract> = {
         contract_type: values.contractType,
         title: values.title,
-        skills_required: values.skillsRequired?.split("") ?? [],
+        skills_required: values.skillsRequired.split(",") ?? [],
         legal_requirements: values.legalRequirements,
         payment_method: values.paymentMethod,
-        total_amount: values.totalAmount,
         renewal: values.renewalOption ?? false,
         description: values.description,
 
@@ -211,29 +201,36 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
         files: [],
       }
 
-      console.log(data)
-
-      await server.post(endpoints.contract, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-
+      const resp = await server.post(
+        endpoints.contract,
+        body,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      
       toast({
-        title: "Contract created successfully",
-        description: "Redirecting to dashboard",
+        title: "Contract Created Successfully",
+        description: "your contract can be seen publically",
         variant: "default",
       })
 
-      router.push("/dashboard/lister")
+      router.replace({
+        pathname: "/dashboard/lister"
+      })
+
     } catch (err: any) {
-      const error = err as AxiosError
+
+      const error = err as AxiosError;
 
       showAxiosError({
         error,
-        generic: "Failed to create contract",
-        additionalText: err?.message,
+        generic: "Failed to signin/signup",
+        additionalText: error?.message,
       })
+
     } finally {
       setLoading(false)
     }
@@ -244,30 +241,51 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <fieldset disabled={loading} className="grid grid-cols-2 gap-4">
-            <FormField
+            
+          <FormField
               control={form.control}
               name="contractType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel style={{ marginRight: "1rem" }}>
-                    Contract Type
-                  </FormLabel>
-
-                  <Select onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a contract type" />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      {contractTypeOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Contract Type</FormLabel>
+                  <FormControl>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            contractTypeOptions.find(
+                              (option) => option.value === field.value
+                            )?.label
+                          ) : (
+                            <span>Select a payment method</span>
+                          )}
+                          <ChevronDownIcon
+                            className={cn(
+                              "ml-auto h-4 w-4 transition-transform",
+                              field.value ? "rotate-180" : ""
+                            )}
+                          />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-auto p-0" align="start">
+                        {contractTypeOptions.map((option) => (
+                          <DropdownMenuItem
+                            key={option.value}
+                            onSelect={() => field.onChange(option.value)}
+                            className="cursor-pointer px-3 py-2 hover:bg-primary hover:text-primary-foreground"
+                          >
+                            {option.label}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -309,28 +327,10 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
 
             <FormField
               control={form.control}
-              name="deliverables"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deliverables</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe the expected deliverables or outcomes"
-                      rows={5}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="proposalDeadline"
               render={({ field }) => (
-                <FormItem className="flex w-full flex-col">
-                  <FormLabel>Proposal Deadline</FormLabel>
+                <FormItem>
+                  <FormLabel>Project Deadline</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -354,6 +354,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                       <Calendar
                         mode="single"
                         selected={field.value}
+                        // @ts-ignore
                         onSelect={field.onChange}
                         initialFocus
                       />
@@ -462,7 +463,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               )}
             />
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="totalAmount"
               render={({ field }) => (
@@ -481,7 +482,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             <FormField
               control={form.control}
@@ -501,7 +502,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               )}
             />
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="startDate"
               render={({ field }) => (
@@ -575,10 +576,11 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                       />
                     </PopoverContent>
                   </Popover>
+                  
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             <FormField
               control={form.control}
@@ -603,26 +605,45 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               name="contractVisibility"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel style={{ marginRight: "1rem" }}>
-                    Contract Visibility
-                  </FormLabel>
-                  <Select onValueChange={field.onChange}>
-                    <SelectTrigger className="">
-                      <SelectValue placeholder="Select contract visibility" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {contractVisibilityOptions.map((option) => (
-                        <SelectItem
-                          key={option.value}
-                          {...field}
-                          value={option.value}
+                  <FormLabel>Contract Visibility</FormLabel>
+                  <FormControl>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
                         >
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
+                          {field.value ? (
+                            contractVisibilityOptions.find(
+                              (option) => option.value === field.value
+                            )?.label
+                          ) : (
+                            <span>Select a payment method</span>
+                          )}
+                          <ChevronDownIcon
+                            className={cn(
+                              "ml-auto h-4 w-4 transition-transform",
+                              field.value ? "rotate-180" : ""
+                            )}
+                          />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-auto p-0" align="start">
+                        {contractVisibilityOptions.map((option) => (
+                          <DropdownMenuItem
+                            key={option.value}
+                            onSelect={() => field.onChange(option.value)}
+                            className="cursor-pointer px-3 py-2 hover:bg-primary hover:text-primary-foreground"
+                          >
+                            {option.label}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -653,7 +674,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                 <FormItem>
                   <FormLabel>Budget Range</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Low, Medium, High" {...field} />
+                    <Input placeholder="e.g., 100K - 200K USD" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

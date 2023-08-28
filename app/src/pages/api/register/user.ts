@@ -38,6 +38,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
       message: "",
       data: {
         user_completed: alreadyExists.user_completed,
+        user_type: alreadyExists.user_type
       },
     })
   } catch (error: any) {

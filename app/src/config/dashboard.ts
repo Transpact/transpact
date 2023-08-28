@@ -24,7 +24,7 @@ export const dashboardConfig: DashboardConfig = {
       icon: "users",
     },
     {
-      title: "List Contract",
+      title: "Create Contract",
       href: "/dashboard/lister/contract/add",
       icon: "package",
     },
