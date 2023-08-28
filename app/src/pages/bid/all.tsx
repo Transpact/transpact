@@ -31,10 +31,10 @@ export const ContractTable: React.FC<{
       <TableHeader>
         <TableRow>
           <TableHead>Title</TableHead>
-          <TableHead>Total Amount</TableHead>
+          <TableHead>Budget Range</TableHead>
           <TableHead>Duration</TableHead>
           <TableHead>Type</TableHead>
-          <TableHead>Visibility</TableHead>
+          <TableHead>Bids</TableHead>
           <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -43,18 +43,18 @@ export const ContractTable: React.FC<{
         {contracts.map(
           ({
             title,
-            total_amount,
+            budget_range,
             id,
             contract_duration,
             contract_type,
-            contract_visibility,
+            bidders,
           }) => (
             <TableRow key={id}>
               <TableCell className="font-medium">{title}</TableCell>
-              <TableCell>{total_amount}</TableCell>
+              <TableCell>{budget_range}</TableCell>
               <TableCell>{contract_duration}</TableCell>
               <TableCell>{contract_type}</TableCell>
-              <TableCell>{contract_visibility}</TableCell>
+              <TableCell>{bidders.length}</TableCell>
               <TableCell className="text-right">
                 <Link href={`/contract/${id}`} className="mr-2">
                   <Button className="rounded-full">

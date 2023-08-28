@@ -42,7 +42,7 @@ export const dashboardConfig: DashboardConfig = {
     },
     {
       title: "All Bids",
-      href: "/bid/all",
+      href: "/dashboard/bidder/all-bids",
       icon: "package",
     },
   ],

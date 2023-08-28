@@ -8,10 +8,14 @@ import { DashboardHeader } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import { SAMPLE_CONTRACT } from "@/lib/data"
-import { ContractTable } from "../../bid/all"
+import { BidderContractTable } from "@/components/bidder/BidderContractTable"
 import { ContractContext } from "@/context/contract-context"
 import Link from "next/link"
 import Head from "next/head"
+import { server, showAxiosError } from "@/lib/api-helper"
+import { ENDPOINTS } from "@/lib/constants"
+import { Contract as PrismaContract } from "prisma/prisma-client"
+import { AxiosError } from "axios"
 
 interface BidderDashboardProps {}
 
@@ -19,21 +23,28 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
   const {} = useContext(WalletContext)!
 
   const [loading, setLoading] = useState(false)
-  // const [contracts, setContracts] = useState<Contract[]>([]);
-  const { contracts, setContracts } = useContext(ContractContext)!
+  const [contracts, setContracts] = useState<PrismaContract[]>([])
 
-  const getContracts = async () => {
+  async function getContracts() {
     if (loading) return
 
     setLoading(true)
-
+    
     try {
-      // TODO: Get from blockchain
-      const contracts: Contract[] = SAMPLE_CONTRACT
+      const res = await server.get(ENDPOINTS.bidder.getContracts + "?filter=my")
 
-      setContracts(contracts)
-    } catch (e) {
-      console.log(e)
+      const data = res.data.data as {
+        contracts: PrismaContract[]
+      }
+      setContracts(data.contracts)
+    } catch (e: any) {
+      const error = e as AxiosError
+
+      showAxiosError({
+        error,
+        generic: "Failed to get contracts",
+        additionalText: "Please try again later",
+      })
     } finally {
       setLoading(false)
     }
@@ -65,7 +76,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
             </Link>
           </DashboardHeader>
 
-          <ContractTable contracts={contracts} />
+          <BidderContractTable contracts={contracts} tableTitle="A list of all applied bids."/>
         </DashboardShell>
       </DashboardLayout>
     </>

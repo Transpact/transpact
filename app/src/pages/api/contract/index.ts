@@ -78,6 +78,9 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
       where: {
         creatorId: user.userId,
       },
+      include: {
+        bidders: true,
+      }
     })
 
     return handleResponse({

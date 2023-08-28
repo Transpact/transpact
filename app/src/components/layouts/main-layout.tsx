@@ -53,7 +53,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <nav>
 
             <SignedIn>
-              <UserButton />
+              <UserButton afterSignOutUrl="/login" />
             </SignedIn>
 
             <SignedOut>

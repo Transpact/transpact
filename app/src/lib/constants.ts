@@ -7,7 +7,9 @@ export const ENDPOINTS = {
     getContracts: "/api/contract",
     createContract: "/api/contract",
   },
-  bidder: {},
+  bidder: {
+    getContracts: "/api/contract/bidder"
+  },
 }
 
 export const ROUTES = {
