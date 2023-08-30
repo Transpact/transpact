@@ -35,13 +35,41 @@ async function getAllContracts(user:  SignedInAuthObject | SignedOutAuthObject){
 
 async function getContract(user:  SignedInAuthObject | SignedOutAuthObject, _id: String) {
 
-  const contracts = await prisma.contract.findFirst({
+  const contract = await prisma.contract.findFirst({
     where:{
       id: _id
-    } 
+    },
+    include:{
+      contract_creator: {
+        select:{
+          company_name: true,
+        }
+      }
+    }
   });
+  
+  const alreadyBidded = await prisma.contract.findFirst({
+    where:{
+      id: _id,
+      bidders: {
+        some:{
+          bidderId: user.userId
+        }
+      }   
+    },
+    select: {
+      id: true,
+    },
+  })
 
-  return contracts;
+  if (alreadyBidded === null){
+    contract.already_bidded = false;
+  }
+  else{
+    contract.already_bidded = true;
+  }
+
+  return contract;
 
 }
 
@@ -138,9 +166,88 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
+
+async function POST(req: NextApiRequest, res: NextApiResponse){
+
+  let user = getAuth(req);
+
+  if (!user || !user.userId) {
+    return handleError({
+      res,
+      statusCode: 401,
+      data: {},
+      message: "You are not authorised",
+    })
+  }
+
+  try{
+
+    const contract_id = req.query.id as String;
+    const data = req.body;
+
+    const bidderApplicationExist = await prisma.bidderApplication.findFirst({
+      where:{
+        bidderId: user.userId
+      }
+    })
+
+    if ( bidderApplicationExist ){
+      return handleError({
+        res,
+        statusCode: 400,
+        data: {},
+        message: "Bidder already applied.",
+      })
+    }
+
+    const bidderApplication = await prisma.bidderApplication.create({
+      data:{
+        quotation_amount: data.quotation_amount,
+        bidder: {
+          connect:{
+            id: user.userId
+          }
+        }
+      }
+    })
+
+    await prisma.contract.update({
+      where:{
+        id: contract_id,
+      },
+      data:{
+        bidders: {
+          connect: [{ id: bidderApplication.id }]
+        }
+      }
+    })
+
+    return handleResponse({
+      res,
+      statusCode:201,
+      message: "Successfully Bidded!",
+      data: {},
+    })
+
+
+
+  } catch (error: any) {
+    return handleError({
+      res,
+      statusCode: 400,
+      data: {},
+      message: error?.message ?? "Failed to update contract",
+    })
+  }
+
+}
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case "GET":
       return GET(req, res)
+
+    case "PUT":
+      return POST(req,res)
   }
 }

@@ -152,14 +152,11 @@ const contractVisibilityOptions = [
 ]
 
 const legalRequirementOptions = [
-  { label: "No specific legal requirements", value: "no_requirements" },
-  { label: "Valid licenses or permits required", value: "licenses_permits" },
-  {
-    label: "Compliance with industry regulations",
-    value: "industry_regulations",
-  },
-  { label: "Non-disclosure agreement (NDA) needed", value: "nda_needed" },
-  { label: "Other legal requirements", value: "other_requirements" },
+  { label: "No specific legal requirements", value: "No specific legal requirements" },
+  { label: "Valid licenses or permits required", value: "Valid licenses or permits required" },
+  { label: "Compliance with industry regulations",value: "Compliance with industry regulations" },
+  { label: "Non-disclosure agreement (NDA) needed", value: "Non-disclosure agreement (NDA) needed" },
+  { label: "Other legal requirements", value: "Other legal requirements" },
 ]
 
 

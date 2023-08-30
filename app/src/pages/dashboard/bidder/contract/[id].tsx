@@ -52,6 +52,22 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       }
 
       console.log(data.contracts,"=====")
+
+      switch (data.contracts.payment_method) {
+        case "BANK_TRANSFER":
+          data.contracts.payment_method = "Bank Transfer"
+          break;
+        
+        case "TRANSPACT_FUND_WALLET":
+          data.contracts.payment_method = "Transpact Fund Wallet"
+          break;
+
+        case "BANK_TRANSFER":
+          data.contracts.payment_method = "Cash"
+          break;
+
+      }
+
       setContract(data.contracts);
 
       switch (data.contracts.status as String){
@@ -199,9 +215,9 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
           <hr className="h-px w-[90%] my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
 
           <CardHeader>
-            <CardTitle className="text-center">Construction of H-34 Road.</CardTitle>
+            <CardTitle className="text-center">{contract.title}</CardTitle>
             <CardDescription className="text-center">
-              <a href="https://google.com" className=" hover:underline" target="_blank">Published By - Bugheist Industries & CO</a>
+              <a href="https://google.com" className=" hover:underline" target="_blank">Published By - {contract.contract_creator.company_name}</a>
             </CardDescription>
           </CardHeader>
           
@@ -211,17 +227,22 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
                 <CardTitle className="text-lg">Basic Info</CardTitle>
               </CardHeader>
               <CardDescription className="w-full px-6 flex flex-col">
-                  <div className="w-full justify-between flex items-center text-lg">
+                  <div className="w-full my-1 justify-between flex items-center text-lg">
                     <p className="text-gray-700 text-bold mr-5">Contract ID: </p>
-                    <p>adsdd234234dfsad</p>
+                    <p>{contract.id}</p>
                   </div>
-                  <div className="w-full justify-between flex items-center text-lg">
+                  <div className="w-full my-1 justify-between flex items-center text-lg">
                     <p className="text-gray-700 text-bold mr-5">Contract Duration: </p>
-                    <p>10 - 12 Months</p>
+                    <p>{contract.contract_duration}</p>
                   </div>
-                  <div className="w-full justify-between flex items-center text-lg">
+                  <div className="w-full my-1 justify-between flex items-center text-lg">
                     <p className="text-gray-700 text-bold mr-5">Contract Renewal: </p>
-                    <Badge variant={'outline'} className="px-3 bg-green-500 font-bold text-white">Allowed</Badge>
+                    {
+                      contract.renewal 
+                       
+                      ? <Badge variant={'outline'} className="px-3 bg-green-500 font-bold text-white">Allowed</Badge>
+                      : <Badge variant={'outline'} className="px-3 bg-red-500 font-bold text-white">Not Allowed</Badge>
+                    }
                   </div>
               </CardDescription>
             </Card>
@@ -231,17 +252,17 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
                 <CardTitle className="text-lg">Payment Info</CardTitle>
               </CardHeader>
               <CardDescription className="w-full px-6 flex flex-col">
-                  <div className="w-full justify-between flex items-center text-lg">
+                  <div className="w-full my-1 justify-between flex items-center text-lg">
                     <p className="text-gray-700 text-bold mr-5">Payment Method: </p>
-                    <p>Transpact Wallet</p>
+                    <p>{contract.payment_method}</p>
                   </div>
-                  <div className="w-full justify-between flex items-center text-lg">
+                  <div className="w-full my-1 justify-between flex items-center text-lg">
                     <p className="text-gray-700 text-bold mr-5">Budget Range: </p>
-                    <p>$500k - $600k</p>
+                    <p>{contract.budget_range}</p>
                   </div>
-                  <div className="w-full justify-between flex items-center text-lg">
-                    <p className="text-gray-700 text-bold mr-5">Aggreed Amount: </p>
-                    <p>$1000000</p>
+                  <div className="w-full my-1 justify-between flex items-center text-lg">
+                    <p className="text-gray-700 text-bold mr-5">Agreed Amount: </p>
+                    <p>${contract.total_amount}</p>
                   </div>
               </CardDescription>
             </Card> 
@@ -267,7 +288,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
               </CardHeader>
               <CardDescription className="w-full flex items-center py-5 px-6 ">
                 <div className="w-full h-10 border-[1px] px-5 border-gray-300 bg-gray-50 rounded-lg">
-                  <p className="flex h-full items-center">Leagelly eligible for doing transactions.</p>
+                  <p className="flex h-full items-center text-gray-800 font-semibold">{contract.legal_requirements}</p>
                 </div>
               </CardDescription>
             </Card>
@@ -279,16 +300,22 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
               <CardHeader>
                 <CardTitle className="text-lg">Contract Description</CardTitle>
               </CardHeader>
-              <CardDescription className="w-full flex items-center py-5 px-6 ">
-                <Textarea disabled value={"dasjda daskjd; alsd;kals d;ajsd ajsdk; asd"}/>
+              <CardDescription className="w-full text-black flex items-center py-5 px-6 ">
+                <Textarea disabled value={contract.description}/>
               </CardDescription>
             </Card>
           </div>
-              
+          
           <div className="w-full flex justify-center mt-10">
             <div className="flex items-center space-x-2">
-              <Input type="number" className="w-[60%]" placeholder="Your Quotation (USD)" />
-              <Button className="w-[200px]">Apply as Bidder</Button>
+              <Input type="number" className="w-[60%]" value={ contract.already_bidded && contract.total_amount } placeholder="Your Quotation (USD)" />
+              <Button className="w-[200px]">
+                {
+                  contract.already_bidded 
+                  ? "Update Quotation"
+                  : "Apply as Bidder"
+                }              
+              </Button>
             </div>
           </div>
 

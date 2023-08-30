@@ -42,6 +42,7 @@ enum PaymentMethods {
   BANK_TRANSFER
   TRANSPACT_FUND_WALLET
   CASH
+  OTHER
 }
 
 enum MilestoneType {
@@ -119,6 +120,16 @@ model Milestone {
   @@index([contractId])
 }
 
+model BidderApplication {
+  id               String @id @default(uuid())
+  quotation_amount Int    @default(0)
+
+  bidderId String
+  bidder   Contract @relation("BidderApplication", fields: [bidderId], references: [id])
+
+  @@index([bidderId])
+}
+
 model Contract {
   id String @id @default(uuid())
 
@@ -147,12 +158,15 @@ model Contract {
   contract_bidder User?   @relation("BiddedContracts", fields: [bidderId], references: [id], onDelete: SetNull)
 
   // total users bidded in this contract (ManytoManyFor Bidded field in User)
-  bidders      User[]
-  deliverables Deliverable[] @relation("ContractDeliverable")
+  bidders      BidderApplication[] @relation("BidderApplication")
+  deliverables Deliverable[]       @relation("ContractDeliverable")
 
   // milestones 
   milestones Milestone[] @relation("ContractMilestone")
+  User       User?       @relation(fields: [userId], references: [id])
+  userId     String?
 
+  @@index([userId])
   @@index([creatorId])
   @@index([bidderId])
 }
