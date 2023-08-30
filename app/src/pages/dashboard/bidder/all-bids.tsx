@@ -77,7 +77,6 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
               </Button>
             </Link>
           </DashboardHeader>
-
           <ContractTable contracts={contracts}/>
         </DashboardShell>
       </DashboardLayout>

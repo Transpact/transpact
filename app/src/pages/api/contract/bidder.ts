@@ -33,12 +33,25 @@ async function getAllContracts(user:  SignedInAuthObject | SignedOutAuthObject){
 
 }
 
+async function getContract(user:  SignedInAuthObject | SignedOutAuthObject, _id: String) {
+
+  const contracts = await prisma.contract.findFirst({
+    where:{
+      id: _id
+    } 
+  });
+
+  return contracts;
+
+}
+
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
   
   let user = getAuth(req);
 
   let filter = req.query.filter;
+  let filter_by_id = req.query.id as String;
 
   if (!user || !user.userId) {
     return handleError({
@@ -92,7 +105,20 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
             },
         })
     }
-    
+
+    if ( filter_by_id ){
+      
+      let my_contract = await getContract(user,filter_by_id);
+      
+      return handleResponse({
+          res,
+          message: "",
+          data: {
+              contracts: my_contract
+          },
+      })
+    }
+
     else {
         return handleError({
             res,

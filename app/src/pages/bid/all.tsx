@@ -25,6 +25,9 @@ import { Contract as PrismaContract } from "@prisma/client"
 export const ContractTable: React.FC<{
   contracts: PrismaContract[]
 }> = ({ contracts }) => {
+
+
+
   return (
     <Table>
       <TableCaption>A list of all available bids.</TableCaption>
@@ -56,7 +59,10 @@ export const ContractTable: React.FC<{
               <TableCell>{contract_type}</TableCell>
               <TableCell>{bidders.length}</TableCell>
               <TableCell className="text-right">
-                <Link href={`/contract/${id}`} className="mr-2">
+                <Link 
+                  href={`contract/${id}`} 
+                  className="mr-2"
+                >
                   <Button className="rounded-full">
                     <Icons.info className="h-4 w-4" />
                   </Button>
