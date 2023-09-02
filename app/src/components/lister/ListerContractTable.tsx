@@ -18,15 +18,15 @@ import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import { SAMPLE_CONTRACT } from "@/lib/data"
 import { formatDate } from "@/lib/utils"
-import { ContractContext } from "@/context/contract-context"
 import Link from "next/link"
 import { Contract as PrismaContract } from "@prisma/client"
+import { UserContext } from "@/context/user-context"
 
 export const ContractTable: React.FC<{
   contracts: PrismaContract[]
 }> = ({ contracts }) => {
 
-
+  const context = useContext(UserContext);
 
   return (
     <Table>
@@ -60,7 +60,7 @@ export const ContractTable: React.FC<{
               <TableCell>{bidders.length}</TableCell>
               <TableCell className="text-right">
                 <Link 
-                  href={`contract/${id}`} 
+                  href={context?.user?.user_type === "LISTER" ? `lister/contract/${id}` : `contract/${id}`} 
                   className="mr-2"
                 >
                   <Button className="rounded-full">

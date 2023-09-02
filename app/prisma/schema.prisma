@@ -75,8 +75,8 @@ model User {
   website                        String? @default("")
   experience                     Int?    @default(0)
 
-  created_contracts Contract[] @relation("CreatedContracts")
-  bidded_contracts  Contract[] @relation("BiddedContracts")
+  created_contracts   Contract[]          @relation("CreatedContracts")
+  bidder_applications BidderApplication[] @relation("BidderApplication")
 
   // ManytoMany with bidders field in Contract
   bidded Contract[]
@@ -85,49 +85,55 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-model Deliverable {
-  id         String   @id @default(uuid())
-  name       String   @db.VarChar(100)
-  start_date DateTime @db.Date
-  end_date   DateTime @db.Date
+// model Deliverable {
+//   id         String   @id @default(uuid())
+//   name       String   @db.VarChar(100)
+//   start_date DateTime @db.Date
+//   end_date   DateTime @db.Date
 
-  // contract deliverable
-  contractId String
-  contract   Contract @relation("ContractDeliverable", fields: [contractId], references: [id])
+//   // contract deliverable
+//   contractId String
+//   contract   Contract @relation("ContractDeliverable", fields: [contractId], references: [id])
 
-  // contract milestone deliverable
-  milestoneId String
-  milestone   Milestone @relation("MilestoneDeliverable", fields: [milestoneId], references: [id])
+//   // contract milestone deliverable
+//   milestoneId String
+//   milestone   Milestone @relation("MilestoneDeliverable", fields: [milestoneId], references: [id])
 
-  @@index([contractId])
-  @@index([milestoneId])
-}
+//   @@index([contractId])
+//   @@index([milestoneId])
+// }
 
-model Milestone {
-  id         String        @id @default(uuid())
-  type       MilestoneType
-  name       String        @db.VarChar(100)
-  start_date DateTime      @db.Date
-  end_date   DateTime      @db.Date
+// model Milestone {
+//   id         String        @id @default(uuid())
+//   type       MilestoneType
+//   name       String        @db.VarChar(100)
+//   start_date DateTime      @db.Date
+//   end_date   DateTime      @db.Date
 
-  // contract milestone
-  contractId String
-  contract   Contract @relation("ContractMilestone", fields: [contractId], references: [id])
+//   // contract milestone
+//   contractId String
+//   contract   Contract @relation("ContractMilestone", fields: [contractId], references: [id])
 
-  // we can add deliverables in the milestone for better documentation in the contract
-  deliverable Deliverable[] @relation("MilestoneDeliverable")
+//   // we can add deliverables in the milestone for better documentation in the contract
+//   deliverable Deliverable[] @relation("MilestoneDeliverable")
 
-  @@index([contractId])
-}
+//   @@index([contractId])
+// }
 
 model BidderApplication {
   id               String @id @default(uuid())
   quotation_amount Int    @default(0)
 
   bidderId String
-  bidder   Contract @relation("BidderApplication", fields: [bidderId], references: [id])
+  bidder   User   @relation("BidderApplication", fields: [bidderId], references: [id])
+
+  contractId String
+  contract   Contract @relation("BidderContractApplication", fields: [contractId], references: [id], onUpdate: Restrict)
+
+  acceptedContract Contract? @relation("AcceptedBidder")
 
   @@index([bidderId])
+  @@index([contractId])
 }
 
 model Contract {
@@ -154,19 +160,18 @@ model Contract {
   contract_creator User   @relation("CreatedContracts", fields: [creatorId], references: [id], onDelete: Cascade)
 
   // ForeignKey relation for bidder/contractor
-  bidderId        String?
-  contract_bidder User?   @relation("BiddedContracts", fields: [bidderId], references: [id], onDelete: SetNull)
 
   // total users bidded in this contract (ManytoManyFor Bidded field in User)
-  bidders      BidderApplication[] @relation("BidderApplication")
-  deliverables Deliverable[]       @relation("ContractDeliverable")
+  bidders BidderApplication[] @relation("BidderContractApplication")
 
-  // milestones 
-  milestones Milestone[] @relation("ContractMilestone")
-  User       User?       @relation(fields: [userId], references: [id])
-  userId     String?
+  // accepted bidder application
+  acceptedBidderId String?            @unique
+  acceptedBidder   BidderApplication? @relation("AcceptedBidder", fields: [acceptedBidderId], references: [id])
 
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  @@index([acceptedBidderId])
   @@index([userId])
   @@index([creatorId])
-  @@index([bidderId])
 }

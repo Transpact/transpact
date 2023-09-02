@@ -16,7 +16,7 @@ import { server, showAxiosError } from "@/lib/api-helper"
 import { ENDPOINTS } from "@/lib/constants"
 import { Contract as PrismaContract } from "prisma/prisma-client"
 import { AxiosError } from "axios"
-import { ContractTable } from "@/pages/bid/all"
+import { ContractTable } from "@/components/lister/ListerContractTable"
 
 interface BidderDashboardProps {}
 
@@ -32,12 +32,12 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
     setLoading(true)
     
     try {
-      const res = await server.get(ENDPOINTS.bidder.getContracts + "?filter=all")
+      const res = await server.get(ENDPOINTS.bidder.contracts + "?filter=all")
 
       const data = res.data.data as {
         contracts: PrismaContract[]
       }
-      console.log(data)
+
       setContracts(data.contracts)
     } catch (e: any) {
       const error = e as AxiosError

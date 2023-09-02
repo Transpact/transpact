@@ -8,9 +8,19 @@ async function getMyContracts(user:  SignedInAuthObject | SignedOutAuthObject){
 
     const contracts = await prisma.contract.findMany({
         where: {
-          bidders: {
+          bidders:{
             some:{
-                id: user.userId?.toString()
+              bidderId: user.userId as string
+            }
+          }
+        },
+        include:{
+          bidders:{
+            where:{
+              bidderId: user.userId as string
+            },
+            select:{
+              quotation_amount: true
             }
           }
         }
@@ -37,7 +47,7 @@ async function getContract(user:  SignedInAuthObject | SignedOutAuthObject, _id:
 
   const contract = await prisma.contract.findFirst({
     where:{
-      id: _id
+      id: _id as string
     },
     include:{
       contract_creator: {
@@ -48,14 +58,10 @@ async function getContract(user:  SignedInAuthObject | SignedOutAuthObject, _id:
     }
   });
   
-  const alreadyBidded = await prisma.contract.findFirst({
+  const alreadyBidded = await prisma.bidderApplication.findFirst({
     where:{
-      id: _id,
-      bidders: {
-        some:{
-          bidderId: user.userId
-        }
-      }   
+      contractId: _id as string,
+      bidderId: user.userId as string
     },
     select: {
       id: true,
@@ -182,53 +188,73 @@ async function POST(req: NextApiRequest, res: NextApiResponse){
 
   try{
 
-    const contract_id = req.query.id as String;
+    const contract_id = req.query.id as string;
     const data = req.body;
-
-    const bidderApplicationExist = await prisma.bidderApplication.findFirst({
+    
+    let bidderApplication = await prisma.bidderApplication.findFirst({
       where:{
-        bidderId: user.userId
+        bidderId: user.userId,
+        contractId: contract_id
       }
     })
 
-    if ( bidderApplicationExist ){
-      return handleError({
-        res,
-        statusCode: 400,
-        data: {},
-        message: "Bidder already applied.",
-      })
-    }
-
-    const bidderApplication = await prisma.bidderApplication.create({
-      data:{
-        quotation_amount: data.quotation_amount,
-        bidder: {
-          connect:{
-            id: user.userId
+    if ( bidderApplication === null ){
+  
+        bidderApplication = await prisma.bidderApplication.create({
+        data:{
+          quotation_amount: data.quotation_amount,
+          bidder: {
+            connect:{
+              id: user.userId
+            }
+          },
+          contract: {
+            connect:{
+              id: contract_id
+            }
           }
         }
-      }
-    })
+      })
 
-    await prisma.contract.update({
-      where:{
-        id: contract_id,
-      },
-      data:{
-        bidders: {
-          connect: [{ id: bidderApplication.id }]
+      await prisma.contract.update({
+        where:{
+          id: contract_id,
+        },
+        data:{
+          bidders: {
+            connect: [{ id: bidderApplication.id }]
+          }
         }
-      }
-    })
+      })
 
-    return handleResponse({
-      res,
-      statusCode:201,
-      message: "Successfully Bidded!",
-      data: {},
-    })
+      return handleResponse({
+        res,
+        statusCode:201,
+        message: "Successfully Bidded!",
+        data: {},
+      })
 
+    }
+
+    else {
+
+      await prisma.bidderApplication.update({
+        where: {
+          id: bidderApplication.id
+        },
+        data: {
+          quotation_amount: data.quotation_amount,
+        },
+      });
+
+      return handleResponse({
+        res,
+        statusCode:201,
+        message: "Updated Successfully!",
+        data: {},
+      })
+
+    }
 
 
   } catch (error: any) {
@@ -247,7 +273,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     case "GET":
       return GET(req, res)
 
-    case "PUT":
+    case "POST":
       return POST(req,res)
   }
 }

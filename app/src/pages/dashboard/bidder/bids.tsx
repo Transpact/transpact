@@ -31,12 +31,14 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
     setLoading(true)
     
     try {
-      const res = await server.get(ENDPOINTS.bidder.getContracts + "?filter=my")
+      const res = await server.get(ENDPOINTS.bidder.contracts + "?filter=my")
 
       const data = res.data.data as {
         contracts: PrismaContract[]
       }
+
       setContracts(data.contracts)
+
     } catch (e: any) {
       const error = e as AxiosError
 

@@ -35,7 +35,7 @@ export const BidderContractTable: React.FC<{
             <TableHead>Budget Range</TableHead>
             <TableHead>Duration</TableHead>
             <TableHead>Type</TableHead>
-            <TableHead>Bids</TableHead>
+            <TableHead>Your Quotation</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -47,15 +47,17 @@ export const BidderContractTable: React.FC<{
               budget_range,
               id,
               contract_duration,
-              contract_type
+              contract_type,
+              bidders
             }) => (
               <TableRow key={id}>
                 <TableCell className="font-medium">{title}</TableCell>
                 <TableCell>{budget_range}</TableCell>
                 <TableCell>{contract_duration}</TableCell>
                 <TableCell>{contract_type}</TableCell>
+                <TableCell>${bidders[0].quotation_amount}</TableCell>
                 <TableCell className="text-right">
-                  <Link href={`/contract/${id}`} className="mr-2">
+                  <Link href={`contract/${id}`} className="mr-2">
                     <Button className="rounded-full">
                       <Icons.info className="h-4 w-4" />
                     </Button>

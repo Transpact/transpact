@@ -12,7 +12,7 @@ import { Icons } from "@/components/icons";
 import { SAMPLE_CONTRACT } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
 import { useRouter } from "next/router";
-import { server } from "@/lib/api-helper";
+import { server, showAxiosError } from "@/lib/api-helper";
 import { ENDPOINTS } from "@/lib/constants";
 import { PrismaContract } from "@prisma/client";
 import { FaFileContract } from "react-icons/fa";
@@ -23,6 +23,8 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { AxiosError } from "axios";
+import { toast } from "@/components/ui/use-toast";
 
 interface ContractDetailsPageProps {}
 
@@ -32,26 +34,26 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   const router = useRouter();
   const contractId = router.query.id;
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [quotationAmount,setQuotationAmount] = useState<number>(0);
+
   const [contract, setContract] = useState<PrismaContract | null | undefined>(
     undefined
   );
   const [progressBar,setProgressBar] = useState<number>(1); 
 
   const getContracts = async () => {
-    console.log("=====")
+
     setLoading(true);
 
     try {
       // TODO: Get from blockchain
 
-      const res = await server.get(ENDPOINTS.bidder.getContracts + `?id=${contractId}`);
+      const res = await server.get(ENDPOINTS.bidder.contracts + `?id=${contractId}`);
       
       const data = res.data.data as {
         contracts: PrismaContract[]
       }
-
-      console.log(data.contracts,"=====")
 
       switch (data.contracts.payment_method) {
         case "BANK_TRANSFER":
@@ -67,7 +69,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
           break;
 
       }
-
+      setQuotationAmount(data.total_amount);
       setContract(data.contracts);
 
       switch (data.contracts.status as String){
@@ -92,7 +94,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
           setProgressBar(5);
           break;
       }
-                
+
     } catch (e) {
       setContract(null);
       console.log(e);
@@ -100,10 +102,50 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       setLoading(false);
     }
   };
+
+  async function apply(){
+
+    try{
+
+      setLoading(true);
+
+      const apply = await server.post(
+          ENDPOINTS.bidder.contracts + `?id=${contractId}`,
+        {
+          quotation_amount: quotationAmount,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+
+      toast({
+        title: apply.data.message,
+        description: "",
+        variant: "default",
+      })
+
+    } catch (err) {
+      
+      const error = err as AxiosError;
+      
+      showAxiosError({
+        error,
+        generic: "Failed to apply, Something went wrong!",
+        additionalText: error?.message,
+      })
+
+    } finally {
+      setLoading(false);
+    }
+
+  }
   
   useEffect(() => {
     getContracts();
-  }, [contractId]);
+  }, []);
 
   if (contract === null || contract === undefined) {
     return <p>Loading</p>;
@@ -118,7 +160,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       buttonLabel=""
     >
       <DashboardShell>
-        <DashboardHeader heading={contract?.name ?? ""} text={""} />
+        <DashboardHeader heading={contract?.name } text={""} />
 
         <Card className="w-full flex flex-col items-center py-10">
 
@@ -308,8 +350,8 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
           
           <div className="w-full flex justify-center mt-10">
             <div className="flex items-center space-x-2">
-              <Input type="number" className="w-[60%]" value={ contract.already_bidded && contract.total_amount } placeholder="Your Quotation (USD)" />
-              <Button className="w-[200px]">
+              <Input type="number" className="w-[60%]" value={ quotationAmount } onChange={(e) => setQuotationAmount(parseInt(e.target.value))} placeholder="Your Quotation (USD)" />
+              <Button onClick={apply} className="w-[200px]">
                 {
                   contract.already_bidded 
                   ? "Update Quotation"

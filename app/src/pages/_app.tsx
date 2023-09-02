@@ -49,10 +49,9 @@ export default function App({ Component, pageProps }: AppProps) {
     try {
       const res = await server.get(endpoints.register)
 
-      const data = res.data.data as {
-        user_completed: boolean,
-        user_type: String
-      }
+      const data = res.data.data as User
+
+      setUser(data);
 
       // if user has not completed company profile
       if (data.user_completed === false) {

@@ -6,9 +6,10 @@ export const ENDPOINTS = {
   lister: {
     getContracts: "/api/contract",
     createContract: "/api/contract",
+    contract: "/api/contract/lister-contract/"
   },
   bidder: {
-    getContracts: "/api/contract/bidder"
+    contracts: "/api/contract/bidder"
   },
 }
 

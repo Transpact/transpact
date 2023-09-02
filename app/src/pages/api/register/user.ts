@@ -27,7 +27,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
         res,
         statusCode: 400,
         data: {
-          user_completed: false,
+          user_completed: false
         },
         message: "The user does not exists",
       })
@@ -36,10 +36,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     return handleResponse({
       res,
       message: "",
-      data: {
-        user_completed: alreadyExists.user_completed,
-        user_type: alreadyExists.user_type
-      },
+      data: alreadyExists,
     })
   } catch (error: any) {
     return res.status(400).json({ message: error.message })
