@@ -162,14 +162,16 @@ async function POST(req: NextApiRequest, res: NextApiResponse){
             id: contract_id
         },
         data:{
+            status: "BIDDER_FOUND",
             acceptedBidder:{
                 connect:{
                     id: bidderApplication.id
                 }
             }
         }
-
     })
+
+
 
     return handleResponse({
         res,

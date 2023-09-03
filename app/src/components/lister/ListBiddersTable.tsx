@@ -137,7 +137,7 @@ const ListBiddersTable: React.FC<ListBiddersTableProps> = ({ data, acceptBidder 
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button variant="outline" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -146,14 +146,11 @@ const ListBiddersTable: React.FC<ListBiddersTableProps> = ({ data, acceptBidder 
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>View Proposal</DropdownMenuItem>
               <DropdownMenuSeparator />
+              
+              <div className="flex flex-col">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                  <Button>
-                    {/* <DropdownMenuItem> */}
-                      Accept Bidder
-                    {/* </DropdownMenuItem> */}
-                  </Button>
-
+                  <Button variant="outline">Accept Bidder</Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -168,10 +165,10 @@ const ListBiddersTable: React.FC<ListBiddersTableProps> = ({ data, acceptBidder 
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-              <DropdownMenuItem>
+
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant={"ghost"}>Reject Bidder</Button>
+                    <Button className="mt-2" variant="outline">Reject Bidder</Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -186,8 +183,8 @@ const ListBiddersTable: React.FC<ListBiddersTableProps> = ({ data, acceptBidder 
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-              </DropdownMenuItem>
-              
+              </div>
+
             </DropdownMenuContent>
           </DropdownMenu>
         )

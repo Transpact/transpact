@@ -36,6 +36,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
     undefined
   );
   const [progressBar,setProgressBar] = useState<number>(1); 
+  const [ bidderAccepted,setBidderAccepted ] = useState<boolean>(false);
 
   const getContract = async () => {
 
@@ -110,6 +111,8 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
         variant: "default",
       })
 
+      setBidderAccepted(true);
+
     } catch (e: any) {
       
       const error = e as AxiosError
@@ -126,7 +129,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   
   useEffect(() => {
     getContract();
-  }, []);
+  }, [bidderAccepted]);
 
   if (contract === null || contract === undefined) {
     return <p>Loading</p>;
