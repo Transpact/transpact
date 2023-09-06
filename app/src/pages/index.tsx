@@ -170,6 +170,52 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
           </div>
         </section>
 
+        <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
+          <div className="container text-center">
+            <h1 className="mb-6 text-center text-xl font-bold sm:text-2xl md:text-3xl lg:text-5xl">
+              Everything your business needs
+            </h1>
+
+            <h3 className="mb-16 text-muted-foreground">
+              Now all contract management tools in one place.
+            </h3>
+
+            <div className="grid grid-cols-3 justify-items-center">
+              {[
+                { text: "Reduce your costs", col: "#DCFAE7" },
+                { text: "Save valuable time", col: "#DCEDF9" },
+                {
+                  text: "Minimize the risk of incorrect contract fulfillment",
+                  col: "#F9DBE2",
+                },
+              ].map((item, i) => {
+                return (
+                  <div
+                    className={cn(
+                      "flex h-64 w-64 flex-col justify-center rounded-xl border border-white/80 p-12",
+                      `bg-[${item.col}]`
+                    )}
+                    key={i}
+                    style={{
+                      backgroundColor: item.col,
+                    }}
+                  >
+                    <p className="text-xl font-bold">{item.text}</p>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* <Image
+              src="/images/landing/cm-transformed.jpeg"
+              height={500}
+              width={1250}
+              alt="Features"
+              className="mx-auto"
+            /> */}
+          </div>
+        </section>
+
         <section className="space-y-6 pb-8 pt-6 md:pb-12">
           <div className="container">
             <h1 className="mb-16 text-center text-xl sm:text-2xl md:text-3xl lg:text-5xl">
