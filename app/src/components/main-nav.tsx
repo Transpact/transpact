@@ -17,8 +17,11 @@ export function MainNav({ items, children }: MainNavProps) {
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
 
   return (
-    <div className="flex gap-6 md:gap-10">
-      <Link href="/" className="hidden items-center space-x-2 md:flex">
+    <div className="light flex gap-6 md:gap-10">
+      <Link
+        href="/"
+        className={cn("hidden items-center space-x-2 md:flex", "text-white")}
+      >
         <Icons.logo />
         <span className="hidden font-bold sm:inline-block">
           {siteConfig.name}
@@ -33,9 +36,10 @@ export function MainNav({ items, children }: MainNavProps) {
               className={
                 // () =>
                 cn(
-                  "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm"
+                  "flex items-center text-lg font-medium transition-colors hover:text-muted/80 sm:text-sm",
                   // isActive ? "text-foreground" : "text-foreground/60",
                   // item.disabled && "cursor-not-allowed opacity-80"
+                  "text-white"
                 )
               }
             >

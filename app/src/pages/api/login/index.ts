@@ -2,10 +2,15 @@ import { generateToken, verifyToken } from "@/lib/TokenAuth"
 import { NextApiRequest, NextApiResponse } from "next"
 import sha256 from "js-sha256"
 import { prisma } from "@/lib/db"
+import { uploadObjectToFirebase } from "@/lib/firebase"
+import second from "../../"
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
   const { action } = req.query
   let users
+
+  // const url = await uploadObjectToFirebase("~/Desktop/lfx.png", "Test")
+  // console.log(url)
 
   if (action === "delete") {
     users = await prisma.user.deleteMany()
@@ -13,7 +18,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     users = await prisma.user.findMany()
   }
 
-  return res.status(200).json(users)
+  return res.status(200).json({ users })
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
