@@ -29,12 +29,7 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
           connect: {
             id: userExists.id,
           },
-        },
-        bidders: {
-          connect: {
-            id: userExists.id,
-          },
-        },
+        }
       },
     })
 
