@@ -15,6 +15,8 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().min(1),
     NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string().min(1),
     NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().min(1),
+    NEXT_PUBLIC_PINATA_API_KEY: z.string().min(1),
+    NEXT_PUBLIC_PINATA_API_SECRET: z.string().min(1),
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
@@ -32,5 +34,9 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,
     NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL:
       process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL,
+    NEXT_PUBLIC_PINATA_API_KEY: 
+      process.env.NEXT_PUBLIC_PINATA_API_KEY,
+    NEXT_PUBLIC_PINATA_API_SECRET:
+      process.env.NEXT_PUBLIC_PINATA_API_SECRET,
   },
 })
