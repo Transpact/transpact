@@ -19,6 +19,8 @@ import localFont from "next/font/local"
 import { cn } from "@/lib/utils"
 import { server, showAxiosError } from "@/lib/api-helper"
 import { AxiosError } from "axios"
+import { User } from "~/types/models"
+import { toast } from "@/components/ui/use-toast"
 
 const CONTRACT_ADDRESS = "dev-1688285985299-62443913276139"
 
@@ -50,7 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
       const res = await server.get(endpoints.register)
 
       const data = res.data.data as User
-
+      console.log(data)
       setUser(data);
 
       // if user has not completed company profile
@@ -72,6 +74,11 @@ export default function App({ Component, pageProps }: AppProps) {
         })
       }
 
+      toast({
+        title: `Welcome to ${data.company_name} ${data.user_type.toLowerCase()} Dashboard`,
+        variant: "default",
+      })
+
     } catch (e: any) {
       const error = e as AxiosError
 
@@ -92,7 +99,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }
   useEffect(() => {
-    getUserData()
+    getUserData();
   }, [])
 
   return (

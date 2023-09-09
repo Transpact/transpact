@@ -17,7 +17,8 @@ import { ENDPOINTS } from "@/lib/constants";
 import { PrismaContract } from "@prisma/client";
 import { FaFileContract } from "react-icons/fa";
 import { AiOutlineUser, AiOutlineCheckCircle, AiOutlineArrowRight } from "react-icons/ai";
-import { BsPencilSquare } from "react-icons/bs";
+import { BsPencilSquare,BsFillPlusCircleFill } from "react-icons/bs";
+import { IoMdRemoveCircle } from "react-icons/io";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -25,6 +26,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { AxiosError } from "axios";
 import { toast } from "@/components/ui/use-toast";
+import { Label } from "@/components/ui/label";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
 
 interface ContractDetailsPageProps {}
 
@@ -40,7 +49,8 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   const [contract, setContract] = useState<PrismaContract | null | undefined>(
     undefined
   );
-  const [progressBar,setProgressBar] = useState<number>(1); 
+  const [progressBar,setProgressBar] = useState<number>(1);
+  const [deliverables, setDeliverables] = useState<String[]>([]);  
 
   const getContracts = async () => {
 
@@ -348,16 +358,63 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
             </Card>
           </div>
           
-          <div className="w-full flex justify-center mt-10">
-            <div className="flex items-center space-x-2">
-              <Input type="number" className="w-[60%]" value={ quotationAmount } onChange={(e) => setQuotationAmount(parseInt(e.target.value))} placeholder="Your Quotation (USD)" />
-              <Button onClick={apply} className="w-[200px]">
-                {
-                  contract.already_bidded 
-                  ? "Update Quotation"
-                  : "Apply as Bidder"
-                }              
+          <div className="w-full px-12 flex flex-col mt-10">
+            
+            <p className="text-2xl mb-10 font-bold text-center">Submit Proposal</p>
+              
+            <div className="flex justify-center w-ful">
+              <div className="grid w-full max-w items-center gap-1.5">
+                <Label htmlFor="picture" className="mb-2">Upload Tender Proposal Files</Label>
+                <Input multiple id="picture" type="file" className="h-[100px] flex p-10"/>
+              </div>
+            </div>
+
+            <div className="flex justify-center w-full mt-7">
+              <div className="grid w-full max-w items-center gap-1.5">
+                <Label htmlFor="picture" className="mb-2">Proposal Description</Label>
+                <Textarea placeholder="# Proposal Description"/>
+              </div>
+            </div>
+                
+            <div className="flex justify-between items-center w-full mt-10">
+              <p className="text-lg font-bold">Add Deliverables (Rough Estimates)</p>
+            </div>
+              
+            <div className="w-full flex justify-between mt-5">
+              <Input type="Text" placeholder="Deliverable 1" className="w-[60%]" />
+              <CalendarDateRangePicker/>
+              <Button className="bg-transparent">
+                <BsFillPlusCircleFill className="w-10 h-10 text-primary"/>
               </Button>
+            </div> 
+            
+            <div className="w-full flex flex-col">
+            
+              <div className="w-full flex justify-between mt-5">
+                <Input disabled type="Text" placeholder="Deliverable 1" className="w-[60%]" />
+                <CalendarDateRangePicker/>
+                <IoMdRemoveCircle className="w-10 h-10 text-primary"/>
+              </div>  
+
+              <div className="w-full flex justify-between mt-5">
+                <Input disabled type="Text" placeholder="Deliverable 1" className="w-[60%]" />
+                <CalendarDateRangePicker/>
+                <IoMdRemoveCircle className="w-10 h-10 text-primary"/>
+              </div>  
+
+            </div>
+           
+            <div className="w-full flex justify-center mt-10">
+              <div className="flex items-center space-x-2">
+                <Input type="number" className="w-[60%]" value={ quotationAmount } onChange={(e) => setQuotationAmount(parseInt(e.target.value))} placeholder="Your Quotation (USD)" />
+                <Button onClick={apply} className="w-[200px]">
+                  {
+                    contract.already_bidded 
+                    ? "Update Quotation"
+                    : "Apply as Bidder"
+                  }              
+                </Button>
+              </div>
             </div>
           </div>
 

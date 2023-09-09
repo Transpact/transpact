@@ -8,16 +8,20 @@ import { buttonVariants } from "@/components/ui/button"
 import { MainNav } from "@/components/main-nav"
 import { SiteFooter } from "@/components/site-footer"
 import { WalletContext } from "@/context/wallet-context"
+import { UserContext } from "@/context/user-context"
 import { useRouter } from "next/router"
 import { SignedIn,SignedOut,UserButton,UserProfile } from "@clerk/nextjs"
+import { User } from "~/types/models"
 
 interface MainLayoutProps {
   children: React.ReactNode
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const { wallet, isSignedIn } = useContext(WalletContext)!
-  const router = useRouter()
+  const { wallet, isSignedIn } = useContext(WalletContext)!;
+  const { user } = useContext(UserContext)!;
+
+  const router = useRouter();
 
   const handleLogin = async () => {
     // wallet.signIn()

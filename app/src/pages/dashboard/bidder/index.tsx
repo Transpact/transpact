@@ -19,11 +19,14 @@ import { RecentSales } from "@/components/bidder/react-sales"
 import { Overview } from "@/components/bidder/overview"
 
 import { CalendarDateRangePicker } from "@/components/ui/date-range-picker"
+import { UserContext } from "@/context/user-context"
 
 interface BidderDashboardProps {}
 
 const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
   const [loading, setLoading] = useState(false)
+
+  const { user } = useContext(UserContext)!;
 
   return (
     <>
@@ -41,7 +44,7 @@ const BidderDashboard: React.FC<BidderDashboardProps> = ({}) => {
           <div className="hidden flex-col md:flex">
             <div className="flex-1 space-y-4 p-8 pt-6">
               <div className="flex items-center justify-between space-y-2">
-                <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+                <h2 className="text-3xl font-bold tracking-tight">{user?.company_name} Dashboard</h2>
 
                 <div className="flex items-center space-x-2">
                   <CalendarDateRangePicker />

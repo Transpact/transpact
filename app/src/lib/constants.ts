@@ -11,6 +11,7 @@ export const ENDPOINTS = {
   bidder: {
     contracts: "/api/contract/bidder"
   },
+  manageFiles: "/api/manage-files"
 }
 
 export const ROUTES = {

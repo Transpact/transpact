@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { User } from "~/types/models";
 
 export type UserContextType = {
   user: User | undefined;

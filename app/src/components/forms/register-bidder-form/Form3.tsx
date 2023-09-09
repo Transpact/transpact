@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { ChangeEvent, useState } from "react"
 
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -37,6 +37,10 @@ import {
 } from "react-country-region-selector"
 import { endpoints } from "@/lib/utils"
 import { useToast } from "@/components/ui/use-toast"
+import { server, showAxiosError } from "@/lib/api-helper"
+import { ENDPOINTS } from "@/lib/constants"
+import { env } from "@/env.mjs"
+import axios, { AxiosError } from "axios"
 
 interface RegisterBidderForm3Props {
   setPageNo: React.Dispatch<React.SetStateAction<number>>
@@ -47,13 +51,16 @@ const formSchemaPage3 = z.object({
   taxIdentificationNumber: z.string().max(100),
   documentType: z.string().max(50),
   businessRegistrationDocument: z.any(),
+  companyLogo: z.any(),
 })
 
 const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({
   setPageNo,
   userType,
 }) => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [ buisnessRegDocuments,setBuisnessRegDocuments ] = useState<File | null>(null);
+  const [ companyLogo,setCompanyLogo ] = useState<File | null>(null);
   const { toast } = useToast()
   const router = useRouter()
 
@@ -62,59 +69,129 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({
     defaultValues: {
       taxIdentificationNumber: "",
       businessRegistrationDocument: undefined,
+      companyLogo: undefined,
     },
   })
 
-  async function onSubmit() {
-    if (loading) return
+  const addFile = (e:ChangeEvent<HTMLInputElement>,setter:React.Dispatch<React.SetStateAction<File | null>>) => {
 
-    setLoading(true)
-
-    const resp = await fetch(endpoints.register, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        tax_identification_number: formPage3.getValues(
-          "taxIdentificationNumber"
-        ),
-        registration_document_type: formPage3.getValues("documentType"),
-        buisness_registration_document: formPage3.getValues(
-          "businessRegistrationDocument"
-        ),
-        user_completed: true,
-      }),
-    })
-
-    let resp_json = await resp.json()
-    setLoading(false)
-
-    if (resp.status !== 200) {
-      toast({
-        title: "Request Failed",
-        description: resp_json,
-        variant: "destructive",
-      })
+    if (e.target.files && e.target.files[0]){
+      setter(e.target.files[0]);
     }
+  }
 
-    setLoading(false)
+  async function uploadImage(file: File | null) {
 
-    setTimeout(() => {
-      if (userType === "BIDDER") {
-        router.replace({
-          pathname: "/dashboard/bidder",
+
+    const formData = new FormData();
+    
+    if (file === null){
+      return null
+    }
+    
+    formData.append('file',file);
+    
+    const resp =  await axios({
+      method: "post",
+      url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+      data: formData,
+      headers: {
+          'pinata_api_key': `${env.NEXT_PUBLIC_PINATA_API_KEY}`,
+          'pinata_secret_api_key': `${env.NEXT_PUBLIC_PINATA_API_SECRET}`,
+          "Content-Type": "multipart/form-data"
+      },
+    });
+
+    const imageUrl = `https://ipfs.io/ipfs/${resp.data.IpfsHash}`;
+
+    return imageUrl;
+
+  }
+
+  async function onSubmit() {
+    
+    
+    try {
+      setLoading(true)    
+
+      const companyUrl = await uploadImage(companyLogo);
+
+      if (companyUrl === null){
+        toast({
+          title: "Failed to upload Company Logo",
+          variant: "destructive",
         })
-      } else if (userType === "LISTER") {
-        router.replace({
-          pathname: "/dashboard/lister",
+        return 
+      }
+
+      const buisnessRegistrationDocumentUrl = await uploadImage(buisnessRegDocuments);
+
+      if (buisnessRegistrationDocumentUrl === null){
+        toast({
+          title: "Failed to upload Company Registration Documents",
+          variant: "destructive",
+        })
+        return 
+      }
+      
+      const resp = await fetch(endpoints.register, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tax_identification_number: formPage3.getValues(
+            "taxIdentificationNumber"
+            ),
+          registration_document_type: formPage3.getValues("documentType"),
+          buisness_registration_document: buisnessRegistrationDocumentUrl,
+          user_completed: true,
+          company_logo: companyUrl,
+        }),
+      })
+
+      let resp_json = await resp.json()
+      setLoading(false)
+
+      if (resp.status !== 200) {
+        toast({
+          title: "Request Failed",
+          description: resp_json,
+          variant: "destructive",
         })
       }
-    }, 1000)
 
-    toast({
-      title: "Company Created",
-    })
+      setLoading(false)
+
+      setTimeout(() => {
+        if (userType === "BIDDER") {
+          router.replace({
+            pathname: "/dashboard/bidder",
+          })
+        } else if (userType === "LISTER") {
+          router.replace({
+            pathname: "/dashboard/lister",
+          })
+        }
+      }, 1000)
+
+      toast({
+        title: "Company Created",
+      })
+    
+    } catch (e:any){
+      
+      const error = e as AxiosError;
+      showAxiosError({
+          error,
+          generic: "Failed to create user",
+          additionalText: "Please try again",
+      });
+
+    } finally{
+      setLoading(false);
+    }
+    
   }
 
   return (
@@ -192,6 +269,28 @@ const RegisterBidderForm3: React.FC<RegisterBidderForm3Props> = ({
                         accept="image/*, application/pdf"
                         multiple
                         {...field}
+                        onChange={(e)=>addFile(e,setBuisnessRegDocuments)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={formPage3.control}
+                name="companyLogo"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Company Logo</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Select An Image"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        {...field}
+                        onChange={(e)=>addFile(e,setCompanyLogo)}
                       />
                     </FormControl>
                     <FormMessage />
