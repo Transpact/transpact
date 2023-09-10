@@ -1,5 +1,5 @@
 import { toast } from "@/components/ui/use-toast"
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextApiResponse } from "next"
 import axios, { AxiosError } from "axios"
 
 export const server = axios.create({})
