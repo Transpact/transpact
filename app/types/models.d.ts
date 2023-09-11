@@ -18,6 +18,7 @@ type Contract = {
   files: string[]
   contract_creator: any
   bidders: any
+  already_bidded: boolean
 }
 
 type User = {
