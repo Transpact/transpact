@@ -1,15 +1,23 @@
 import { number } from "zod";
 
 type Contract = {
-  id: string;
-  name: string;
-  owner: string;
-  amount: number;
-  status: "progress" | "complete"
-  description: string;
-  startDate: Date;
-  endDate: Date;
-  files: string[];
+  id: string
+  contract_type: string      
+  status: string            
+  title: string
+  skills_required: string[]
+  legal_requirements: string
+  payment_method: string
+  total_amount: number
+  renewal: boolean
+  description: string
+  contract_visibility: string
+  contract_duration: string
+  budget_range: string
+  acceptedBidder: any
+  files: string[]
+  contract_creator: any
+  bidders: any
 }
 
 type User = {

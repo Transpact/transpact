@@ -20,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { AxiosError } from "axios";
 import { toast } from "@/components/ui/use-toast";
 import ListBiddersTable, { Bidder } from "@/components/lister/ListBiddersTable";
+import { Contract } from "~/types/models";
 
 interface ContractDetailsPageProps {}
 
@@ -32,7 +33,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [quotationAmount,setQuotationAmount] = useState<number>(0);
 
-  const [contract, setContract] = useState<PrismaContract | null | undefined>(
+  const [contract, setContract] = useState<Contract | null | undefined>(
     undefined
   );
   const [progressBar,setProgressBar] = useState<number>(1); 
@@ -48,9 +49,9 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       const res = await server.get(ENDPOINTS.lister.contract + `?id=${contractId}`);
       
       const data = res.data.data as {
-        contracts: PrismaContract[]
+        contracts: Contract
       }
-
+      console.log(data)
       switch (data.contracts.payment_method) {
         case "BANK_TRANSFER":
           data.contracts.payment_method = "Bank Transfer"
@@ -65,7 +66,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
           break;
 
       }
-      setQuotationAmount(data.total_amount);
+      setQuotationAmount(data.contracts.total_amount);
       setContract(data.contracts);
 
       switch (data.contracts.status as String){
@@ -144,7 +145,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       buttonLabel=""
     >
       <DashboardShell>
-        <DashboardHeader heading={contract?.name } text={""} />
+        <DashboardHeader heading={contract?.title } text={""} />
 
         <Card className="w-full flex flex-col items-center py-10">
 
@@ -332,12 +333,83 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
             </Card>
           </div>  
         </Card>
-        
-        {
-          contract !== undefined && 
-          <ListBiddersTable acceptBidder={acceptBidder} data={ contract.bidders as Bidder[]} />
-        }
 
+        {
+          contract !== undefined && contract.acceptedBidder !== null
+          
+          ?
+          
+          <Card className="w-full flex flex-col items-center py-10">
+            
+            <CardHeader>
+              <CardTitle className="text-center">BIDDER PROPOSAL</CardTitle>
+              <CardDescription className="text-center">
+                <a href={contract.acceptedBidder.bidder.website} className=" hover:underline" target="_blank">Proposed By - {contract.acceptedBidder.bidder.company_name}</a>
+              </CardDescription>
+            </CardHeader>
+
+            <div className="w-full px-5 mt-10 flex justify-between">
+              <Card className="w-full border-0">
+                <CardHeader>
+                  <CardTitle className="text-lg">{(contract.acceptedBidder.bidder.company_name as string).toUpperCase()}</CardTitle>
+                </CardHeader>
+                <CardDescription className="min-w-full flex justify-between">
+                  <div className="w-1/2 px-6 flex flex-col">
+                    <div className="w-full my-1 justify-between flex items-center text-lg">
+                      <p className="text-gray-700 text-bold mr-5">Proposal Id: </p>
+                      <p>{contract.acceptedBidder.id}</p>
+                    </div>
+                    <div className="w-full my-1 justify-between flex items-center text-lg">
+                      <p className="text-gray-700 text-bold mr-5">Based on (Location): </p>
+                      <p>{contract.acceptedBidder.bidder.country}</p>
+                    </div>
+                    <div className="w-full my-1 justify-between flex items-center text-lg">
+                      <p className="text-gray-700 text-bold mr-5">Experience: </p>
+                      <p>{contract.acceptedBidder.bidder.experience} Years</p>
+                    </div>
+                  </div>
+
+                  <div className="w-1/2 px-6 flex flex-col">
+                    <div className="w-full my-1 justify-between flex items-center text-lg">
+                      <p className="text-gray-700 text-bold mr-5">Total Deliverables: </p>
+                      <p>10</p>
+                    </div>
+                    <div className="w-full my-1 justify-between flex items-center text-lg">
+                      <p className="text-gray-700 text-bold mr-5">Quotation: </p>
+                      <p>${contract.acceptedBidder.quotation_amount}</p>
+                    </div>
+                    <div className="w-full my-1 justify-between flex items-center text-lg">
+                      <p className="text-gray-700 text-bold mr-5">Bidder Website: </p>
+                      <a href={contract.acceptedBidder.bidder.website} target="_blank">{contract.acceptedBidder.bidder.website}</a>
+                    </div>
+                  </div>
+                </CardDescription>
+              </Card>
+            </div>
+
+            <div className="w-full px-5 mt-10 flex justify-between">
+              <Card className="w-full border-0">
+                <CardHeader>
+                  <CardTitle className="text-lg">Proposal Documents</CardTitle>
+                </CardHeader>
+                <CardDescription className="w-full text-black flex items-center py-5 px-6 ">
+                <ul id="gallery" className="flex flex-1 flex-wrap -m-1">
+                  <li id="empty" className="h-full w-full text-center flex flex-col items-center justify-center">
+                    <img className="mx-auto w-32" src="https://user-images.githubusercontent.com/507615/54591670-ac0a0180-4a65-11e9-846c-e55ffce0fe7b.png" alt="no data" />
+                    <span className="text-small text-gray-500">No files selected</span>
+                  </li>
+                </ul>
+                </CardDescription>
+              </Card>
+            </div>  
+
+          </Card>
+
+          :
+
+          // List bidder table
+          <ListBiddersTable acceptBidder={acceptBidder} data={ contract.bidders as Bidder[]} />
+        }         
         
       </DashboardShell>
     </DashboardLayout>

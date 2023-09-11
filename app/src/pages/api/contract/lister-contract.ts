@@ -16,6 +16,23 @@ async function getContract(user:  SignedInAuthObject | SignedOutAuthObject, _id:
           company_name: true,
         }
       },
+      acceptedBidder: {
+        select:{
+          id: true,
+          quotation_amount: true,
+          bidder: {
+              select:{
+                  id: true,
+                  email: true,
+                  country: true,
+                  company_name: true,
+                  company_logo: true,
+                  experience: true,
+                  website: true
+              }
+          }
+        }
+      },
       bidders:{
         select:{
             id: true,

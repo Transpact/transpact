@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { AxiosError } from "axios";
 import { toast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
+import FileInput from "@/components/file-input";
 
 import {
   Popover,
@@ -362,12 +363,18 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
             
             <p className="text-2xl mb-10 font-bold text-center">Submit Proposal</p>
               
-            <div className="flex justify-center w-ful">
+            {/* <div className="flex justify-center w-ful">
               <div className="grid w-full max-w items-center gap-1.5">
                 <Label htmlFor="picture" className="mb-2">Upload Tender Proposal Files</Label>
                 <Input multiple id="picture" type="file" className="h-[100px] flex p-10"/>
               </div>
+            </div> */}
+
+            <div className="w-full flex">
+              <FileInput/>
             </div>
+
+
 
             <div className="flex justify-center w-full mt-7">
               <div className="grid w-full max-w items-center gap-1.5">
