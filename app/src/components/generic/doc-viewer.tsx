@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useState } from "react"
@@ -7,24 +8,39 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 export const DocumentViewer: React.FC<{
   documentUrl: string
-}> = ({ documentUrl }) => {
+  className?: string
+}> = ({ documentUrl, className = "" }) => {
   const [numPages, setNumPages] = useState(0)
-  const [error, setError] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
 
   return (
-    <div className="h-min--24 mx-auto max-h-[720px] max-w-screen-md overflow-scroll rounded-lg border border-gray-400 p-4">
-      {error && (
-        <p>
-          Error loading data, view <Link href={documentUrl}>here</Link>
-        </p>
+    <div
+      className={cn(
+        "h-min--24 mx-auto max-h-[720px] max-w-screen-md overflow-scroll rounded-lg border border-gray-400 p-4",
+        className
       )}
-
+    >
       <Document
         file={documentUrl}
         onError={(e, args) => {
-          setError(true)
+          setError("Failed to load PDF")
         }}
-        onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+        onLoadError={(error) => {
+          setError(error?.message ?? "Failed to load PDF")
+        }}
+        onLoadSuccess={({ numPages }) => {
+          setNumPages(numPages)
+          setError(null)
+        }}
+        error={() => (
+          <p>
+            {error}, view the file{" "}
+            <Link href={documentUrl} className="underline" target="_blank">
+              here
+            </Link>
+            .
+          </p>
+        )}
       >
         {Array.from({ length: numPages }, (_, index) => (
           <Page
