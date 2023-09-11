@@ -27,7 +27,6 @@ import { Input } from "@/components/ui/input";
 import { AxiosError } from "axios";
 import { toast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
-import FileInput from "@/components/file-input";
 
 import {
   Popover,
@@ -35,6 +34,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
+import { Contract } from "~/types/models";
 
 interface ContractDetailsPageProps {}
 
@@ -47,7 +47,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [quotationAmount,setQuotationAmount] = useState<number>(0);
 
-  const [contract, setContract] = useState<PrismaContract | null | undefined>(
+  const [contract, setContract] = useState<Contract | null | undefined>(
     undefined
   );
   const [progressBar,setProgressBar] = useState<number>(1);
@@ -63,7 +63,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       const res = await server.get(ENDPOINTS.bidder.contracts + `?id=${contractId}`);
       
       const data = res.data.data as {
-        contracts: PrismaContract[]
+        contracts: Contract
       }
 
       switch (data.contracts.payment_method) {
@@ -80,7 +80,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
           break;
 
       }
-      setQuotationAmount(data.total_amount);
+      setQuotationAmount(data.contracts.total_amount);
       setContract(data.contracts);
 
       switch (data.contracts.status as String){
@@ -171,7 +171,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       buttonLabel=""
     >
       <DashboardShell>
-        <DashboardHeader heading={contract?.name } text={""} />
+        <DashboardHeader heading={contract?.title } text={""} />
 
         <Card className="w-full flex flex-col items-center py-10">
 
@@ -371,7 +371,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
             </div> */}
 
             <div className="w-full flex">
-              <FileInput/>
+              
             </div>
 
 
