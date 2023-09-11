@@ -19,6 +19,7 @@ import Head from "next/head"
 
 import { DocumentViewer } from "@/components/generic/doc-viewer"
 import { SAMPLE_PDF_URL } from "@/lib/data"
+import { FileUploaderDroppable } from "@/components/generic/form-uploader-drop"
 
 interface HomePageProps {}
 
@@ -314,7 +315,11 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
           </div>
         </section>
 
-        <DocumentViewer documentUrl={SAMPLE_PDF_URL} />
+        {/* <DocumentViewer documentUrl={SAMPLE_PDF_URL} /> */}
+        <FileUploaderDroppable
+          title="Upload Contract"
+          description="Upload PDF, Images and Docs"
+        />
       </MainLayout>
     </>
   )

@@ -35,6 +35,9 @@ import {
   Calendar,
   Home,
   ChevronsUpDown,
+  FileIcon,
+  FileTextIcon,
+  FileImage,
   type XIcon as LucideIcon,
 } from "lucide-react"
 
@@ -70,6 +73,9 @@ export const Icons = {
   plusCircle: PlusCircle,
   info: Info,
   home: Home,
+  fileIcon: FileIcon,
+  fileTextIcon: FileIcon,
+  fileImage: FileImage,
   chevronsUpDown: ChevronsUpDown,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
