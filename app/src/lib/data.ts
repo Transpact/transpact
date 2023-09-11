@@ -27,4 +27,7 @@ export const SAMPLE_CONTRACT: Contract[] = [
     This sample infrastructure development contract provides a solid foundation for the implementation of infrastructure projects in our app's dummy data. It covers essential aspects related to project scope, timeline, technical specifications, budget, roles, and dispute resolution.
     `,
   },
-];
+]
+
+export const SAMPLE_PDF_URL =
+  "https://jobspring-prod-uploads.s3.amazonaws.com/e82f6d9f-8b38-48fc-967c-ebe3e6b67290-.pdf"

@@ -17,6 +17,9 @@ import Image from "next/image"
 import RotatingText from "@/components/landing/rotating-text"
 import Head from "next/head"
 
+import { DocumentViewer } from "@/components/generic/doc-viewer"
+import { SAMPLE_PDF_URL } from "@/lib/data"
+
 interface HomePageProps {}
 
 const HomePage: React.FC<HomePageProps> = ({}) => {
@@ -310,6 +313,8 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
             </div>
           </div>
         </section>
+
+        <DocumentViewer documentUrl={SAMPLE_PDF_URL} />
       </MainLayout>
     </>
   )
