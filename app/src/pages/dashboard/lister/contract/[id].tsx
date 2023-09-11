@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useContext, useEffect, useState } from "react";
 
 import { WalletContext } from "@/context/wallet-context";
@@ -10,7 +12,6 @@ import { DashboardHeader } from "@/components/header";
 import { useRouter } from "next/router";
 import { server, showAxiosError } from "@/lib/api-helper";
 import { ENDPOINTS } from "@/lib/constants";
-import { PrismaContract } from "@prisma/client";
 import { FaFileContract } from "react-icons/fa";
 import { AiOutlineUser, AiOutlineCheckCircle, AiOutlineArrowRight } from "react-icons/ai";
 import { BsPencilSquare } from "react-icons/bs";
@@ -21,6 +22,7 @@ import { AxiosError } from "axios";
 import { toast } from "@/components/ui/use-toast";
 import ListBiddersTable, { Bidder } from "@/components/lister/ListBiddersTable";
 import { Contract } from "~/types/models";
+import { DocumentViewer } from "@/components/generic/doc-viewer"
 
 interface ContractDetailsPageProps {}
 
@@ -332,6 +334,22 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
               </CardDescription>
             </Card>
           </div>  
+
+          <div className="w-full px-5 flex justify-between">
+            <Card className="w-full border-0">
+              <CardHeader>
+                <CardTitle className="text-lg">Contract Files</CardTitle>
+              </CardHeader>
+              <CardDescription className="w-full text-black flex items-center py-5 px-6 ">
+              <div className="flex max-w-[900px] overflow-x-scroll">
+                {
+                  contract.files.map((url)=><DocumentViewer className="min-w-[500px] mx-5" documentUrl={url}/>)
+                }        
+              </div>
+              </CardDescription>
+            </Card>
+          </div>  
+
         </Card>
 
         {

@@ -57,6 +57,7 @@ import {
 } from "@prisma/client"
 import { server, showAxiosError } from "@/lib/api-helper"
 import { AxiosError } from "axios"
+import { ENDPOINTS } from "@/lib/constants"
 
 interface NewContractFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -105,7 +106,6 @@ const formSchema = z.object({
   // preferredLanguage: z.string(),
   // geographicalLocation: z.string().optional(),
 
-  contractAttachments: z.any(),
   // communicationGuidelines: z.string(),
   // evaluationCriteria: z.string(),
   // terminationClause: z.string(),
@@ -163,9 +163,11 @@ const legalRequirementOptions = [
 type FormData = z.infer<typeof formSchema>
 
 export function NewContractForm({ className, ...props }: NewContractFormProps) {
+
   const router = useRouter()
   const { isSignedIn, wallet, contractId } = React.useContext(WalletContext)!
   const { contracts, setContracts } = React.useContext(ContractContext)!
+  const [ listerFiles , setListerFiles ] = React.useState<File[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -173,14 +175,39 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
       title: ""
     },
   })
+  
 
   const [loading, setLoading] = React.useState<boolean>(false)
+
+  async function uploadFile(file:File) {
+
+    const formData = new FormData();
+    
+    
+    formData.append('file',file);
+
+    let resp = await server.post(
+      ENDPOINTS.uploadFile,
+      formData,
+      {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        },
+      }
+    )
+    
+    return resp.data.data.url as string
+  }
+
 
   async function onSubmit(values: FormData) {
     
     try {
 
       setLoading(true)
+
+      let filesUploadPromises = listerFiles.map((file)=>uploadFile(file))
+      let filesUploaded: string[] = await Promise.all(filesUploadPromises);
 
       const body: Partial<PrismaContract> = {
         contract_type: values.contractType,
@@ -195,7 +222,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
         contract_duration: values.contractDuration,
         budget_range: values.budgetRange,
 
-        files: [],
+        files: filesUploaded,
       }
 
       const resp = await server.post(
@@ -440,25 +467,6 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="contractAttachments"
-              render={({ field }) => (
-                <FormItem className="col-span-2">
-                  <FormLabel>Contract Attachments</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Select Images or PDFs"
-                      type="file"
-                      accept="image/*, application/pdf"
-                      multiple
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             {/* <FormField
               control={form.control}
@@ -683,14 +691,14 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               name="files"
               render={({ field }) => (
                 <FormItem className="col-span-2">
-                  <FormLabel>File(s)</FormLabel>
+                  <FormLabel>Contract Files (PDF's)</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Select Images or PDFs"
+                      placeholder="Select PDFs"
                       type="file"
-                      accept="image/*, application/pdf"
+                      accept="application/pdf"
                       multiple
-                      {...field}
+                      onChange={(e)=>(setListerFiles(Array.from(e.target.files as FileList)))}
                     />
                   </FormControl>
                   <FormMessage />
