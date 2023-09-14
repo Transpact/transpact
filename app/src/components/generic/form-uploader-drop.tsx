@@ -51,7 +51,9 @@ export const FileUploaderDroppable: React.FC<{
   multiple?: boolean
   description?: string
   className?: string
-}> = ({ title, multiple = true, description = "", className = "" }) => {
+  files: File[] 
+  onFilesSet: React.Dispatch<React.SetStateAction<File[]>>
+}> = ({ title, multiple = true, description = "", className = "", onFilesSet, files }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState<FileList | null>()
 
@@ -61,10 +63,10 @@ export const FileUploaderDroppable: React.FC<{
 
   const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const files = event.target.files
-
+    
     if (!files) return
 
-    console.log(files)
+    onFilesSet(Array.from(event.target.files as FileList))
     setValue(files)
   }
 
@@ -72,19 +74,20 @@ export const FileUploaderDroppable: React.FC<{
     if (inputRef.current?.value) {
       inputRef.current.value = ""
       setValue(null)
+      onFilesSet([])
     }
   }
 
   return (
-    <Card className={cn("mx-auto max-w-screen-sm border", className)}>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+    <Card className={cn(className)}>
+      {/* <CardHeader>
+        <CardTitle className="text-md">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
-      </CardHeader>
+      </CardHeader> */}
 
       <CardContent>
-        <div className="flex h-48 w-full items-center justify-center rounded-lg border border-dashed bg-slate-50 dark:bg-card/30">
-          <Button variant="link" className="h-16" onClick={onUploadClick}>
+        <div className="flex mt-5 h-48 w-full items-center justify-center rounded-lg border border-dashed bg-slate-50 dark:bg-card/30">
+          <Button type="button" variant="link" className="h-16" onClick={onUploadClick}>
             Drag and drop or Choose your files
           </Button>
         </div>
@@ -110,7 +113,7 @@ export const FileUploaderDroppable: React.FC<{
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" onClick={onClear}>
+        <Button variant="outline" type="button" onClick={onClear}>
           Clear
         </Button>
       </CardFooter>

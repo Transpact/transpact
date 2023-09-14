@@ -52,7 +52,6 @@ export default function App({ Component, pageProps }: AppProps) {
       const res = await server.get(endpoints.register)
 
       const data = res.data.data as User
-      console.log(data)
       setUser(data);
 
       // if user has not completed company profile

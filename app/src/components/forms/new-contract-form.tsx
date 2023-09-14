@@ -48,7 +48,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
+import { FileUploaderDroppable } from "@/components/generic/form-uploader-drop"
 import {
   Contract as PrismaContract,
   ContractTypes,
@@ -686,7 +686,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
               )}
             />
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="files"
               render={({ field }) => (
@@ -704,7 +704,28 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            />   */}
+
+            <FormField
+              control={form.control}
+              name="files"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>Contract Files (PDF's)</FormLabel>
+                  <FormControl>
+                    <FileUploaderDroppable
+                      className="w-full"
+                      title="Upload Contract"
+                      description="Upload PDF, Images and Docs"
+                      onFilesSet={setListerFiles}
+                      files={listerFiles}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />  
+        
 
             <Button type="submit" className="col-span-2 mt-6">
               Create Contract
