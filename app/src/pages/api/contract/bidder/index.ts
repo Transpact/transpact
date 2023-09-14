@@ -244,6 +244,8 @@ async function POST(req: NextApiRequest, res: NextApiResponse){
         },
         data: {
           quotation_amount: data.quotation_amount,
+          proposalDescription: data.proposalDescription,
+          files: data.files
         },
       });
 

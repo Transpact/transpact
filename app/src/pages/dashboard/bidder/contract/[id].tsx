@@ -12,7 +12,7 @@ import { Icons } from "@/components/icons";
 import { SAMPLE_CONTRACT } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
 import { useRouter } from "next/router";
-import { server, showAxiosError } from "@/lib/api-helper";
+import { server, showAxiosError, uploadFile } from "@/lib/api-helper";
 import { ENDPOINTS } from "@/lib/constants";
 import { PrismaContract } from "@prisma/client";
 import { FaFileContract } from "react-icons/fa";
@@ -34,7 +34,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
-import { Contract } from "~/types/models";
+import { BidderApplication, Contract } from "~/types/models";
+import { FileUploaderDroppable } from "@/components/generic/form-uploader-drop";
 
 interface ContractDetailsPageProps {}
 
@@ -52,8 +53,13 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   );
   const [progressBar,setProgressBar] = useState<number>(1);
   const [deliverables, setDeliverables] = useState<String[]>([]);  
+  const [description, setDescription] = useState<string>("");
 
-  const getContracts = async () => {
+  const [ proposalFiles , setProposalFiles ] = React.useState<File[]>([]);
+  const [ bidderApplication, setBidderApplication ] = React.useState<BidderApplication | null>(null);
+
+
+  const getContract = async () => {
 
     setLoading(true);
 
@@ -65,7 +71,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       const data = res.data.data as {
         contracts: Contract
       }
-
+      console.log(data)
       switch (data.contracts.payment_method) {
         case "BANK_TRANSFER":
           data.contracts.payment_method = "Bank Transfer"
@@ -114,16 +120,39 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
     }
   };
 
+  async function getBidderApplication(){
+
+    try {
+
+      const res = await server.get(ENDPOINTS.bidder.application + `?contract=${contractId}`);
+      
+      const data = res.data.data as BidderApplication
+      setBidderApplication(data);
+
+    } catch (e) {
+      setBidderApplication(null);
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+
+  }
+
   async function apply(){
 
     try{
 
       setLoading(true);
 
+      let filesUploadPromises = proposalFiles.map((file)=>uploadFile(file))
+      let filesUploaded: string[] = await Promise.all(filesUploadPromises);
+
       const apply = await server.post(
           ENDPOINTS.bidder.contracts + `?id=${contractId}`,
         {
           quotation_amount: quotationAmount,
+          proposalDescription: description,
+          files: filesUploaded
         },
         {
           headers: {
@@ -155,7 +184,8 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   }
   
   useEffect(() => {
-    getContracts();
+    getContract();
+    getBidderApplication();
   }, []);
 
   if (contract === null || contract === undefined) {
@@ -361,55 +391,67 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
           
           <div className="w-full px-12 flex flex-col mt-10">
             
-            <p className="text-2xl mb-10 font-bold text-center">Submit Proposal</p>
-              
-            {/* <div className="flex justify-center w-ful">
-              <div className="grid w-full max-w items-center gap-1.5">
-                <Label htmlFor="picture" className="mb-2">Upload Tender Proposal Files</Label>
-                <Input multiple id="picture" type="file" className="h-[100px] flex p-10"/>
-              </div>
-            </div> */}
-
-            <div className="w-full flex">
-              
-            </div>
-
-
-
-            <div className="flex justify-center w-full mt-7">
-              <div className="grid w-full max-w items-center gap-1.5">
-                <Label htmlFor="picture" className="mb-2">Proposal Description</Label>
-                <Textarea placeholder="# Proposal Description"/>
-              </div>
-            </div>
+            {
+              progressBar == 2
+              &&
+              <>
+                <hr />
+                <p className="text-2xl my-10 font-bold text-center">Submit Proposal</p>
+                  
+                <div className="flex justify-center w-full mt-7">
+                  <div className="grid w-full max-w items-center gap-1.5">
+                    <Label htmlFor="picture" className="mb-2">Proposal Description</Label>
+                    <Textarea
+                      value={description}
+                      onChange={(e)=>setDescription(e.target.value)}
+                      placeholder="# Proposal Description"
+                    />
+                  </div>
+                </div>
                 
-            <div className="flex justify-between items-center w-full mt-10">
-              <p className="text-lg font-bold">Add Deliverables (Rough Estimates)</p>
-            </div>
-              
-            <div className="w-full flex justify-between mt-5">
-              <Input type="Text" placeholder="Deliverable 1" className="w-[60%]" />
-              <CalendarDateRangePicker/>
-              <Button className="bg-transparent">
-                <BsFillPlusCircleFill className="w-10 h-10 text-primary"/>
-              </Button>
-            </div> 
-            
-            <div className="w-full flex flex-col">
-            
-              <div className="w-full flex justify-between mt-5">
-                <Input disabled type="Text" placeholder="Deliverable 1" className="w-[60%]" />
-                <CalendarDateRangePicker/>
-                <IoMdRemoveCircle className="w-10 h-10 text-primary"/>
-              </div>  
+                <div className="flex justify-center w-full mt-7">
+                  <div className="grid w-full max-w items-center gap-1.5">
+                    <Label htmlFor="picture" className="mb-2">Proposal Files</Label>
+                    <FileUploaderDroppable
+                      className="w-full"
+                      title="Upload Proposal"
+                      description="Upload PDF, Images and Docs"
+                      onFilesSet={setProposalFiles}
+                      files={proposalFiles}
+                    />
+                  </div>
+                </div>
+                    
+                <div className="flex justify-between items-center w-full mt-10">
+                  <p className="text-lg font-bold">Add Deliverables (Rough Estimates)</p>
+                </div>
+                  
+                <div className="w-full flex justify-between mt-5">
+                  <Input type="Text" placeholder="Deliverable 1" className="w-[60%]" />
+                  <CalendarDateRangePicker/>
+                  <Button className="bg-transparent">
+                    <BsFillPlusCircleFill className="w-10 h-10 text-primary"/>
+                  </Button>
+                </div> 
+                
+                <div className="w-full flex flex-col">
+                
+                  <div className="w-full flex justify-between mt-5">
+                    <Input disabled type="Text" placeholder="Deliverable 1" className="w-[60%]" />
+                    <CalendarDateRangePicker/>
+                    <IoMdRemoveCircle className="w-10 h-10 text-primary"/>
+                  </div>  
 
-              <div className="w-full flex justify-between mt-5">
-                <Input disabled type="Text" placeholder="Deliverable 1" className="w-[60%]" />
-                <CalendarDateRangePicker/>
-                <IoMdRemoveCircle className="w-10 h-10 text-primary"/>
-              </div>  
+                  <div className="w-full flex justify-between mt-5">
+                    <Input disabled type="Text" placeholder="Deliverable 1" className="w-[60%]" />
+                    <CalendarDateRangePicker/>
+                    <IoMdRemoveCircle className="w-10 h-10 text-primary"/>
+                  </div>  
 
-            </div>
+                </div>
+              </>
+
+            } 
            
             <div className="w-full flex justify-center mt-10">
               <div className="flex items-center space-x-2">
@@ -417,7 +459,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
                 <Button onClick={apply} className="w-[200px]">
                   {
                     contract.already_bidded 
-                    ? "Update Quotation"
+                    ? "Update Proposal"
                     : "Apply as Bidder"
                   }              
                 </Button>

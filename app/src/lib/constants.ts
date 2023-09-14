@@ -9,7 +9,8 @@ export const ENDPOINTS = {
     contract: "/api/contract/lister-contract/"
   },
   bidder: {
-    contracts: "/api/contract/bidder"
+    contracts: "/api/contract/bidder",
+    application: "/api/contract/bidder/application"
   },
   manageFiles: "/api/manage-files",
   uploadFile: "/api/upload",

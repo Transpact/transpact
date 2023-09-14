@@ -55,7 +55,7 @@ import {
   PaymentMethods,
   ContractVisibility,
 } from "@prisma/client"
-import { server, showAxiosError } from "@/lib/api-helper"
+import { server, showAxiosError, uploadFile } from "@/lib/api-helper"
 import { AxiosError } from "axios"
 import { ENDPOINTS } from "@/lib/constants"
 
@@ -178,28 +178,7 @@ export function NewContractForm({ className, ...props }: NewContractFormProps) {
   
 
   const [loading, setLoading] = React.useState<boolean>(false)
-
-  async function uploadFile(file:File) {
-
-    const formData = new FormData();
-    
-    
-    formData.append('file',file);
-
-    let resp = await server.post(
-      ENDPOINTS.uploadFile,
-      formData,
-      {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        },
-      }
-    )
-    
-    return resp.data.data.url as string
-  }
-
-
+  
   async function onSubmit(values: FormData) {
     
     try {

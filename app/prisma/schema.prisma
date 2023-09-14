@@ -130,7 +130,9 @@ model BidderApplication {
   contractId String
   contract   Contract @relation("BidderContractApplication", fields: [contractId], references: [id], onUpdate: Restrict)
 
-  acceptedContract Contract? @relation("AcceptedBidder")
+  acceptedContract    Contract? @relation("AcceptedBidder")
+  proposalDescription String?   @db.Text
+  files               String[]
 
   @@index([bidderId])
   @@index([contractId])

@@ -1,6 +1,7 @@
 import { toast } from "@/components/ui/use-toast"
 import { NextApiResponse } from "next"
 import axios, { AxiosError } from "axios"
+import { ENDPOINTS } from "./constants"
 
 export const server = axios.create({})
 
@@ -54,4 +55,25 @@ export const showAxiosError = ({
     title: errMsg,
     description: additionalText,
   })
+}
+
+
+export async function uploadFile(file:File) {
+
+  const formData = new FormData();
+  
+  
+  formData.append('file',file);
+  
+  let resp = await server.post(
+    ENDPOINTS.uploadFile,
+    formData,
+    {
+      headers: {
+          "Content-Type": "multipart/form-data"
+      },
+    }
+  )
+  
+  return resp.data.data.url as string
 }

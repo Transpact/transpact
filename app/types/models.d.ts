@@ -47,3 +47,11 @@ type User = {
   experience: number
 }
 
+type BidderApplication = {
+  id:string
+  quotation_amount: number
+  bidder: User
+  contractId: string
+  proposalDescription: string | null
+  files: string[]
+}
