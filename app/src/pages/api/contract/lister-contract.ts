@@ -224,21 +224,13 @@ async function PUT(req: NextApiRequest, res: NextApiResponse){
     const contract_id = req.query.id as string;
     const data = req.body;
 
-    const contract = await prisma.contract.findFirst({
-      where:{
-        id: contract_id
-      }
-    })
-
     await prisma.contract.update({
         where:{
             id: contract_id
         },
         data: data
     })
-
-
-
+    
     return handleResponse({
         res,
         statusCode:200,

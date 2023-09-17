@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import { server, showAxiosError } from "@/lib/api-helper";
 import { ENDPOINTS } from "@/lib/constants";
 import { FaFileContract } from "react-icons/fa";
-import { AiOutlineUser, AiOutlineCheckCircle, AiOutlineArrowRight } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineCheckCircle, AiOutlineArrowRight, AiOutlineUpload } from "react-icons/ai";
 import { BsPencilSquare } from "react-icons/bs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -140,7 +140,8 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
     try{
 
       setLoading(true);
-      const resp = await server.put(
+      
+      await server.put(
         ENDPOINTS.lister.contract+`?id=${contractId}`,
         {
           status: "APPROVED"
@@ -292,12 +293,12 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
                 <div className="relative mb-2">
                   <div className="absolute flex align-center items-center align-middle content-center" style={{ "width": "calc(100% - 2.5rem - 1rem)", "top": "50%", "transform": "translate(-50%, -50%)" }}>
                     <div className="w-full bg-gray-200 rounded items-center align-middle align-center flex-1">
-                      <div className={`w-0 ${progressBar >=4 && "bg-green-300" } py-1 rounded`} style={{"width": "100%"}}></div>
+                      <div className={`w-0 ${progressBar >=5 && "bg-green-300" } py-1 rounded`} style={{"width": "100%"}}></div>
                     </div>
                   </div>
 
-                  <div className={`w-10 h-10 mx-auto ${progressBar >= 4 && "bg-green-500" } ${progressBar <4 && "border-2 border-gray-200" } rounded-full text-lg text-white flex items-center`}>
-                    <span className={`text-center ${progressBar >= 4 ? "text-white" : "text-gray-600" } w-full`}>
+                  <div className={`w-10 h-10 mx-auto ${progressBar >= 5 && "bg-green-500" } ${progressBar <4 && "border-2 border-gray-200" } rounded-full text-lg text-white flex items-center`}>
+                    <span className={`text-center ${progressBar >= 5 ? "text-white" : "text-gray-600" } w-full`}>
                     <AiOutlineCheckCircle className="w-full fill-current"/>  
                     </span> 
                   </div>
@@ -587,7 +588,17 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
           <ListBiddersTable setViewBidder={setViewBidder} acceptBidder={acceptBidder} data={ contract.bidders as Bidder[]} />
           </>
 
-        }         
+        }    
+
+        {
+          progressBar === 4 &&
+          <div className="w-full flex justify-center mt-10">
+              <Button className="w-[200px] flex items-center justify-center font-bold">
+                <AiOutlineUpload className="text-lg mr-2" />
+                Upload On Chain             
+              </Button>
+          </div>
+        }     
         
       </DashboardShell>
     </DashboardLayout>

@@ -13,7 +13,6 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
   const contractId = req.query.contract as string;
   const bidderApplicationId = req.query.bidder_application_id as string;
 
-  console.log(contractId,bidderApplicationId)
 
   if (!user || !user.userId) {
     return handleError({

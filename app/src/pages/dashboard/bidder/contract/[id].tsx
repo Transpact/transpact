@@ -17,7 +17,7 @@ import { ENDPOINTS } from "@/lib/constants";
 import { PrismaContract } from "@prisma/client";
 import { FaFileContract } from "react-icons/fa";
 import { AiOutlineUser, AiOutlineCheckCircle, AiOutlineArrowRight } from "react-icons/ai";
-import { BsPencilSquare,BsFillPlusCircleFill } from "react-icons/bs";
+import { BsPencilSquare,BsPen } from "react-icons/bs";
 import { IoMdRemoveCircle } from "react-icons/io";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -137,6 +137,46 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       setLoading(false);
     }
 
+  }
+
+  async function signContract(){
+    
+    try{
+
+      setLoading(true);
+
+      await server.put(
+        ENDPOINTS.lister.contract+`?id=${contractId}`,
+        {
+          status: "SIGNED"
+        },
+        {
+          headers:{
+              'Content-Type': 'application/json'
+          }
+        } 
+      )
+
+      toast({
+        title: "Successfully Signed",
+        description: "Contract has been signed!",
+        variant: "default",
+      })
+
+    } catch (err) {
+      
+      const error = err as AxiosError;
+      
+      showAxiosError({
+        error,
+        generic: "Failed to apply, Something went wrong!",
+        additionalText: error?.message,
+      })
+
+    } finally {
+      setLoading(false);
+    }
+    
   }
 
   async function apply(){
@@ -548,39 +588,35 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
 
             } 
            
+           {
+            progressBar < 3 &&
             <div className="w-full flex justify-center mt-10">
               <div className="flex items-center space-x-2">
                 <Input type="number" className="w-[60%]" value={ quotationAmount } onChange={(e) => setQuotationAmount(parseInt(e.target.value))} placeholder="Your Quotation (USD)" />
                 <Button onClick={apply} className="w-[200px]">
                   {
-                    contract.already_bidded 
+                    contract.already_bidded
                     ? "Update Proposal"
                     : "Apply as Bidder"
                   }              
                 </Button>
               </div>
             </div>
+           }
+
+          {
+            progressBar === 3 &&
+            <div className="w-full flex justify-center mt-10">
+                <Button onClick={signContract} className="w-[200px] bg-green-600 dark:bg-white flex items-center justify-center font-bold">
+                  <BsPen className="text-lg mr-2" />
+                  Sign Contract             
+                </Button>
+            </div>
+           }
+
           </div>
 
         </Card>
-
-        {/* <div className="grid grid-cols-2">
-          <p>
-            <span className="font-bold">START: </span>{" "}
-            {formatDate(contract?.startDate ?? new Date())}
-          </p>
-
-          <p>
-            <span className="font-bold">DEADLINE: </span>{" "}
-            {formatDate(contract?.endDate ?? new Date())}
-          </p>
-
-          <p>
-            <span className="font-bold">BUDGET: </span> ${contract?.budget_range}
-          </p>
-        </div>
-
-        <p className="mt-6">{contract?.description}</p> */}
       </DashboardShell>
     </DashboardLayout>
   );
