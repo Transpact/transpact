@@ -36,6 +36,7 @@ import {
 import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
 import { BidderApplication, Contract } from "~/types/models";
 import { FileUploaderDroppable } from "@/components/generic/form-uploader-drop";
+import { DocumentViewer } from "@/components/generic/doc-viewer";
 
 interface ContractDetailsPageProps {}
 
@@ -128,7 +129,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       
       const data = res.data.data as BidderApplication
       setBidderApplication(data);
-
+      console.log(data,"====");
     } catch (e) {
       setBidderApplication(null);
       console.log(e);
@@ -388,6 +389,75 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
               </CardDescription>
             </Card>
           </div>
+
+          {
+            bidderApplication &&
+            <>
+            <p className="text-2xl my-10 font-bold text-center">Your Proposal</p>
+            <div className="w-full px-5 mt-10 flex justify-between">
+              <Card className="w-1/2 border-0">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Bidder Info</CardTitle>
+                  </CardHeader>
+                  <CardDescription className="w-full px-6 flex flex-col">
+                      <div className="w-full my-1 justify-between flex items-center text-lg">
+                        <p className="text-gray-700 text-bold mr-5">Application ID: </p>
+                        <p>{bidderApplication.id}</p>
+                      </div>
+                      <div className="w-full my-1 justify-between flex items-center text-lg">
+                        <p className="text-gray-700 text-bold mr-5">Bidder Name: </p>
+                        <p>{bidderApplication.bidder.company_name}</p>
+                      </div>
+                  </CardDescription>
+              </Card>
+
+              <Card className="w-1/2 border-0">
+                <CardHeader>
+                  <CardTitle className="text-lg mb-5"></CardTitle>
+                </CardHeader>
+                <CardDescription className="w-full px-6 flex flex-col">
+                    <div className="w-full my-1 justify-between flex items-center text-lg">
+                      <p className="text-gray-700 text-bold mr-5">Country: </p>
+                      <p>{bidderApplication.bidder.country}</p>
+                    </div>
+                    <div className="w-full my-1 justify-between flex items-center text-lg">
+                      <p className="text-gray-700 text-bold mr-5">Experience: </p>
+                      <p>{bidderApplication.bidder.experience} Years</p>
+                    </div>
+                </CardDescription>
+              </Card> 
+
+            </div>
+            <div className="w-full px-8 mt-10 flex flex-col items-center">
+              <div className="flex justify-center w-full mt-7">
+                <div className="grid w-full max-w items-center gap-1.5">
+                  <Label htmlFor="picture" className="mb-2">Proposal Description</Label>
+                  <Textarea
+                    value={bidderApplication.proposalDescription}
+                    disabled
+                    placeholder="# Proposal Description"
+                  />
+                </div>
+              </div>
+
+              <div className="w-full px-5 flex justify-between">
+                <Card className="w-full border-0">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Contract Files</CardTitle>
+                  </CardHeader>
+                  <CardDescription className="w-full text-black flex items-center py-5 px-6 ">
+                  <div className="flex max-w-[900px] overflow-x-scroll">
+                    {
+                      bidderApplication.files.map((url)=><DocumentViewer className="min-w-[500px] mx-5" documentUrl={url}/>)
+                    }        
+                  </div>
+                  </CardDescription>
+                </Card>
+              </div>  
+
+            </div>
+            </>
+          }
           
           <div className="w-full px-12 flex flex-col mt-10">
             
@@ -396,7 +466,13 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
               &&
               <>
                 <hr />
-                <p className="text-2xl my-10 font-bold text-center">Submit Proposal</p>
+                <p className="text-2xl my-10 font-bold text-center">
+                  {
+                    bidderApplication === null
+                    ? "Submit Proposal"
+                    : "Update Proposal"
+                  }              
+                </p>
                   
                 <div className="flex justify-center w-full mt-7">
                   <div className="grid w-full max-w items-center gap-1.5">
