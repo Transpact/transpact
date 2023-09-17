@@ -66,11 +66,11 @@ export type Bidder = {
 interface ListBiddersTableProps {
   data: Bidder[]
   acceptBidder: (bidderApplicationId:string) => void
+  setViewBidder: (viewBidderId:string) => void
 }
 
 
-const ListBiddersTable: React.FC<ListBiddersTableProps> = ({ data, acceptBidder }) => {
-
+const ListBiddersTable: React.FC<ListBiddersTableProps> = ({ data, acceptBidder, setViewBidder }) => {
 
   const columns: ColumnDef<Bidder>[] = [
     {
@@ -144,7 +144,7 @@ const ListBiddersTable: React.FC<ListBiddersTableProps> = ({ data, acceptBidder 
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>View Proposal</DropdownMenuItem>
+              <DropdownMenuItem onClick={()=>setViewBidder(row.original.id)}>View Proposal</DropdownMenuItem>
               <DropdownMenuSeparator />
               
               <div className="flex flex-col">

@@ -30,7 +30,9 @@ async function getContract(user:  SignedInAuthObject | SignedOutAuthObject, _id:
                   experience: true,
                   website: true
               }
-          }
+          },
+        files: true,
+        proposalDescription: true
         }
       },
       bidders:{
@@ -120,15 +122,6 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
         },
     })
 
-    // else {
-    //     return handleError({
-    //         res,
-    //         statusCode: 400,
-    //         data: {},
-    //         message: "Invalid filter passed",
-    //     })
-    // }
-
   } catch (error: any) {
     return handleError({
       res,
@@ -210,8 +203,61 @@ async function POST(req: NextApiRequest, res: NextApiResponse){
       })
     }
   
+}
+
+
+async function PUT(req: NextApiRequest, res: NextApiResponse){
+
+  let user = getAuth(req);
+
+  if (!user || !user.userId) {
+    return handleError({
+      res,
+      statusCode: 401,
+      data: {},
+      message: "You are not authorised",
+    })
   }
-  
+
+  try{
+
+    const contract_id = req.query.id as string;
+    const data = req.body;
+
+    const contract = await prisma.contract.findFirst({
+      where:{
+        id: contract_id
+      }
+    })
+
+    await prisma.contract.update({
+        where:{
+            id: contract_id
+        },
+        data: data
+    })
+
+
+
+    return handleResponse({
+        res,
+        statusCode:200,
+        message: "Contract Updated!",
+        data: {},
+    })
+
+  } catch (error: any) {
+
+    return handleError({
+      res,
+      statusCode: 400,
+      data: {},
+      message: error?.message ?? "Failed to update contract",
+    })
+  }
+
+}
+
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -219,6 +265,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return GET(req, res)
     case "POST":{
         return POST(req,res)
+    }
+    case "PUT":{
+      return PUT(req,res)
     }
   }
 }

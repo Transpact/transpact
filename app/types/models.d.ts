@@ -14,7 +14,7 @@ type Contract = {
   contract_visibility: string
   contract_duration: string
   budget_range: string
-  acceptedBidder: any
+  acceptedBidder: BidderApplication
   files: string[]
   contract_creator: any
   bidders: any

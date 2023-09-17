@@ -21,8 +21,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { AxiosError } from "axios";
 import { toast } from "@/components/ui/use-toast";
 import ListBiddersTable, { Bidder } from "@/components/lister/ListBiddersTable";
-import { Contract } from "~/types/models";
+import { BidderApplication, Contract } from "~/types/models";
 import { DocumentViewer } from "@/components/generic/doc-viewer"
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface ContractDetailsPageProps {}
 
@@ -40,6 +42,10 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   );
   const [progressBar,setProgressBar] = useState<number>(1); 
   const [ bidderAccepted,setBidderAccepted ] = useState<boolean>(false);
+  
+  const [ bidderApplication, setBidderApplication ] = React.useState<BidderApplication | null>(null);
+  const [viewBidder,setViewBidder] = useState<string | null>(null);
+
 
   const getContract = async () => {
 
@@ -129,10 +135,72 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
     }
   }
 
+  async function approveContract(){
+
+    try{
+
+      setLoading(true);
+      const resp = await server.put(
+        ENDPOINTS.lister.contract+`?id=${contractId}`,
+        {
+          status: "APPROVED"
+        },
+        {
+          headers:{
+              'Content-Type': 'application/json'
+          }
+        } 
+      )
+
+      toast({
+        title: "Bidder Proposal Approved",
+        description: "Bidder Proposal has been accepted and notification has been sent.",
+        variant: "default",
+      })
+
+      setBidderAccepted(true);
+
+    } catch (e: any) {
+      
+      const error = e as AxiosError
+
+      showAxiosError({
+        error,
+        generic: "Failed to accept bidder",
+        additionalText: "Please try to login again",
+      })
+    
+    } finally{
+      setLoading(false)
+    }
+
+  }
+
+  async function getBidderApplication(){
+
+    try {
+
+      const res = await server.get(ENDPOINTS.bidder.application + `?bidder_application_id=${viewBidder}`);
+      
+      const data = res.data.data as BidderApplication
+      setBidderApplication(data);
+    } catch (e) {
+      setBidderApplication(null);
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+
+  }
+
   
   useEffect(() => {
     getContract();
   }, [bidderAccepted]);
+
+  useEffect(()=>{
+    getBidderApplication()
+  },[viewBidder])
 
   if (contract === null || contract === undefined) {
     return <p>Loading</p>;
@@ -405,28 +473,120 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
               </Card>
             </div>
 
-            <div className="w-full px-5 mt-10 flex justify-between">
+            <div className="flex px-9 justify-center w-full mt-7">
+              <div className="grid w-full max-w items-center gap-1.5">
+                <Label htmlFor="picture" className="mb-2">Proposal Description</Label>
+                <Textarea
+                  value={contract.acceptedBidder.proposalDescription}
+                  disabled
+                  placeholder="# Proposal Description"
+                />
+              </div>
+            </div>
+
+            <div className="w-full px-5 flex justify-between">
               <Card className="w-full border-0">
                 <CardHeader>
-                  <CardTitle className="text-lg">Proposal Documents</CardTitle>
+                  <CardTitle className="text-lg">Proposal Files</CardTitle>
                 </CardHeader>
                 <CardDescription className="w-full text-black flex items-center py-5 px-6 ">
-                <ul id="gallery" className="flex flex-1 flex-wrap -m-1">
-                  <li id="empty" className="h-full w-full text-center flex flex-col items-center justify-center">
-                    <img className="mx-auto w-32" src="https://user-images.githubusercontent.com/507615/54591670-ac0a0180-4a65-11e9-846c-e55ffce0fe7b.png" alt="no data" />
-                    <span className="text-small text-gray-500">No files selected</span>
-                  </li>
-                </ul>
+                <div className="flex max-w-[900px] overflow-x-scroll">
+                  {
+                    contract.acceptedBidder.files.map((url:string)=><DocumentViewer className="min-w-[500px] mx-5" documentUrl={url}/>)
+                  }        
+                </div>
                 </CardDescription>
               </Card>
             </div>  
+
+            {
+              progressBar === 2 &&
+              <Button onClick={approveContract} type="button" className="w-[200px]">
+                Approve Contract              
+              </Button> 
+            }
 
           </Card>
 
           :
 
-          // List bidder table
-          <ListBiddersTable acceptBidder={acceptBidder} data={ contract.bidders as Bidder[]} />
+          <>
+          
+          <Card className="w-full flex flex-col items-center py-10">
+            {
+              viewBidder && bidderApplication !== null &&
+              <>
+                <p className="text-2xl my-10 font-bold text-center">Bidder Proposal</p>
+                <div className="w-full px-5 mt-10 flex justify-between">
+                  <Card className="w-1/2 border-0">
+                      <CardHeader>
+                        <CardTitle className="text-lg">Bidder Info</CardTitle>
+                      </CardHeader>
+                      <CardDescription className="w-full px-6 flex flex-col">
+                          <div className="w-full my-1 justify-between flex items-center text-lg">
+                            <p className="text-gray-700 text-bold mr-5">Application ID: </p>
+                            <p>{bidderApplication.id}</p>
+                          </div>
+                          <div className="w-full my-1 justify-between flex items-center text-lg">
+                            <p className="text-gray-700 text-bold mr-5">Bidder Name: </p>
+                            <p>{bidderApplication.bidder.company_name}</p>
+                          </div>
+                      </CardDescription>
+                  </Card>
+
+                  <Card className="w-1/2 border-0">
+                    <CardHeader>
+                      <CardTitle className="text-lg mb-5"></CardTitle>
+                    </CardHeader>
+                    <CardDescription className="w-full px-6 flex flex-col">
+                        <div className="w-full my-1 justify-between flex items-center text-lg">
+                          <p className="text-gray-700 text-bold mr-5">Country: </p>
+                          <p>{bidderApplication.bidder.country}</p>
+                        </div>
+                        <div className="w-full my-1 justify-between flex items-center text-lg">
+                          <p className="text-gray-700 text-bold mr-5">Experience: </p>
+                          <p>{bidderApplication.bidder.experience} Years</p>
+                        </div>
+                    </CardDescription>
+                  </Card> 
+
+                </div>
+                <div className="w-full px-8 mt-10 flex flex-col items-center">
+                  <div className="flex justify-center w-full mt-7">
+                    <div className="grid w-full max-w items-center gap-1.5">
+                      <Label htmlFor="picture" className="mb-2">Proposal Description</Label>
+                      <Textarea
+                        value={bidderApplication.proposalDescription !== null ? bidderApplication.proposalDescription : "" }
+                        disabled
+                        placeholder="# Proposal Description"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="w-full px-5 flex justify-between">
+                    <Card className="w-full border-0">
+                      <CardHeader>
+                        <CardTitle className="text-lg">Proposal Files</CardTitle>
+                      </CardHeader>
+                      <CardDescription className="w-full text-black flex items-center py-5 px-6 ">
+                      <div className="flex max-w-[900px] overflow-x-scroll">
+                        {
+                          bidderApplication.files.map((url)=><DocumentViewer className="min-w-[500px] mx-5" documentUrl={url}/>)
+                        }        
+                      </div>
+                      </CardDescription>
+                    </Card>
+                  </div>  
+
+                </div>
+              </>
+
+            }
+          </Card>
+
+          <ListBiddersTable setViewBidder={setViewBidder} acceptBidder={acceptBidder} data={ contract.bidders as Bidder[]} />
+          </>
+
         }         
         
       </DashboardShell>

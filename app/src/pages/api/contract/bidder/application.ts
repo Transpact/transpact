@@ -11,6 +11,9 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
   let user = getAuth(req);
 
   const contractId = req.query.contract as string;
+  const bidderApplicationId = req.query.bidder_application_id as string;
+
+  console.log(contractId,bidderApplicationId)
 
   if (!user || !user.userId) {
     return handleError({
@@ -22,12 +25,24 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    
+
+    let where = null;
+
+    if (bidderApplicationId === undefined){
+      where = {
+        contractId: contractId,
+        bidderId: user.userId
+      }
+    }
+
+    else{
+      where = {
+        id: bidderApplicationId,
+      }
+    }
+
     const bidder_application = await prisma.bidderApplication.findFirst({
-        where:{
-            contractId: contractId,
-            bidderId: user.userId
-        },
+        where: where,
         include:{
             bidder:{
                 select:{

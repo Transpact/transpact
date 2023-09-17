@@ -390,6 +390,25 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
             </Card>
           </div>
 
+          <div className="w-full px-5 flex justify-between">
+            <Card className="w-full border-0">
+              <CardHeader>
+                <CardTitle className="text-lg">Contract Files</CardTitle>
+              </CardHeader>
+              <CardDescription className="w-full text-black flex items-center py-5 px-6 ">
+              <div className="flex max-w-[900px] overflow-x-scroll">
+                {
+                  contract.files.map((url)=><DocumentViewer className="min-w-[500px] mx-5" documentUrl={url}/>)
+                }        
+              </div>
+              </CardDescription>
+            </Card>
+          </div> 
+
+        </Card>
+
+        <Card className="w-full flex flex-col items-center py-10">
+
           {
             bidderApplication &&
             <>
@@ -443,7 +462,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
               <div className="w-full px-5 flex justify-between">
                 <Card className="w-full border-0">
                   <CardHeader>
-                    <CardTitle className="text-lg">Contract Files</CardTitle>
+                    <CardTitle className="text-lg">Proposal Files</CardTitle>
                   </CardHeader>
                   <CardDescription className="w-full text-black flex items-center py-5 px-6 ">
                   <div className="flex max-w-[900px] overflow-x-scroll">
@@ -462,7 +481,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
           <div className="w-full px-12 flex flex-col mt-10">
             
             {
-              progressBar == 2
+              (progressBar === 1 || progressBar === 2)
               &&
               <>
                 <hr />
@@ -498,7 +517,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
                   </div>
                 </div>
                     
-                <div className="flex justify-between items-center w-full mt-10">
+                {/* <div className="flex justify-between items-center w-full mt-10">
                   <p className="text-lg font-bold">Add Deliverables (Rough Estimates)</p>
                 </div>
                   
@@ -524,7 +543,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
                     <IoMdRemoveCircle className="w-10 h-10 text-primary"/>
                   </div>  
 
-                </div>
+                </div> */}
               </>
 
             } 
