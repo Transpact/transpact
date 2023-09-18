@@ -7,6 +7,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().min(1),
     SECRET_KEY: z.string().min(1),
     CLERK_SECRET_KEY: z.string().min(1),
+    
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
@@ -37,5 +38,10 @@ export const env = createEnv({
 
     NEXT_PUBLIC_PINATA_API_KEY: process.env.NEXT_PUBLIC_PINATA_API_KEY,
     NEXT_PUBLIC_PINATA_API_SECRET: process.env.NEXT_PUBLIC_PINATA_API_SECRET,
+    
+    ACCOUNT_ID: process.env.ACCOUNT_ID,
+    WALLET_PRIVATE_KEY: process.env.WALLET_PRIVATE_KEY,
+    CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
+
   },
 })
