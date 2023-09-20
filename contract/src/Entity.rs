@@ -100,47 +100,83 @@ impl MultiSigWallet {
 
 #[derive(Clone,PartialEq,BorshDeserialize,BorshSerialize,Serialize,Deserialize,Debug)]
 #[serde(tag = "type", crate = "near_sdk::serde")]
+
 pub struct BuisnessContract{
-    pub contract_id: String,
+    
+    pub id: String,
+    pub contract_type: String,
+    pub status: String,
+
     pub title: String,
+    pub skills_required: Vec<String>,
+    pub legal_requirements: String,
+    pub payment_method: String,
+    pub total_amount: i32,
+    pub renewal: bool,
     pub description: String,
-    pub contractor: Option<PublicKey>,
-    pub lister: PublicKey,
-    pub is_milestoned: bool,
-    pub start_date: Timestamp,
-    pub end_date: Timestamp,
-    pub wallet: MultiSigWallet,
+    
+    pub contract_duration: String,
+    pub budget_range: String,
+    pub files: Vec<String>,
+
+    pub creator_id: String,
+    pub accepted_bidder_id: String,
 }
 
 impl BuisnessContract{
 
     pub fn new( 
+        
+        id: String,
+        contract_type: String,
+        status: String,
+    
         title: String,
+        skills_required: Vec<String>,
+        legal_requirements: String,
+        payment_method: String,
+        total_amount: i32,
+        renewal: bool,
         description: String,
-        contractor: Option<PublicKey>,
-        lister: PublicKey,
-        is_milestoned: bool,
-        start_date: Timestamp,
-        end_date: Timestamp) -> BuisnessContract{
+        
+        contract_duration: String,
+        budget_range: String,
+        files: Vec<String>,
+    
+        creator_id: String,
+        accepted_bidder_id: String,
+    
+    ) -> BuisnessContract{
 
-            let wallet = MultiSigWallet{
-                owners: Vec::new(),
-                users: Vec::new(),
-                required_confirmations: 1,
-                total_reserves: 0
-            };
-            let contract_id = generate_user_hash(&title,&description);
+            // let wallet = MultiSigWallet{
+            //     owners: Vec::new(),
+            //     users: Vec::new(),
+            //     required_confirmations: 1,
+            //     total_reserves: 0
+            // };
+            // let contract_id = generate_user_hash(&title,&description);
 
             Self{
-                contract_id,
+
+                id,
+                contract_type,
+                status,
+            
                 title,
+                skills_required,
+                legal_requirements,
+                payment_method,
+                total_amount,
+                renewal,
                 description,
-                contractor,
-                lister,
-                is_milestoned,
-                start_date,
-                end_date,
-                wallet
+                
+                contract_duration,
+                budget_range,
+                files,
+            
+                creator_id,
+                accepted_bidder_id,
+            
             }
 
         }

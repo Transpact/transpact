@@ -7,7 +7,9 @@ export const env = createEnv({
     DATABASE_URL: z.string().min(1),
     SECRET_KEY: z.string().min(1),
     CLERK_SECRET_KEY: z.string().min(1),
-    
+    ACCOUNT_ID: z.string().min(1),
+    WALLET_PRIVATE_KEY: z.string().min(1),
+    CONTRACT_ADDRESS: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
