@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db"
 
 
 
-async function GET(req: NextApiRequest, res: NextApiResponse){
+async function POST(req: NextApiRequest, res: NextApiResponse){
 
     let user = getAuth(req);
     const contract_id = req.query.id as string;
@@ -44,7 +44,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse){
             })
         }
         
-        let resp1 = await smart_contract.create_contract(
+        let resp = await smart_contract.create_contract(
             {
                 id: contract.id,
                 contract_type: contract.contract_type as string,
@@ -65,22 +65,54 @@ async function GET(req: NextApiRequest, res: NextApiResponse){
                     proposal_description: contract.acceptedBidder?.proposalDescription,
                     files: contract.acceptedBidder?.files
                 } ,
-                skills_required: ["hello","hi"],
-                files: ["hello","hi"]
+                skills_required: contract.skills_required,
+                files: contract.files
             }
         )
-            
         
-        let resp2 = await smart_contract.get_contract({
-            contract_id: contract_id
-        })
+
+        await prisma.contract.update({
+            where:{
+              id: contract_id,
+            },
+            data:{
+              status: "FINISHED"
+            }
+          })
+
+        // let resp2 = await smart_contract.get_contract({
+        //     contract_id: contract_id
+        // })
+
+
+        // let check_hash = await smart_contract.check_hash({
+        //     id: contract.id,
+        //     contract_type: contract.contract_type as string,
+        //     status: contract.status as string,
+        //     title: contract.title,
+        //     legal_requirements: contract.legal_requirements,
+        //     payment_method: contract.payment_method as string,
+        //     total_amount: contract.total_amount,
+        //     renewal: contract.renewal,
+        //     description: contract.description,
+        //     contract_duration: contract.contract_duration,
+        //     budget_range: contract.budget_range,
+        //     creator_id: contract.creatorId,
+        //     accepted_bidder: {
+        //         id: contract.acceptedBidder?.id,
+        //         quotation_amount: contract.acceptedBidder?.quotation_amount,
+        //         bidder_id: contract.acceptedBidder?.bidderId,
+        //         proposal_description: contract.acceptedBidder?.proposalDescription,
+        //         files: contract.acceptedBidder?.files
+        //     } ,
+        // })
         
-        console.log(resp2)
+        // console.log(check_hash)
 
         return handleResponse({
             res,
             message: "",
-            data: contract,
+            data: resp,
         })
 
 
@@ -99,10 +131,10 @@ async function GET(req: NextApiRequest, res: NextApiResponse){
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
-      case "GET":
-        return GET(req, res)
-    //   case "POST":
-    //     return POST(req, res)
+    //   case "GET":
+    //     return GET(req, res)
+      case "POST":
+        return POST(req, res)
     }
   }
   

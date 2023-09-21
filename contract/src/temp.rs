@@ -27,7 +27,7 @@ pub struct Contract {
 }
 
 
-
+#[near_bindgen]
 impl Default for Contract{
     fn default() -> Self {
 

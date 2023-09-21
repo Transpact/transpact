@@ -7,14 +7,14 @@ const private_key = env.WALLET_PRIVATE_KEY;
 
 
 const contractDef = {
-  viewMethods: ['get_contract'],
+  viewMethods: ['get_contract','check_hash'],
   changeMethods: ["create_contract"],
 }
 
 
 export async function AccountSetup() {
   
-  const contractName = "dev-1695118488391-73671523655786";
+  const contractName = "dev-1695289713998-62725920744725";
     try{
         
         const myKeyStore = new keyStores.InMemoryKeyStore(); 

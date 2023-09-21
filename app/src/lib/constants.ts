@@ -14,6 +14,9 @@ export const ENDPOINTS = {
   },
   manageFiles: "/api/manage-files",
   uploadFile: "/api/upload",
+  onChain: {
+    uploadContact: "/api/contract/on-chain/deploy"
+  }
 }
 
 export const ROUTES = {

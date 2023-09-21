@@ -177,6 +177,37 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
 
   }
 
+
+  async function uploadOnChain(){
+
+    try {
+
+      setLoading(true);
+
+      await server.post(ENDPOINTS.onChain.uploadContact + `?id=${contractId}`);
+
+      toast({
+        title: "Upload Successfull",
+        description: "Contract Uploaded On Blockchain.",
+        variant: "default",
+      })
+
+    } catch (e: any) {
+      
+      const error = e as AxiosError
+
+      showAxiosError({
+        error,
+        generic: "Failed to accept bidder",
+        additionalText: "Please try to login again",
+      })
+    
+    } finally{
+      setLoading(false)
+    }
+
+  }
+
   async function getBidderApplication(){
 
     try {
@@ -478,7 +509,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
               <div className="grid w-full max-w items-center gap-1.5">
                 <Label htmlFor="picture" className="mb-2">Proposal Description</Label>
                 <Textarea
-                  value={contract.acceptedBidder.proposalDescription}
+                  value={ contract.acceptedBidder.proposalDescription as string}
                   disabled
                   placeholder="# Proposal Description"
                 />
@@ -593,7 +624,7 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
         {
           progressBar === 4 &&
           <div className="w-full flex justify-center mt-10">
-              <Button className="w-[200px] flex items-center justify-center font-bold">
+              <Button type="button" onClick={uploadOnChain} className="w-[200px] flex items-center justify-center font-bold">
                 <AiOutlineUpload className="text-lg mr-2" />
                 Upload On Chain             
               </Button>
