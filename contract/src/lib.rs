@@ -132,10 +132,10 @@ impl BuisnessContract{
     pub fn generate_hash(&self) -> String {
 
         let data = format!(
-            "{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}",
+            "{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}",
+                
                 self.id.clone(),
                 self.contract_type.clone(),
-                self.status.clone(),
             
                 self.title.clone(),
                 self.legal_requirements.clone(),
@@ -265,7 +265,6 @@ impl Contract {
         &self,
         id: String,
         contract_type: String,
-        status: String,
     
         title: String,
         legal_requirements: String,
@@ -286,12 +285,12 @@ impl Contract {
         match contract{
 
             Some(stored_contract) => {
-
+                
                 let data = format!(
-                    "{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}",
+                    "{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}",
+                        
                         id.clone(),
                         contract_type.clone(),
-                        status.clone(),
                     
                         title.clone(),
                         legal_requirements.clone(),
@@ -317,12 +316,13 @@ impl Contract {
         
                 let result = hasher.finalize();
                 let hex_string: String = result.iter().map(|byte| format!("{:02x}", byte)).collect();
-                
+            
+
                 if stored_contract.hash.unwrap_or("".to_string()) == hex_string {
                     return "VALID".to_string();
                 }
-
                 return "INVALID".to_string();
+                
 
             } 
 

@@ -2,7 +2,7 @@ const { Contract, Account, Connection,connect,keyStores, KeyPair } = require('ne
 import { env } from "@/env.mjs";
 
 const accountId = env.ACCOUNT_ID;
-// const contractName = env.CONTRACT_ADDRESS;
+const contractName = env.CONTRACT_ADDRESS;
 const private_key = env.WALLET_PRIVATE_KEY;
 
 
@@ -14,7 +14,6 @@ const contractDef = {
 
 export async function AccountSetup() {
   
-  const contractName = "dev-1695289713998-62725920744725";
     try{
         
         const myKeyStore = new keyStores.InMemoryKeyStore(); 

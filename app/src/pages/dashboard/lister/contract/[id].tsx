@@ -46,6 +46,8 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   const [ bidderApplication, setBidderApplication ] = React.useState<BidderApplication | null>(null);
   const [viewBidder,setViewBidder] = useState<string | null>(null);
 
+  const [contractValidated, setContractValidated] = React.useState<number>(0);
+
 
   const getContract = async () => {
 
@@ -59,7 +61,6 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       const data = res.data.data as {
         contracts: Contract
       }
-      console.log(data)
       switch (data.contracts.payment_method) {
         case "BANK_TRANSFER":
           data.contracts.payment_method = "Bank Transfer"
@@ -208,6 +209,33 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
 
   }
 
+
+  async function validateContract(){
+    
+    try {
+
+      const res = await server.get(ENDPOINTS.onChain.uploadContact + `?id=${contractId}`);
+      let validation = res.data.data;
+
+      console.log("=======")
+      // 1 -> VALIDATED
+      // 2 -> INVALID
+      // 3 -> Server / network error
+
+      if ( validation === "VALID" ) {
+        setContractValidated(1);
+      } 
+
+      else {
+        setContractValidated(2);
+      }
+
+    } catch (e) {
+      setContractValidated(3);
+    }
+    
+  }
+
   async function getBidderApplication(){
 
     try {
@@ -234,6 +262,14 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
     getBidderApplication()
   },[viewBidder])
 
+  useEffect(()=>{
+
+    if (progressBar == 5) {
+      validateContract()
+    }
+
+  },[progressBar])
+
   if (contract === null || contract === undefined) {
     return <p>Loading</p>;
   }
@@ -247,12 +283,32 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
       buttonLabel=""
     >
       <DashboardShell>
-        <DashboardHeader heading={contract?.title } text={""} />
 
         <Card className="w-full flex flex-col items-center py-10">
 
           {/* contract progress bar */}
-          <div className="w-full py-6">
+          <div className="w-full">
+            <div className="w-full flex justify-end items-center mb-5 pr-10">
+              {
+                contractValidated === 0 && 
+                <div title="Validated" className="w-3 h-3 p-[1px] bg-yellow-500 rounded-full animate-spin">
+                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                </div>
+              }
+
+              {
+                contractValidated === 1 && 
+                <div title="Validated" className="w-3 h-3 p-[1px] bg-green-500 rounded-full"></div>
+              }
+              {
+                contractValidated === 2 && 
+                <div title="Invalid" className="w-3 h-3 p-[1px] bg-red-500 rounded-full"></div>
+              }
+              {
+                contractValidated === 3 && 
+                <div title="Network Error" className="w-3 h-3 p-[1px] bg-yellow-500 rounded-full"></div>
+              }
+            </div>
             <div className="flex">
               <div className="w-1/4">
                 <div className="relative mb-2">
