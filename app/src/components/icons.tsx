@@ -38,6 +38,7 @@ import {
   FileIcon,
   FileTextIcon,
   FileImage,
+  ArrowLeft,
   type XIcon as LucideIcon,
 } from "lucide-react"
 
@@ -77,6 +78,7 @@ export const Icons = {
   fileTextIcon: FileIcon,
   fileImage: FileImage,
   chevronsUpDown: ChevronsUpDown,
+  arrowLeft: ArrowLeft,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

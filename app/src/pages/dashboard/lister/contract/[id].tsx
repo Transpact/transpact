@@ -1,6 +1,4 @@
-"use client"
-
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 
 import { WalletContext } from "@/context/wallet-context"
 import DashboardLayout from "@/components/layouts/dashboard-layout"
@@ -21,6 +19,7 @@ import {
 import { BsPencilSquare } from "react-icons/bs"
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -34,6 +33,10 @@ import { BidderApplication, Contract } from "~/types/models"
 import { DocumentViewer } from "@/components/generic/doc-viewer"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import AliceCarousel from "react-alice-carousel"
+import "react-alice-carousel/lib/alice-carousel.css"
+import { Icons } from "@/components/icons"
 
 interface ContractDetailsPageProps {}
 
@@ -56,6 +59,8 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   const [viewBidder, setViewBidder] = useState<string | null>(null)
 
   const [contractValidated, setContractValidated] = React.useState<number>(0)
+
+  const carouselRef = useRef<AliceCarousel>(null)
 
   const getContract = async () => {
     setLoading(true)
@@ -604,16 +609,42 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
               <CardHeader>
                 <CardTitle className="text-lg">Contract Files</CardTitle>
               </CardHeader>
-              <CardDescription className="flex w-full items-center px-6 py-5 text-black ">
-                <div className="flex max-w-[900px] overflow-x-scroll">
-                  {contract.files.map((url) => (
-                    <DocumentViewer
-                      className="mx-5 min-w-[500px]"
-                      documentUrl={url}
-                    />
+              <CardContent className="relative flex w-full max-w-[900px] items-center px-6 py-5 text-black">
+                <AliceCarousel
+                  ref={carouselRef}
+                  mouseTracking
+                  disableDotsControls
+                  disableButtonsControls
+                  controlsStrategy="alternate"
+                  items={contract.files.map((url) => (
+                    <DocumentViewer className="mx-5 w-full" documentUrl={url} />
                   ))}
-                </div>
-              </CardDescription>
+                />
+
+                {/* <div className="mx-auto flex max-w-[900px] overflow-x-scroll">
+                  {contract.files.slice(0, 1).map((url) => (
+                    <DocumentViewer className="mx-5 w-full" documentUrl={url} />
+                  ))}
+                </div> */}
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute left-0 top-[calc(50%-1.5rem)] rounded-full"
+                  onClick={(e) => carouselRef.current?.slidePrev(e)}
+                >
+                  <Icons.arrowLeft />
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute right-0 top-[calc(50%-1.5rem)] rounded-full"
+                  onClick={(e) => carouselRef.current?.slideNext(e)}
+                >
+                  <Icons.arrowRight />
+                </Button>
+              </CardContent>
             </Card>
           </div>
         </Card>
@@ -623,13 +654,13 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
             <CardHeader>
               <CardTitle className="text-center">BIDDER PROPOSAL</CardTitle>
               <CardDescription className="text-center">
-                <a
+                <Link
                   href={contract.acceptedBidder.bidder.website}
-                  className=" hover:underline"
+                  className="hover:underline"
                   target="_blank"
                 >
                   Proposed By - {contract.acceptedBidder.bidder.company_name}
-                </a>
+                </Link>
               </CardDescription>
             </CardHeader>
 
