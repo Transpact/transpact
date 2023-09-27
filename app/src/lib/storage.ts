@@ -1,19 +1,18 @@
-import { bucket } from "./firebase-admin"
 import pinataSdk from "@pinata/sdk"
 import { env } from "@/env.mjs"
 import { createReadStream } from "fs"
 
-export const uploadObjectToFirebase = async (
-  localFilePath: string,
-  firebasePath: string
-) => {
-  const [file] = await bucket.upload(localFilePath, {
-    destination: firebasePath,
-    public: true,
-  })
+// export const uploadObjectToFirebase = async (
+//   localFilePath: string,
+//   firebasePath: string
+// ) => {
+//   const [file] = await bucket.upload(localFilePath, {
+//     destination: firebasePath,
+//     public: true,
+//   })
 
-  return file.publicUrl
-}
+//   return file.publicUrl
+// }
 
 export const uploadObjectToIPFS = async ({
   filePath,
