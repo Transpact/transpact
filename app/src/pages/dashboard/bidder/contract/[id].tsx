@@ -25,6 +25,7 @@ import { BsPencilSquare, BsPen } from "react-icons/bs"
 import { IoMdRemoveCircle } from "react-icons/io"
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -49,6 +50,7 @@ import { CalendarDateRangePicker } from "@/components/ui/date-range-picker"
 import { BidderApplication, Contract } from "~/types/models"
 import { FileUploaderDroppable } from "@/components/generic/form-uploader-drop"
 import { DocumentViewer } from "@/components/generic/doc-viewer"
+import AliceCarousel from "react-alice-carousel"
 
 interface ContractDetailsPageProps {}
 
@@ -70,6 +72,8 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
   const [proposalFiles, setProposalFiles] = React.useState<File[]>([])
   const [bidderApplication, setBidderApplication] =
     React.useState<BidderApplication | null>(null)
+
+  const carouselRef = useRef<AliceCarousel>(null)
 
   const getContract = async () => {
     setLoading(true)
@@ -627,16 +631,48 @@ const ContractDetailsPage: React.FC<ContractDetailsPageProps> = ({}) => {
                     <CardHeader>
                       <CardTitle className="text-lg">Proposal Files</CardTitle>
                     </CardHeader>
-                    <CardDescription className="flex w-full items-center px-6 py-5 text-black ">
-                      <div className="flex max-w-[900px] overflow-x-scroll">
+                    <CardContent className="relative flex w-full items-center px-6 py-5 text-black ">
+                      <AliceCarousel
+                        ref={carouselRef}
+                        mouseTracking
+                        disableDotsControls
+                        disableButtonsControls
+                        controlsStrategy="alternate"
+                        items={contract.files.map((url) => (
+                          <DocumentViewer
+                            className="mx-5 w-full"
+                            documentUrl={url}
+                          />
+                        ))}
+                      />
+
+                      {/* <div className="flex max-w-[900px] overflow-x-scroll">
                         {bidderApplication.files.map((url) => (
                           <DocumentViewer
                             className="mx-5 min-w-[500px]"
                             documentUrl={url}
                           />
                         ))}
-                      </div>
-                    </CardDescription>
+                      </div> */}
+                    </CardContent>
+
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="absolute left-0 top-[calc(50%-1.5rem)] rounded-full"
+                      onClick={(e) => carouselRef.current?.slidePrev(e)}
+                    >
+                      <Icons.arrowLeft />
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="absolute right-0 top-[calc(50%-1.5rem)] rounded-full"
+                      onClick={(e) => carouselRef.current?.slideNext(e)}
+                    >
+                      <Icons.arrowRight />
+                    </Button>
                   </Card>
                 </div>
               </div>
