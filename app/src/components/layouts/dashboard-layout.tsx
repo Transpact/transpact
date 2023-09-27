@@ -1,19 +1,20 @@
-import { dashboardConfig } from "@/config/dashboard";
-import { MainNav } from "@/components/main-nav";
-import { DashboardNav } from "@/components/nav";
-import { SiteFooter } from "@/components/site-footer";
-import { UserAccountNav } from "@/components/user-account-nav";
-import { useContext } from "react";
-import { WalletContext } from "@/context/wallet-context";
-import DashboardSkeleton from "../ui/dashboard-skeleton";
+import { dashboardConfig } from "@/config/dashboard"
+import { MainNav } from "@/components/main-nav"
+import { DashboardNav } from "@/components/nav"
+import { SiteFooter } from "@/components/site-footer"
+import { UserAccountNav } from "@/components/user-account-nav"
+import { useContext } from "react"
+import { WalletContext } from "@/context/wallet-context"
+import DashboardSkeleton from "../ui/dashboard-skeleton"
+import { cn } from "@/lib/utils"
 
 interface DashboardLayoutProps {
-  type: "lister" | "bidder" | "none";
-  loading: boolean;
-  heading: string;
-  text: string;
-  buttonLabel: string;
-  children?: React.ReactNode;
+  type: "lister" | "bidder" | "none" | "empty"
+  loading: boolean
+  heading: string
+  text: string
+  buttonLabel: string
+  children?: React.ReactNode
 }
 
 export default function DashboardLayout({
@@ -24,7 +25,7 @@ export default function DashboardLayout({
   buttonLabel,
   heading,
 }: DashboardLayoutProps) {
-  const { wallet } = useContext(WalletContext)!;
+  const { wallet } = useContext(WalletContext)!
 
   return (
     <div className="flex min-h-screen flex-col space-y-6">
@@ -42,11 +43,21 @@ export default function DashboardLayout({
         </div>
       </header>
 
-      <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
-        <aside className="hidden w-[200px] flex-col md:flex">
+      <div
+        className={cn(
+          "container grid flex-1 gap-12",
+          type !== "empty" ? "md:grid-cols-[200px_1fr]" : ""
+        )}
+      >
+        <aside
+          className={cn(
+            "hidden w-[200px] flex-col md:flex",
+            type === "empty" ? "w-[0px]" : ""
+          )}
+        >
           <DashboardNav
             items={
-              type === "none"
+              type === "none" || type === "empty"
                 ? []
                 : type === "lister"
                 ? dashboardConfig.sidebarNav
@@ -68,5 +79,5 @@ export default function DashboardLayout({
       </div>
       <SiteFooter className="border-t" />
     </div>
-  );
+  )
 }
