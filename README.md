@@ -13,34 +13,31 @@ The core problem we aim to address is the inefficiency and lack of transparency 
 
 ## Features and Interfaces
 
-1. Registration page <a id="Login"></a>
+1. Landing Page <a id="Landing Page"></a>
    - ![ArcoLinux_2023-10-21_15-32-16](https://github.com/Transpact/transpact/assets/68425016/dc98e6c9-3ee6-46fa-bd44-e47c3422a13b)
 
 
-2. Booking page <a id="Booking-Cab"></a>
+2. Signup Page <a id="Signup-Page"></a>
    - ![ArcoLinux_2023-10-21_15-43-46](https://github.com/Transpact/transpact/assets/68425016/da591af1-72c0-49af-9fe5-df2d42f9b8bd)
 
 
-3. Your bookings  <a id="Your-Bookings"></a>
+3. My Contracts  <a id="My-Contracts"></a>
    - ![ArcoLinux_2023-10-21_15-44-49](https://github.com/Transpact/transpact/assets/68425016/a5469c7f-8f10-4e4d-918e-8c85211de511)
 
 
-4. Bookings accepted <a id="Bookings-Accepted"></a>
+4. Lister Dashboard <a id="Lister-Dashboard"></a>
  - ![ArcoLinux_2023-10-21_15-45-05](https://github.com/Transpact/transpact/assets/68425016/7dc032c8-511f-4591-9300-8b2f78f60584)
 
-
-
-
-5. Bookings accepted <a id="Individual-Bookings"></a>
+5. Create Contract <a id="Create-Contract"></a>
 	- ![ArcoLinux_2023-10-21_15-45-25](https://github.com/Transpact/transpact/assets/68425016/c6220668-5012-43f8-a13e-b94b9565770c)
 
 
-5. Your route <a id="Individual-Bookings"></a>
+5. Contract View <a id="Contract-View"></a>
 	- ![ArcoLinux_2023-10-21_15-45-45](https://github.com/Transpact/transpact/assets/68425016/4cf759f8-5c45-447f-8375-b143606a26b7)
 
 
   
-6. Chat Functionality <a id="Chats"></a>
+6. Contract Flow Completed <a id="Contract-Flow-Completed"></a>
    - ![ArcoLinux_2023-10-21_15-48-26](https://github.com/Transpact/transpact/assets/68425016/05f008b2-0e19-4318-aefe-48300245623f)
 
 
